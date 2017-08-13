@@ -149,11 +149,11 @@ rm /root/.ssh -f -r
     execAndShow(`chmod 755 ${this._fsDir}/tempinstaller`);
     execAndShow(`chroot ${this._fsDir} /tempinstaller`);
     execAndShow(`sleep 1`);
-    execAndShow(`umount /srv/eggs/littlebird/proc`);
+    execAndShow(`umount ${this._fsDir}/proc`);
     execAndShow(`sleep 1`);
-    execAndShow(`umount /srv/eggs/littlebird/dev`);
+    execAndShow(`umount ${this._fsDir}/dev`);
     execAndShow(`sleep 1`);
-    execAndShow(`umount /srv/eggs/littlebird/sys`);
+    execAndShow(`umount ${this._fsDir}/sys`);
     execAndShow(`sleep 1`);
 
     console.log("### Fine esecuzione di tempinstaller ###")
@@ -277,7 +277,7 @@ function writeAndShow(file, text) {
   console.log(`### Fine creazione ${file}  ###`);
   }
 
-function execAndSho(cmd){
+function execAndShow(cmd){
   console.log(cmd);
   shell.exec(cmd);
 }
