@@ -13,8 +13,8 @@ import Eggs from "./lib/Eggs.js";
 
 console.log("Inizio");
 
-const homeDir = "/srv/incubator";
-const distroName = "LittleBird-BETA";
+const distroName = "littlebird";
+const homeDir = "/srv/incubator/"+distroName;
 
 let e = new Eggs(homeDir, distroName);
 
@@ -40,6 +40,7 @@ e.pxelinux();
 e.exports();
 e.dnsmasq();
 
+e.tempInstallerRun();
 // System
 // f.systemCopy();
 // f.systemClean();
