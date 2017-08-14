@@ -14,7 +14,7 @@ import Eggs from "./lib/Eggs.js";
 console.log("Inizio");
 
 const distroName = "littlebird";
-const homeDir = "/srv/incubator/"+distroName;
+const homeDir = "/srv/incubator/" + distroName;
 
 let e = new Eggs(homeDir, distroName);
 
@@ -25,26 +25,22 @@ e.workDirs();
 
 // System
 e.systemCopy();
-e.systemClean();
-e.systemEdit();
-e.systemIsoName();
 
+// Eggs
 e.fstab();
 e.hostname();
 e.resolvConf();
-//e.resolvConfDBase();
 e.interfaces();
 e.hosts();
 e.tempInstaller();
 e.pxelinux();
 e.exports();
 e.dnsmasq();
-
-e.tempInstallerRun();
-e.tempInstallerFinalize();
+e.vmlinuz();
 e.initramfs();
+
 // System
-// f.systemCopy();
+
 // f.systemClean();
 // f.systemEdit();
 //f.systemIsoName();
