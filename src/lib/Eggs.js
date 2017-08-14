@@ -25,12 +25,15 @@ class Eggs extends Fabricator {
     this._netNetmask = "255.255.255.0";
     this._netGateway = "192.168.0.1";
     this._netDns = "192.168.0.1";
-    this._netDeviceName = "eth0";
 
     this._homeDir = homeDir;
     this._fsDir = `${homeDir}/fs`;
     this._distroName = distroName;
-    this._kernelVer = "3.16.0-4-amd64";
+
+    // this._netDeviceName = "eth0";
+    this._netDeviceName = "ens18";
+    // this._kernelVer = "3.16.0-4-amd64";
+    this._kernelVer = "4.9.0-3-amd64";
   }
 
   fstab() {
@@ -242,7 +245,7 @@ TEXT HELP
 Esegue il boot dal disco locale
 ENDTEXT
 
-  include common.cfg`;
+include common.cfg`;
 
     writeAndShow(file, text);
 
