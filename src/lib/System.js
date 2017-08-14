@@ -11,6 +11,13 @@ class System {
     this._fsDir = homeDir + "/fs";
     this._distroName = distroName;
   }
+  systemErase() {
+    console.log("==========================================");
+    console.log("systemErase");
+    console.log("==========================================");
+    shell.rm(`-rf`, this._homeDir);
+    console.log("systemErase END");
+  }
 
   systemCopy() {
     console.log("==========================================");
