@@ -31,11 +31,13 @@ class System {
     console.log("==========================================");
     console.log("systemClean");
     console.log("==========================================");
-    shell.rm("-rf", `${this._fsDir}/etc/group`);
+    shell.rm("-rf", `${this._fsDir}/etc/exports`);
+    //shell.rm("-rf", `${this._fsDir}/etc/group`);
     shell.rm("-rf", `${this._fsDir}/etc/group-`);
-    shell.rm("-rf", `${this._fsDir}/etc/passwd`);
+    //shell.rm("-rf", `${this._fsDir}/etc/passwd`);
     shell.rm("-rf", `${this._fsDir}/etc/passwd-`);
-    shell.rm("-rf", `${this._fsDir}/etc/shadow`);
+    //shell.rm("-rf", `${this._fsDir}/etc/shadow`);
+
     shell.rm("-rf", `${this._fsDir}/etc/shadow-`);
     shell.rm("-rf", `${this._fsDir}/etc/gshadow`);
     shell.rm("-rf", `${this._fsDir}/etc/gshadow-`);

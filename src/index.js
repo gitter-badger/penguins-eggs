@@ -41,6 +41,8 @@ e.exports();
 e.dnsmasq();
 
 e.tempInstallerRun();
+e.tempInstallerFinalize();
+e.initramfs();
 // System
 // f.systemCopy();
 // f.systemClean();
