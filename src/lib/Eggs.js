@@ -1,4 +1,4 @@
-// apt-get instal nfs-kernel-server dnsmasq apache2 syslinux pxelinux
+// apt-get install nfs-kernel-server dnsmasq apache2 syslinux pxelinux
 
 "use strict";
 
@@ -7,6 +7,7 @@ import Fabricator from "./fabricator.js";
 let shell = require("shelljs");
 let fs = require("fs");
 let os = require("os");
+let dns = require("dns");
 
 class Eggs extends Fabricator {
   constructor(homeDir = "/home/artisan/fabricator", distroName = "default") {
@@ -21,15 +22,17 @@ class Eggs extends Fabricator {
 
     this._netDomainName = "lan"; // $CLIENTDOMAIN
     this._net = "192.168.0.0";
-    this._netBootServer = "192.168.0.5";
     this._tftpRoot = "/var/www/html";
     this._netNetmask = "255.255.255.0";
     this._netGateway = "192.168.0.1";
-    this._netDns = "192.168.0.1";
+    //this._netDns = "192.168.0.1";
 
     this._homeDir = homeDir;
     this._fsDir = `${homeDir}/fs`;
     this._distroName = distroName;
+
+    let dnss = dns.getServers();
+    this._netDns = dnss[0];
 
     let ip = require("ip");
     this._netBootServer = ip.address();
