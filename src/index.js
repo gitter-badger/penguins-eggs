@@ -5,34 +5,36 @@
 import { install } from "source-map-support";
 install();
 
-let version ="0.2.0";
+let version = "0.2.0";
 console.log(`#### incubator ${version} ####`);
-
 
 import Eggs from "./lib/Eggs.js";
 
 // Check for parameters
 let rebuild = false;
-let help=false;
+let help = false;
 process.argv.forEach(function(val, index, array) {
   if (val == "rebuild") {
     rebuild = true;
-  } else if(val=="r"){
+  } else if (val == "r") {
     rebuild = true;
-  } else if(val=="help"){
-    help=true;
-  } else if(val=="h"){
-    help=true;
+  } else if (val == "help") {
+    help = true;
+  } else if (val == "h") {
+    help = true;
   }
 });
 
-if(help){
+if (help) {
   console.log(`incubator version: ${version}`);
-  console.log(`Description: an utility to remaster your system and boot it from remote`);
+  console.log(
+    `Description: an utility to remaster your system and boot it from remote`
+  );
   console.log(`Usage: incubator [options]`);
   console.log(`h,   help        this help`);
   console.log(`r,   rebuild     destroy and rebuild all`);
-  console.log(`(C) 2017 piero.proietti@gmail.com`)
+  console.log(`Incubator work, at moment, with Debian 8 and Debian 9`);
+  console.log(`(C) 2017 piero.proietti@gmail.com`);
   process.exit();
 }
 
@@ -44,7 +46,6 @@ console.log("type: " + os.type());
 console.log("platform: " + os.platform());
 console.log("arch: " + os.arch());
 console.log("release: " + os.release());
-
 
 const distroName = "littlebird";
 const homeDir = "/srv/incubator/" + distroName;
@@ -100,7 +101,6 @@ e.exports();
 // f.finalize();
 
 console.log(`incubator version: ${version}`);
-console.log(`Remeber to give the followind commands:`);
+console.log(`Remember to give the followind command, before to start:`);
 console.log("sudo service dnsmasq restart");
-console.log("sudo service portmap stop");
 console.log("Enjoy your birds!");
