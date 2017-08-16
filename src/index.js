@@ -77,8 +77,8 @@ e.pxelinux();
 e.dnsmasq();
 e.exports();
 
-shell.exec("service dnsmasq stop");
-shell.exec("service dnsmasq start");
+//shell.exec("service dnsmasq stop");
+//shell.exec("service dnsmasq start");
 // System
 
 //e.tempInstaller();
@@ -99,4 +99,8 @@ shell.exec("service dnsmasq start");
 // f.cleanup();
 // f.finalize();
 
-console.log("Fine");
+console.log(`incubator version: ${version}`);
+console.log(`Remeber to give the followind commands:`);
+console.log("sudo service dnsmasq restart");
+console.log("sudo service portmap stop");
+console.log("Enjoy your birds!");
