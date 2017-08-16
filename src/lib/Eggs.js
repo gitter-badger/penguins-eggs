@@ -8,7 +8,6 @@ let shell = require("shelljs");
 let fs = require("fs");
 let os = require("os");
 
-
 class Eggs extends Fabricator {
   constructor(homeDir = "/home/artisan/fabricator", distroName = "default") {
     super(homeDir, distroName);
@@ -32,12 +31,17 @@ class Eggs extends Fabricator {
     this._fsDir = `${homeDir}/fs`;
     this._distroName = distroName;
 
-    let interfaces=Object.keys(os.getNetworkInterfaces());
-    for (var k in interfaces) {
-      if (interfaces[k]!="lo"){
-        this._netDeviceName=interfaces[k];
+    let ip = require("ip");
+    this._netBootServer = ip.address();
+
+    let interfaces = Object.keys(os.networkInterfaces());
+    let iface = "";
+    for (let k in interfaces) {
+      if (interfaces[k] != "lo") {
+        iface = interfaces[k];
       }
     }
+    this._netDeviceName = iface;
     this._kernelVer = os.release();
   }
 
