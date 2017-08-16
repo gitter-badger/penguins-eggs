@@ -6,6 +6,8 @@ import Rsync from "./Rsync.js";
 import Fabricator from "./fabricator.js";
 let shell = require("shelljs");
 let fs = require("fs");
+let os = require("os");
+
 
 class Eggs extends Fabricator {
   constructor(homeDir = "/home/artisan/fabricator", distroName = "default") {
@@ -30,10 +32,13 @@ class Eggs extends Fabricator {
     this._fsDir = `${homeDir}/fs`;
     this._distroName = distroName;
 
-    // this._netDeviceName = "eth0";
-    this._netDeviceName = "ens18";
-    // this._kernelVer = "3.16.0-4-amd64";
-    this._kernelVer = "4.9.0-3-amd64";
+    let interfaces=Object.keys(os.getNetworkInterfaces());
+    for (var k in interfaces) {
+      if (interfaces[k]!="lo"){
+        this._netDeviceName=interfaces[k];
+      }
+    }
+    this._kernelVer = os.release();
   }
 
   eggsErase() {

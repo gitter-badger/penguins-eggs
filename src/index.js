@@ -5,14 +5,8 @@
 import { install } from "source-map-support";
 install();
 
-console.log("@@@@ getOS @@@");
-let getos = require("getos");
-getos();
-getos(function(e, os) {
-  if (e) return console.log(e);
-  console.log("Your OS is:" + JSON.stringify(os));
-});
-console.log("@@@@ getOS @@@");
+import Eggs from "./lib/Eggs.js";
+let shell = require("shelljs");
 
 var os = require("os");
 console.log("hostnane: " + os.hostname());
@@ -20,12 +14,15 @@ console.log("type: " + os.type());
 console.log("platform: " + os.platform());
 console.log("arch: " + os.arch());
 console.log("release: " + os.release());
-//console.log(os.networkInterfaces());
+var interfaces=Object.keys(os.getNetworkInterfaces());
+var iface="";
+for (var k in interfaces) {
+  if (interfaces[k]!="lo"){
+    iface=interfaces[k];
+  }
+}
+console.log("inteface: " + iface);
 
-process.exit();
-
-import Eggs from "./lib/Eggs.js";
-let shell = require("shelljs");
 
 // INSTALLAZIONE
 // conf /etc/fabricator
