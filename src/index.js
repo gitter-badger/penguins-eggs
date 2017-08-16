@@ -5,6 +5,25 @@
 import { install } from "source-map-support";
 install();
 
+console.log("@@@@ getOS @@@");
+let getos = require("getos");
+getos();
+getos(function(e, os) {
+  if (e) return console.log(e);
+  console.log("Your OS is:" + JSON.stringify(os));
+});
+console.log("@@@@ getOS @@@");
+
+var os = require("os");
+console.log("hostnane: " + os.hostname());
+console.log("type: " + os.type());
+console.log("platform: " + os.platform());
+console.log("arch: " + os.arch());
+console.log("release: " + os.release());
+//console.log(os.networkInterfaces());
+
+process.exit();
+
 import Eggs from "./lib/Eggs.js";
 let shell = require("shelljs");
 
@@ -46,6 +65,9 @@ e.resolvConf();
 e.interfaces();
 e.hosts();
 e.tempInstaller();
+e.tempInstallerMount();
+e.tempInstallerUmount();
+
 e.pxelinux();
 e.exports();
 e.dnsmasq();

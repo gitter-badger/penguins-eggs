@@ -157,26 +157,34 @@ rm /root/.ssh -f -r
     execAndShow(`sleep 1`);
   }
 
-  tempInstallerRun() {
-    console.log("### Avvio di tempinstaller ###");
+  tempInstallerMount() {
+    console.log("### tempInstallerMount ###");
+    let file = `${this._fsDir}/tempinstallerMount`;
+    let text = `#!/bin/bash
+# Questo script è stato generato da eggs
+mount -o bind /proc ${this._fsDir}/proc
+mount -o bind /dev ${this._fsDir}/dev
+mount -o bind /sys ${this._fsDir}/sys
+cd ${this._fsDir}`;
 
-    execAndShow(`mount -o bind /proc ${this._fsDir}/proc`);
-    execAndShow(`mount -o bind /dev ${this._fsDir}/dev`);
-    execAndShow(`mount -o bind /sys ${this._fsDir}/sys`);
+    writeAndShow(file, text);
+    execAndShow(`chmod 755 ${file}`);
+  }
 
-    execAndShow(`chroot ${this._fsDir} ./tempinstaller`);
+  tempInstallerUmount() {
+    console.log("### tempInstallerUmount ###");
+    let file = `${this._fsDir}/tempinstallerUmount`;
+    let text = `#!/bin/bash
+# Questo script è stato generato da eggs
+umount ${this._fsDir}/proc
+sleep 1
+umount ${this._fsDir}/dev
+sleep 1
+umount ${this._fsDir}/sys
+sleep 1`;
 
-    execAndShow(`sleep 1`);
-    execAndShow(`umount ${this._fsDir}/proc`);
-
-    execAndShow(`sleep 1`);
-    execAndShow(`umount ${this._fsDir}/dev`);
-
-    execAndShow(`sleep 1`);
-    execAndShow(`umount ${this._fsDir}/sys`);
-    execAndShow(`sleep 1`);
-
-    console.log("### Fine esecuzione di tempinstaller ###");
+    writeAndShow(file, text);
+    execAndShow(`chmod 755 ${file}`);
   }
 
   vmlinuz() {
@@ -199,15 +207,14 @@ rm /root/.ssh -f -r
     console.log(`### creazione initramfs ###`);
     fileEdit(file, search, replace);
 
-    search = "BOOT=most";
-    replace = "BOOT=local";
+    search = "BOOT=local";
+    replace = "BOOT=nfs";
     fileEdit(file, search, replace);
 
     execAndShow(`mkinitramfs -o /initrd.img-${this._kernelVer}`);
     console.log(`### Copia di initrd.img-${this._kernelVer} ###`);
     execAndShow(
-      `cp ${this._fsDir}/initrd.img-${this._kernelVer}  ${this._tftpRoot}/${this
-        ._distroName}`
+      `cp /initrd.img-${this._kernelVer}  ${this._tftpRoot}/${this._distroName}`
     );
     console.log(`### file initramfs ###`);
   }
