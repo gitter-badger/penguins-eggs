@@ -1,6 +1,6 @@
 # eggs
 
-Eggs is a library in development, at moment rudimentary (and need a GUI counterpart) but it work well with Debian 8 Jessie and Debian 9 Stretch, and let You to remaster your system and, for now, give You the possibility to replicate it with remote boot.
+Eggs is a library in development, at moment rudimentary (and needing a GUI counterpart) but it work well with Debian 8 Jessie and Debian 9 Stretch, and let You to remaster your system and, for now, give You the possibility to replicate it with remote boot.
 
 Eggs, will be the library back  to [incubator](http://github.com/pieroproietti/incubator) the project to implement the GUI for the process of remastering your version of Linux, generate an ISO image, burn it on a DVD/install on usb key or performing remote boot from the net.
 
@@ -23,9 +23,13 @@ To test it, you need a functional installation of Linux Debian version 8 or 9, d
 Eggs, will copy your entire fs in the directory /srv/incubator/[your distro name in my case littlebird], and will create the structure for tftp boot.
 
 ## Install nfs, tftp, apache2 and othe stuffs
+Eggs to boot the littlebirds, need to install apache2, dnsmasq and nfs. Other syslinux and pxelinux. Don't worry too much, is just a question to open the terminal and write the following lines:
 ``` bash
-sudo apt-get install 
+sudo apt-get update
+sudo apt-get install apache2 dnsmasq nfs-kernel-server syslinux pxelinux 
 ```
+No need other configurations, or better, all the necessary configurations will create from eggs.
+
 
 For other informations, write to the author.
 
