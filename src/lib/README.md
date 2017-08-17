@@ -1,16 +1,9 @@
-// Attuale
+# Attuale
+
 // object ->System ->Uefi ->Fabricator ->Eggs
 
-
-Egg.erase <- systemErase
-Egg.fstab <- Eggs.fstab
-
-
-class Egg extend object
-  homeDir
-  workDirs
-}
-class System extend Egg {
+## Mappa attuale delle classi
+class System {
   systemErase
   systemCopy
   systemClean
@@ -18,30 +11,33 @@ class System extend Egg {
   systeFileIso
 }
 
-class Config extend Egg{
+class Uefi extend System{
+}
+
+class Fabricator extend Uefi{
+  homeDir
+  workDirs
+}
+
+class Eggs extend Uefi{
   fstab
   hostname
   resolvConf
   interfaces
   hosts
   vmlinux
+  =======
   initramfs
-}
-
-class Incubator extend Egg{
   eggsErase
   pxelinux
   exports
   dnsmasq
 }
 
-class Iso {
+class Iso{
   dropIso
   isoDirs
   isoLinuxCopy
-  //kernelCopy
-    vmlinuz
-    initramfs
-
-
+  vmlinuz
+  initramfs
 }
