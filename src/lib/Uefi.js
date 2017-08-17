@@ -17,6 +17,8 @@ class Uefi extends System {
   constructor(homeDir = "/home/artisan/fabricator", distroName = "default") {
     super(homeDir, distroName);
     this._tempDir = homeDir + "/temp";
+
+    this._confDir ="/etc/incubator";
   }
 
   Uefi() {
@@ -52,7 +54,8 @@ class Uefi extends System {
     fs.writeFile(bootFileCfg, bootString, function(err) {
       console.log("Errore durante la scrittura di boot.cfg");
     });
-    // fs: start with empty directories.
+
+    // Start with empty directories.
     console.log(`rm -rf ${this._fsDir}/boot`);
     shell.rm("-rf", `${this._fsDir}/boot`);
     console.log(`rm -rf ${this._fsDir}/efi`);
@@ -63,8 +66,8 @@ class Uefi extends System {
     shell.mkdir("-p", `${this._fsDir}/efi/boot`);
 
     // copy splash
-    console.log(`cp ${this._condDir}/splash.png ${this._fsDir}/boot/grub`);
-    shell.cp(`${this._condDir}/splash.png`, `${this._fsDir}/boot/grub`);
+    console.log(`cp ${this._confDir}/splash.png ${this._fsDir}/boot/grub`);
+    shell.cp(`${this._confDir}/splash.png`, `${this._fsDir}/boot/grub`);
 
     // second grub.cfg file in /boot/grub/x86_64-efi/grub.cfg
     let cmd = `for i in $(ls /usr/lib/grub/x86_64-efi|grep part_|grep \.mod|sed 's/.mod//'); do echo "insmod $i" >> ${this

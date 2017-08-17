@@ -5,7 +5,7 @@
 import { install } from "source-map-support";
 install();
 
-let version = "0.2.0";
+let version = "0.2.1";
 console.log(`#### incubator ${version} ####`);
 
 import Eggs from "./lib/Eggs.js";

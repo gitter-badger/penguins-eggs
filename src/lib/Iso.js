@@ -48,7 +48,7 @@ class Iso extends Uefi {
     }
   }
 
-  isoLinuxCopy() {
+  isolinux() {
     console.log("==========================================");
     console.log("isoLinuxCopy");
     console.log("==========================================");
@@ -89,9 +89,9 @@ class Iso extends Uefi {
     aCommands.push(`rsync -a ${isoLinuxBin} ${this._isoDir}`);
     aCommands.push(`rsync -a ${vesamenuFil} ${this._isoDir}`);
 
-    if (fs.existsSync("/usr/lib/fabrica-fabricator/menu_help")) {
+    if (fs.existsSync("/usr/lib/incubator/menu_help")) {
       aCommands.push(
-        `cp -a /usr/lib/fabrica-fabricator/menu_help ${this._isoDir}`
+        `cp -a /usr/lib/incubator/menu_help ${this._isoDir}`
       );
     }
 
@@ -99,19 +99,14 @@ class Iso extends Uefi {
     return aCommands;
   }
 
-  kernelCopy() {
-    console.log("==========================================");
-    console.log("kernelCopy");
-    console.log("==========================================");
+  vmlinuz(){
+    const kernelImage = `/vmlinuz`;
+    shell.cp(kernelImage,this._isoDir );
+  }
 
-    const kernelImage = "/vmlinuz";
+  initramfs(){
     const initrdImage = "/initrd.img";
-
-    let aCommands = [];
-    aCommands.push(`cp -a ${kernelImage} ${this._isoDir}/live`);
-    aCommands.push(`cp -a ${initrdImage} ${this._isoDir}/live`);
-    Rsync(aCommands);
-    return aCommands;
+    shell.cp(initrdImage,this._isoDir );
   }
 }
 
