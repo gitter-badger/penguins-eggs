@@ -4,11 +4,11 @@
 
 ## Mappa attuale delle classi
 class System {
-  systemErase
-  systemCopy
-  systemClean
-  systemEdit
-  systeFileIso
+*  systemErase
+*  systemCopy
+*  systemClean
+*  systemEdit
+*  systeFileIso
 }
 
 class Uefi extend System{
