@@ -28,7 +28,7 @@ Eggs to boot the littlebirds, need to install apache2, dnsmasq and nfs. Other sy
 sudo apt-get update
 sudo apt-get install apache2 dnsmasq nfs-kernel-server syslinux pxelinux 
 ```
-No need other configurations, or better, all the necessary configurations will create from eggs.
+No need other configurations, or better, all the necessary configurations will be created from eggs.
 
 
 For other informations, write to the author.
