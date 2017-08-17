@@ -11,20 +11,23 @@ To experiment now, give a look at the file Eggs.js and adapt the internal variab
 ## Testing Eggs
 
 To test it, download from github:
-''' bash
+``` bash
  git clone https://github.com/pieroproietti/eggs
  cd eggs
  yarn
-
+```
 (give a look at Eggs.js in the src/lib folder, and run it
+``` bash
  sudo yarn run dev
- 
+```
 Eggs, will copy your entire fs in the directory /srv/incubator/[your distro name in my case littlebird], and will create the structure for tftp boot.
 
 ## Install nfs, tftp, apache2 and othe stuffs
-suddo apt-get install 
+``` bash
+sudo apt-get install 
+```
 
-For other informations, write me.
+For other informations, write to the author.
 
 The author
 piero.proietti@gmail.com
