@@ -8,9 +8,10 @@ Eggs, at the moment august 17, is under construction and can have same troubles 
 
 To experiment now, give a look at the file Eggs.js and adapt the internal variables at yours needs.
 
-## Testing Egg
+## Testing Eggs
 
 To test it, download from github:
+''' bash
  git clone https://github.com/pieroproietti/eggs
  cd eggs
  yarn
