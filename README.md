@@ -10,7 +10,7 @@ To experiment now, give a look at the file Eggs.js and adapt the internal variab
 
 ## Testing Eggs
 
-To test it, download from github:
+To test it, you need a functional installation of Linux Debian version 8 or 9, download eggs from github:
 ``` bash
  git clone https://github.com/pieroproietti/eggs
  cd eggs
