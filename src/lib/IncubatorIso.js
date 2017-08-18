@@ -1,9 +1,5 @@
 /*
-* Struttura ISO:  boot
-*                 EFI
-*                 isolinux
-*                 live
-*
+  IncubatorEggIso.js V. 0.3.0
 */
 "use strict";
 

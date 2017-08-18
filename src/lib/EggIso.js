@@ -11,7 +11,7 @@ import Rsync from "./Rsync.js";
 let shell = require("shelljs");
 let fs = require("fs");
 
-class Iso extends Uefi {
+class EggIso extends Uefi {
   constructor(homeDir = "/home/artisan/fabricator", distroName = "Fabricator") {
     super(homeDir, distroName);
 
