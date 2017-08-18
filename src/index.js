@@ -5,10 +5,11 @@
 import { install } from "source-map-support";
 install();
 
-let version = "0.2.1";
+let version = "0.3.0";
 console.log(`#### incubator ${version} ####`);
 
-import Eggs from "./lib/Eggs.js";
+import Egg from "./lib/Egg.js";
+import Netboot from "./lib/Netboot.js";
 
 // Check for parameters
 let rebuild = false;
@@ -39,7 +40,6 @@ if (help) {
 }
 
 let shell = require("shelljs");
-
 var os = require("os");
 console.log("hostnane: " + os.hostname());
 console.log("type: " + os.type());
@@ -47,58 +47,38 @@ console.log("platform: " + os.platform());
 console.log("arch: " + os.arch());
 console.log("release: " + os.release());
 
+
 const distroName = "littlebird";
-const homeDir = "/srv/incubator/" + distroName;
+const homeDir = "/srv/incubator/";
 
-let e = new Eggs(homeDir, distroName);
+// Build the Egg
+let e = new Egg(homeDir, distroName);
 if (rebuild) {
-  e.eggsErase();
-  e.systemErase();
+  e.erase();
+  e.create();
+} else {
+  e.create();
 }
-
-//Fabricator
-e.dropDir();
-e.homeDir();
-e.workDirs();
-
-// System
-e.systemCopy();
-
-// Eggs client
+//e.copy();
 e.fstab();
 e.hostname();
 e.resolvConf();
 e.interfaces();
 e.hosts();
-e.vmlinuz();
-e.initramfs();
 
-// Eggs server
-e.pxelinux();
-e.dnsmasq();
-e.exports();
-
-//shell.exec("service dnsmasq stop");
-//shell.exec("service dnsmasq start");
-// System
-
-//e.tempInstaller();
-//e.tempInstallerMount();
-//e.tempInstallerUmount();
-// f.systemClean();
-// f.systemEdit();
-//f.systemIsoName();
-
-// Uefi
-//f.Uefi();
-
-// f.addExtras();
-// f.bootOptionsSet();
-// f.bootOptionsEdit();
-// f.bootOptionsMenus();
-// f.isoFsMake();
-// f.cleanup();
-// f.finalize();
+process.exit();
+// Build the Incubator
+let i = new Netboot();
+if (rebuild) {
+  i.erase();
+  i.create();
+} else {
+  i.create();
+}
+i.vmlinuz();
+i.initramfs();
+i.pxelinux();
+i.dnsmasq();
 
 console.log(`incubator version: ${version}`);
 console.log(`Remember to give the followind command, before to start:`);
