@@ -9,6 +9,7 @@ let fs = require("fs");
 let os = require("os");
 let utils = require("./utils.js");
 
+
 class Egg {
   constructor(
     homeDir = "/srv/incubator",
