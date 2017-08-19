@@ -7,18 +7,17 @@
 let shell = require("shelljs");
 let fs = require("fs");
 
-
 function rsync(commands) {
   commands.forEach(function(cmd) {
     console.log(cmd);
     const { stdout, stderr, code } = shell.exec(cmd, { silent: true });
   });
-};
+}
 
 function exec(cmd) {
   console.log(cmd);
   shell.exec(cmd);
-};
+}
 
 function bashfile(file, text) {
   const head = `
@@ -38,7 +37,7 @@ function bashfile(file, text) {
     }
   });
   console.log(`### Fine creazione ${file}  ###`);
-};
+}
 
 function fileSearchReplace(file, search, replace) {
   fs.readFile(file, "utf8", function(err, data) {
@@ -50,7 +49,6 @@ function fileSearchReplace(file, search, replace) {
       if (err) return console.log(err);
     });
   });
-};
+}
 
-module.exports = ['rsync', 'exec', 'bashfile', 'fileSearchReplace;
-                  
+module.exports[(rsync, exec, bashfile, fileSearchReplace)];
