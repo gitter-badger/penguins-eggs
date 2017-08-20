@@ -24,9 +24,25 @@ if (options["help"]) {
   process.exit();
 }
 
-let i = new Netboot(homeDir, distroName);
+if (options["start"]) {
+  start(version);
+  process.exit();
+}
+
+if (options["stop"]) {
+  stop(version);
+  process.exit();
+}
+
+if (options["restart"]) {
+  restart(version);
+  process.exit();
+}
+
+
 
 // Build or purge the Incubator
+let i = new Netboot(homeDir, distroName);
 if (options["install"]) {
   i.install();
   process.exit();
@@ -66,7 +82,6 @@ i.exports();
 
 bye(version);
 
-
 /*
 * Options, Help and Byw
 */
@@ -77,6 +92,9 @@ function options() {
   param["rebuild"] = false;
   param["install"] = false;
   param["remove"] = false;
+  param["start"] = false;
+  param["stop"] = false;
+  param["restart"] = false;
 
   process.argv.forEach(function(val, index, array) {
     if (val == "rebuild") {
@@ -87,6 +105,12 @@ function options() {
       param["install"] = true;
     } else if (val == "purge") {
       param["purge"] = true;
+    } else if (val == "start") {
+      param["start"] = true;
+    } else if (val == "stop") {
+      param["stop"] = true;
+    } else if (val == "restart") {
+      param["restart"] = true;
     }
   });
 
@@ -103,24 +127,44 @@ function help() {
   console.log(`>>>  rebuild     destroy and rebuild all`);
   console.log(`>>>  install     install incubator netboot`);
   console.log(`>>>  purge       purge incubator netboot`);
+  console.log(`>>>  start       start bootserver services`);
+  console.log(`>>>  stop        stop bootserver services`);
+  console.log(`>>>  restart     restart bootserver services`);
 
   console.log(`Eggs work with Debian 8 jessie and Debian 9 strecth`);
   console.log(`>>>(C) 2017 piero.proietti@gmail.com<<<`);
 }
 
+function start() {
+  console.log(">>> Eggs starting netboot services ");
+  utils.exec(`sudo service dnsmasq start`);
+  utils.exec(`sudo service nfs-kernel-server start`);
+  bye();
+}
+
+function stop() {
+  console.log(">>> Eggs: stopping netboot services ");
+  utils.exec(`sudo service dnsmasq stop`);
+  utils.exec(`sudo service nfs-kernel-server stop`);
+  bye();
+}
+
+function restart() {
+  console.log(">>> Eggs restarting netboot services");
+  utils.exec(`sudo service dnsmasq restart`);
+  utils.exec(`sudo service nfs-kernel-server restart`);
+  bye();
+}
+
 function welcome() {
   console.log(`>>> Eggs ${version} <<<`);
-  console.log(">>> hostnane: " + os.hostname());
-  console.log(">>> type: " + os.type());
-  console.log(">>> platform: " + os.platform());
-  console.log(">>> arch: " + os.arch());
-  console.log(">>> release: " + os.release());
+//  console.log(">>> hostnane: " + os.hostname());
+//  console.log(">>> type: " + os.type());
+//  console.log(">>> platform: " + os.platform());
+//  console.log(">>> arch: " + os.arch());
+//  console.log(">>> release: " + os.release());
 }
 
 function bye() {
-  console.log(`Eggs version: ${version}`);
-  console.log(`Remember to give the followind command, before to start:`);
-  console.log("sudo service dnsmasq reload");
-  console.log("sudo service nfs-kernel-server reload");
   console.log("Enjoy your birds!");
 }
