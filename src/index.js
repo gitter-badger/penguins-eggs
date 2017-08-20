@@ -6,10 +6,12 @@ install();
 
 import Egg from "./lib/Egg.js";
 import Netboot from "./lib/Netboot.js";
-
 let shell = require("shelljs");
 var os = require("os");
 let utils = require("./lib/utils.js");
+// https://github.com/yargs 
+const argv = require('yargs').argv
+
 
 let version = "0.3.5";
 welcome();
