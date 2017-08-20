@@ -63,7 +63,10 @@ i.exports();
 
 console.log(`incubator version: ${version}`);
 console.log(`Remember to give the followind command, before to start:`);
-console.log("sudo service dnsmasq restart");
+console.log("sudo service dnsmasq reload");
+console.log("service nfs-kernel-server reload");
+
+
 console.log("Enjoy your birds!");
 
 function parameters(){

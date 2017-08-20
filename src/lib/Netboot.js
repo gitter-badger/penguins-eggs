@@ -193,6 +193,9 @@ dhcp-match=set:ipxe,175 # iPXE sends a 175 option.
 
   install() {
     utils.exec(
+      `apt-get update`
+    );
+    utils.exec(
       `apt-get install nfs-kernel-server dnsmasq apache2 syslinux pxelinux -y`
     );
   }
