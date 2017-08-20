@@ -82,7 +82,7 @@ i.exports();
 
 restart();
 
-bye(version);
+// FINE
 
 /*
 * Options, Help and Byw
