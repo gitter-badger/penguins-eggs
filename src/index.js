@@ -37,7 +37,7 @@ e.interfaces();
 e.hosts();
 
 // Build the Incubator
-let i = new Netboot();
+let i = new Netboot(homeDir, distroName);
 if (options["install"]){
     i.install();
     process.exit();
@@ -58,6 +58,7 @@ i.vmlinuz();
 i.initramfs();
 i.pxelinux();
 i.dnsmasq();
+i.exports();
 
 console.log(`incubator version: ${version}`);
 console.log(`Remember to give the followind command, before to start:`);

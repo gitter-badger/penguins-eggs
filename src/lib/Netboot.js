@@ -12,7 +12,7 @@ let utils = require("./utils.js");
 class Netboot {
   constructor(
     homeDir = "/srv/incubator",
-    distroName = "Littebird",
+    distroName = "littebird",
     clientUserFullName = "Artisan",
     clientUserName = "artisan",
     clientPassword = "evoluzione"
@@ -164,12 +164,11 @@ include common.cfg`;
   exports() {
     let file = `/etc/exports`;
     let text =
-      bashHeader +
       `${this.fsDir} ${this.net}/${this
         .netNetmask}(rw,no_root_squash,async,no_subtree_check)
-### Attenzione NON lasciare spazi tra le opzioni ###`;
+# >>> Attenzione NON lasciare spazi tra le opzioni nfs <<<`;
 
-    writeAndShow(file, text);
+    utils.bashwrite(file, text);
   }
 
   dnsmasq() {
