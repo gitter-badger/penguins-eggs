@@ -30,15 +30,13 @@ sudo apt-get install apache2 dnsmasq nfs-kernel-server syslinux pxelinux
 ```
 No need other configurations, or better, all the necessary configurations will be created from eggs.
 
-## version
-[history](src/lib/README.md)
-
-
 ## development
 If you want the branch develop, give this command before to try:
 ```
  git checkout develop
 ```
+## [history](src/lib/README.md)
+
 For other informations, write me.
 
 The author
