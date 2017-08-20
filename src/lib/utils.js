@@ -42,20 +42,14 @@ utils.prototype.rsync = function(commands) {
     // Questa riga, mandava rsync in async...
     //const { stdout, stderr, code } =  shell.exec(cmd, { silent: true });
     console.log(`[utils] >>> exec ${cmd}`);
-    shell.exec(cmd,{async:false});
+    shell.exec(cmd, { async: false });
   });
 };
 
 utils.prototype.sr = function(file, search, replace) {
-  fs.readFile(file, "utf8", function(err, data) {
-    if (err) {
-      return console.log(err);
-    }
-    let result = data.replace(search, replace);
-    fs.writeFile(file, result, "utf8", function(err) {
-      if (err) return console.log(err);
-    });
-  });
+  let original = fs.readFileSync(file).toString();
+  let changed = original.replace(search, replace);
+  fs.writeFileSync(file, changed);
 };
 
 module.exports = new utils();

@@ -19,6 +19,18 @@ const distroName = "littlebird";
 const homeDir = "/srv/incubator/";
 
 let options =parameters()
+let i = new Netboot(homeDir, distroName);
+
+// Build or purge the Incubator
+if (options["install"]){
+    i.install();
+    process.exit();
+}
+if (options["purge"]){
+    i.purge();
+    process.exit();
+}
+
 
 // Build the Egg
 let e = new Egg(homeDir, distroName);
@@ -36,17 +48,6 @@ e.resolvConf();
 e.interfaces();
 e.hosts();
 
-// Build the Incubator
-let i = new Netboot(homeDir, distroName);
-if (options["install"]){
-    i.install();
-    process.exit();
-}
-
-if (options["purge"]){
-    i.purge();
-    process.exit();
-}
 
 if (options['rebuild']) {
   i.erase();
