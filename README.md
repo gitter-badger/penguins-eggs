@@ -34,7 +34,12 @@ No need other configurations, or better, all the necessary configurations will b
 [history](src/lib/README.md)
 
 
-For other informations, write to the author.
+## development
+If you want the branch develop, give this command before to try:
+```
+ git checkout develop
+```
+For other informations, write me.
 
 The author
 piero.proietti@gmail.com
