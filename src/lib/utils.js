@@ -37,12 +37,12 @@ utils.prototype.exec = function(cmd) {
 };
 
 utils.prototype.rsync = function(commands) {
-  console.log(`[utils] >>> rsync ${commands}`);
+  //console.log(`[utils] >>> rsync ${commands}`);
   commands.forEach(function(cmd) {
     // Questa riga, mandava rsync in async...
     //const { stdout, stderr, code } =  shell.exec(cmd, { silent: true });
+    console.log(`[utils] >>> exec ${cmd}`);
     shell.exec(cmd,{async:false});
-
   });
 };
 

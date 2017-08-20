@@ -35,7 +35,6 @@ class Egg {
     this.netDns=(dns.getServers()[0]);
 
 
-
     console.log("==========================================");
     console.log("Egg constructor");
     console.log("==========================================");
@@ -81,11 +80,11 @@ class Egg {
 
   copy() {
     console.log("==========================================");
-    console.log("egg copy");
+    console.log("Egg copy");
     console.log("==========================================");
     let aCommands = [];
     aCommands.push(
-      `rsync -av / ${this.fsDir} --exclude="${this
+      `rsync -aq / ${this.fsDir} --exclude="${this
         .homeDir}" --exclude-from="./src/lib/excludes" --delete-before --delete-excluded`
     );
     utils.rsync(aCommands);
