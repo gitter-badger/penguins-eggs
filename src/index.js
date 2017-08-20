@@ -80,6 +80,8 @@ i.pxelinux();
 i.dnsmasq();
 i.exports();
 
+restart();
+
 bye(version);
 
 /*
