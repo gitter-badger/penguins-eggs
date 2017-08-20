@@ -41,7 +41,8 @@ utils.prototype.rsync = function(commands) {
   commands.forEach(function(cmd) {
     // Questa riga, mandava rsync in async...
     //const { stdout, stderr, code } =  shell.exec(cmd, { silent: true });
-    const { stdout, stderr, code } = shell.exec(cmd);
+    shell.exec(cmd,{async:false});
+
   });
 };
 

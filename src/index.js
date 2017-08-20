@@ -1,15 +1,19 @@
 #!/usr/bin/env node
 
 "use strict";
+import Egg from "./lib/Egg.js";
+import Netboot from "./lib/Netboot.js";
+
+let shell = require("shelljs");
+var os = require("os");
+let utils =require("./lib/utils.js");
 
 import { install } from "source-map-support";
 install();
 
-let version = "0.3.0";
+let version = "0.3.1";
 console.log(`#### incubator ${version} ####`);
 
-import Egg from "./lib/Egg.js";
-import Netboot from "./lib/Netboot.js";
 
 // Check for parameters
 let rebuild = false;
@@ -39,8 +43,6 @@ if (help) {
   process.exit();
 }
 
-let shell = require("shelljs");
-var os = require("os");
 console.log("hostnane: " + os.hostname());
 console.log("type: " + os.type());
 console.log("platform: " + os.platform());
@@ -59,7 +61,10 @@ if (rebuild) {
 } else {
   e.create();
 }
+
 e.copy();
+//utils.exec(`mkdir -p ${homeDir}/${distroName}/fs/etc/network/`);
+
 e.fstab();
 e.hostname();
 e.resolvConf();
@@ -67,6 +72,7 @@ e.interfaces();
 e.hosts();
 
 process.exit();
+
 // Build the Incubator
 let i = new Netboot();
 if (rebuild) {

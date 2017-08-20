@@ -32,10 +32,8 @@ class Egg {
 
 
     this.netDomainName="lan";
-    let dnss=dns.getServers();
-    console.log(dnss);
+    this.netDns=(dns.getServers()[0]);
 
-    this._netDns = dnss[0];
 
 
     console.log("==========================================");
@@ -70,6 +68,7 @@ class Egg {
       utils.exec(`mkdir -p ${this.fsDir}`);
       utils.exec(`mkdir -p ${this.fsDir}/dev`);
       utils.exec(`mkdir -p ${this.fsDir}/etc`);
+      utils.exec(`mkdir -p ${this.fsDir}/etc/intefaces`);
       utils.exec(`mkdir -p ${this.fsDir}/etc/live`);
       utils.exec(`mkdir -p ${this.fsDir}/proc`);
       utils.exec(`mkdir -p ${this.fsDir}/sys`);
