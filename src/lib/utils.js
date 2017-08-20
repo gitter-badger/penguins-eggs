@@ -23,9 +23,9 @@ utils.prototype.bashwrite = function(file, text) {
 `;
 
   console.log(`[utils]\n>>> Creazione ${file}`);
-  text = head + text.trim() +"\n" + footer;
-  text=text.trim()+"\n";
-  file=file.trim();
+  text = head + text.trim() + "\n" + footer;
+  text = text.trim() + "\n";
+  file = file.trim();
   fs.writeFileSync(file, text);
   console.log(text);
   console.log(`>>> Fine creazione ${file}  ===`);
@@ -39,7 +39,9 @@ utils.prototype.exec = function(cmd) {
 utils.prototype.rsync = function(commands) {
   console.log(`[utils] >>> rsync ${commands}`);
   commands.forEach(function(cmd) {
-    const { stdout, stderr, code } = shell.exec(cmd, { silent: true });
+    // Questa riga, mandava rsync in async...
+    //const { stdout, stderr, code } =  shell.exec(cmd, { silent: true });
+    const { stdout, stderr, code } = shell.exec(cmd);
   });
 };
 
