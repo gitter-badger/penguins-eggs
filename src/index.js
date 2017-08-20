@@ -59,7 +59,7 @@ if (rebuild) {
 } else {
   e.create();
 }
-//e.copy();
+e.copy();
 e.fstab();
 e.hostname();
 e.resolvConf();

@@ -7,6 +7,8 @@
 let shell = require("shelljs");
 let fs = require("fs");
 let os = require("os");
+let dns = require("dns");
+
 let utils = require("./utils.js");
 
 
@@ -16,7 +18,7 @@ class Egg {
     distroName = "Littebird",
     clientUserFullName = "Artisan",
     clientUserName = "artisan",
-    clientPassword = "egg"
+    clientPassword = "evoluzione"
   ) {
     this.distroName = distroName;
 
@@ -27,6 +29,14 @@ class Egg {
     this.clientPassword = clientPassword;
     this.clientIpAddress = "127.0.1.1";
     this.kernelVer = os.release();
+
+
+    this.netDomainName="lan";
+    let dnss=dns.getServers();
+    console.log(dnss);
+
+    this._netDns = dnss[0];
+
 
     console.log("==========================================");
     console.log("Egg constructor");
@@ -89,13 +99,13 @@ class Egg {
 #proc /proc proc defaults 0 0
 /dev/nfs / nfs defaults 1 1
 `;
-    utils.bashfile(file, text);
+    utils.bashwrite(file, text);
   }
 
   hostname() {
     let file = `${this.fsDir}/etc/hostname`;
     let text = this.distroName;
-    utils.bashfile(file, text);
+    utils.bashwrite(file, text);
   }
 
   resolvConf() {
@@ -103,9 +113,11 @@ class Egg {
     let text = `
 search ${this.netDomainName}
 nameserver ${this.netDns}
+nameserver 8.8.8.8
+nameserver 8.8.4.4
 `;
 
-    utils.bashfile(file, text);
+    utils.bashwrite(file, text);
   }
 
   interfaces() {
@@ -116,7 +128,7 @@ iface lo inet loopback
 iface this._netDeviceName inet manual
 `;
 
-    utils.bashfile(file, text);
+    utils.bashwrite(file, text);
   }
 
   hosts() {
@@ -134,7 +146,7 @@ ff02::2 ip6-allrouters
 ff02::3 ip6-allhosts
 `;
 
-    utils.bashfile(file, text);
+    utils.bashwrite(file, text);
   }
 }
 
