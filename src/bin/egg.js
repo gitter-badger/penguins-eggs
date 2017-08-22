@@ -1,49 +1,77 @@
 #!/usr/bin/env node
-var argv = require("yargs")
-    .usage('Usage: $0 <commands> [options]')
-    .option('netboot', {
-        alias: 'n',
-        describe: 'choose the action',
-        choices: ['start', 'stop', 'restart', 'install', 'purge']
-      })
-      .command('create', 'create eggs and incubator')
-      .example('$0 create', 'create eggs and incubator')
-      .alias('c','create')
-      .describe('c', 'create eggs and incubator')
-      .command('rebuild', 'destroy and create eggs and incubator')
-      .example('$0 rebuild', 'destroy and create eggs and incubator')
-      .alias('r','rebuild')
-      .describe('c', 'rebuild eggs and incubator')
 
-    .help('h')
-    .alias('h','help')
-    .epilog('(C) 2017 piero.proietti@gmail.com<<<')
-    .argv;
+"use strict";
+//import { install } from "source-map-support";
+//install();
 
-console.log(argv._);
+let program = require("commander");
+let cmdValue="";
+let envValue="";
 
-let version = "We are just testing...";
-welcome();
+program.version("0.1.0").arguments("<cmd> [env]");
 
+program
+  .command("create")
+  .alias("c")
+  .description("create egg and netboot")
+  .action(function(cmd, env) {
+    cmdValue = cmd;
+    envValue = env;
+  });
 
-function welcome() {
-  console.log(`>>> Eggs ${version} <<<`);
+program
+  .command("rebuild")
+  .alias("r")
+  .description("rebuild egg and netboot")
+  .action(function(cmd) {
+    console.log(cmd);
+  });
+
+program
+  .command("install")
+  .alias("i")
+  .description("install netboot services")
+  .action(function(cmd) {
+    console.log(cmd);
+  });
+
+program
+  .command("purge")
+  .alias("p")
+  .description("remove and purge netboot services")
+  .action(function(cmd) {
+    console.log(cmd);
+  });
+
+program
+  .command("start")
+  .alias("s")
+  .description("start netboot services")
+  .action(function(cmd) {
+    console.log(cmd);
+  });
+
+program
+  .command("stop")
+  .alias("o")
+  .description("stop netboot services")
+  .action(function(cmd) {
+    console.log(cmd);
+  });
+
+program
+  .command("restart")
+  .alias("r")
+  .description("restart netboot services")
+  .action(function(cmd) {
+    console.log(cmd);
+  });
+
+program.parse(process.argv);
+
+if (typeof cmdValue === "undefined") {
+  console.error("no command given!");
+  process.exit(1);
 }
-
-function help() {
-  console.log(`Eggs version: ${version}`);
-  console.log(
-    `Description: an utility to remaster your system and boot it from remote`
-  );
-  console.log(`Usage: eggs [options]`);
-  console.log(`>>>  help        this help`);
-  console.log(`>>>  rebuild     destroy and rebuild all`);
-  console.log(`>>>  install     install incubator netboot`);
-  console.log(`>>>  purge       purge incubator netboot`);
-  console.log(`>>>  start       start bootserver services`);
-  console.log(`>>>  stop        stop bootserver services`);
-  console.log(`>>>  restart     restart bootserver services`);
-
-  console.log(`Eggs work with Debian 8 jessie and Debian 9 strecth`);
-  console.log(`>>>(C) 2017 piero.proietti@gmail.com<<<`);
-}
+console.log("command:", cmdValue);
+console.log("environment:", envValue || "no environment given");

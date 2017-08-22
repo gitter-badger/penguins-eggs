@@ -9,7 +9,7 @@ import Netboot from "./lib/Netboot.js";
 let shell = require("shelljs");
 var os = require("os");
 let utils = require("./lib/utils.js");
-// https://github.com/yargs 
+// https://github.com/yargs
 const argv = require('yargs').argv
 
 

@@ -17,6 +17,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "commander": "^2.11.0",
     "getos": "^3.0.1",
     "ip": "^1.1.5",
     "shelljs": "^0.7.8",
