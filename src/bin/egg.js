@@ -1,77 +1,65 @@
 #!/usr/bin/env node
 
 "use strict";
-//import { install } from "source-map-support";
-//install();
+import { install } from "source-map-support";
+install();
 
-let program = require("commander");
-let cmdValue="";
-let envValue="";
 
-program.version("0.1.0").arguments("<cmd> [env]");
+let program = require("commander")
+.version('0.1.0');
 
 program
-  .command("create")
-  .alias("c")
-  .description("create egg and netboot")
-  .action(function(cmd, env) {
-    cmdValue = cmd;
-    envValue = env;
-  });
+.command('create','create egg and netboot if installed')
+.usage('eggs create --distroname littlebird --username scott --password tiger')
+.option('-d --distroname [distroname]', 'The user will be created')
+.option('-u --username [username]', 'The user will be created')
+.option('-p --password [password]', 'The password for user');
 
 program
-  .command("rebuild")
-  .alias("r")
-  .description("rebuild egg and netboot")
-  .action(function(cmd) {
-    console.log(cmd);
-  });
+  .command('rebuild','rebuild egg')
+  .option('-D --distroname [distroname]', 'The user will be created');
 
 program
-  .command("install")
-  .alias("i")
-  .description("install netboot services")
-  .action(function(cmd) {
-    console.log(cmd);
-  });
+.command('netboot [action]','netboot')
+.option('purge','purge netboot')
+.option('install', 'install netboot')
+.option('purge', 'purge netboot')
+.option('start', 'start netboot')
+.option('stop', 'stop netboot')
+.option('restart', 'restart netboot');
 
 program
-  .command("purge")
-  .alias("p")
-  .description("remove and purge netboot services")
-  .action(function(cmd) {
-    console.log(cmd);
-  });
+.parse(process.argv);
 
-program
-  .command("start")
-  .alias("s")
-  .description("start netboot services")
-  .action(function(cmd) {
-    console.log(cmd);
-  });
+let command=process.argv[2];
+console.log(`command: ${command}`);
 
-program
-  .command("stop")
-  .alias("o")
-  .description("stop netboot services")
-  .action(function(cmd) {
-    console.log(cmd);
-  });
-
-program
-  .command("restart")
-  .alias("r")
-  .description("restart netboot services")
-  .action(function(cmd) {
-    console.log(cmd);
-  });
-
-program.parse(process.argv);
-
-if (typeof cmdValue === "undefined") {
-  console.error("no command given!");
-  process.exit(1);
+if (command=='create'){
+  console.log(`distroName: ${program.distroname}`);
+  console.log(`username: ${program.username}`);
+  console.log(`password: ${program.password}`);
+} else if(command=='netboot') {
+  if(program.install){
+    console.log("Action install netboot");
+  }
+  if(program.purge){
+    console.log("Action purge netboot");
+  }
+  if(program.start){
+    console.log("Action start netboot");
+  }
+  if(program.stop){
+    console.log("Action stop netboot");
+  }
+  if(program.restart){
+    console.log("Action restart netboot");
+  }
+} else if(command=='rebuild') {
+  console.log("Action rebuild egg and netboot");
 }
-console.log("command:", cmdValue);
-console.log("environment:", envValue || "no environment given");
+  else{
+  console.log("Usage: egg [create|rebuild|netboot]");
+}
+
+
+process.exit(0);
