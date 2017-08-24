@@ -10,117 +10,102 @@ let shell = require("shelljs");
 var os = require("os");
 let utils = require("./lib/utils.js");
 
-
-
-
-let version = "0.3.5";
-
-welcome();
-
-const distroName = "littlebird";
 const homeDir = "/srv/incubator/";
+let distroName = "littlebird";
 
-let options = options();
+let program = require("commander").version("0.3.5");
 
-if (options["help"]) {
-  help(version);
-  process.exit();
-}
+program
+  .command("create", "create egg and netboot if installed")
+  .usage(
+    "eggs create --distroname littlebird --username scott --password tiger"
+  )
+  .option("-d --distroname [distroname]", "The name of distro")
+  .option("-u --username [username]", "The user of the distro")
+  .option("-p --password [password]", "The password for user");
 
-if (options["start"]) {
-  start(version);
-  process.exit();
-}
+program.command("rebuild", "rebuild egg and netboot stuffs");
 
-if (options["stop"]) {
-  stop(version);
-  process.exit();
-}
+program
+  .command("netboot [action]", "netboot")
+  .option("purge", "purge netboot")
+  .option("install", "install netboot")
+  .option("purge", "purge netboot")
+  .option("start", "start netboot")
+  .option("stop", "stop netboot")
+  .option("restart", "restart netboot");
 
-if (options["restart"]) {
-  restart(version);
-  process.exit();
-}
-
-
+program.parse(process.argv);
 
 // Build or purge the Incubator
 let i = new Netboot(homeDir, distroName);
-if (options["install"]) {
-  i.install();
-  process.exit();
-}
-if (options["purge"]) {
-  i.purge();
-  process.exit();
-}
-
-// Build the Egg
 let e = new Egg(homeDir, distroName);
-if (options["rebuild"]) {
+
+let command = process.argv[2];
+if (command == "create") {
+  createAll()
+} else if (program.rebuild) {
+  //REBUILD
   e.erase();
-  e.create();
-} else {
-  e.create();
-}
-e.copy();
-e.fstab();
-e.hostname();
-e.resolvConf();
-e.interfaces();
-e.hosts();
-
-// Build the Incubator
-if (options["rebuild"]) {
   i.erase();
-  i.create();
+  createAll
+} else if (command == "netboot") {
+  //NETBOOT
+  if (program.install) {
+    i.install();
+    process.exit();
+  }
+  if (program.purge) {
+    i.purge();
+    process.exit();
+  }
+  if (program.start) {
+    start(version);
+    process.exit();
+  }
+  if (program.stop) {
+    stop(version);
+    process.exit();
+  }
+  if (program.restart) {
+    restart(version);
+    process.exit();
+  }
 } else {
+  console.log(
+    "Usage: eggs [create|rebuild|netboot [start|stop|restart|install|purge]]"
+  );
+  process.exit(1);
+}
+
+process.exit(0);
+
+function createAll(){
+  buildEgg;
+  buildNetboot;
+}
+function buildEgg() {
+  //build egg
+  e.create();
+  e.copy();
+  e.fstab();
+  e.hostname();
+  e.resolvConf();
+  e.interfaces();
+  e.hosts();
+}
+
+function buildNetboot() {
+  // Build the Incubator
   i.create();
+  i.vmlinuz();
+  i.initramfs();
+  i.pxelinux();
+  i.dnsmasq();
+  i.exports();
+  restart();
 }
-i.vmlinuz();
-i.initramfs();
-i.pxelinux();
-i.dnsmasq();
-i.exports();
-
-restart();
-
 // FINE
-
-/*
-* Options, Help and Byw
-*/
-function options() {
-  let param = new Object();
-
-  param["help"] = false;
-  param["rebuild"] = false;
-  param["install"] = false;
-  param["remove"] = false;
-  param["start"] = false;
-  param["stop"] = false;
-  param["restart"] = false;
-
-  process.argv.forEach(function(val, index, array) {
-    if (val == "rebuild") {
-      param["rebuild"] = true;
-    } else if (val == "help") {
-      param["help"] = true;
-    } else if (val == "install") {
-      param["install"] = true;
-    } else if (val == "purge") {
-      param["purge"] = true;
-    } else if (val == "start") {
-      param["start"] = true;
-    } else if (val == "stop") {
-      param["stop"] = true;
-    } else if (val == "restart") {
-      param["restart"] = true;
-    }
-  });
-
-  return param;
-}
 
 function help() {
   console.log(`Eggs version: ${version}`);
@@ -163,11 +148,11 @@ function restart() {
 
 function welcome() {
   console.log(`>>> Eggs ${version} <<<`);
-//  console.log(">>> hostnane: " + os.hostname());
-//  console.log(">>> type: " + os.type());
-//  console.log(">>> platform: " + os.platform());
-//  console.log(">>> arch: " + os.arch());
-//  console.log(">>> release: " + os.release());
+  //  console.log(">>> hostnane: " + os.hostname());
+  //  console.log(">>> type: " + os.type());
+  //  console.log(">>> platform: " + os.platform());
+  //  console.log(">>> arch: " + os.arch());
+  //  console.log(">>> release: " + os.release());
 }
 
 function bye() {
