@@ -12,10 +12,10 @@ let utils = require("./utils.js");
 class Netboot {
   constructor(
     homeDir = "/srv/incubator",
-    distroName = "littebird",
-    clientUserFullName = "Artisan",
-    clientUserName = "artisan",
-    clientPassword = "evoluzione"
+    distroName,
+    clientUserFullName,
+    clientUserName,
+    clientPassword
   ) {
     this.fsDir = homeDir + `${distroName}/fs`;
     this.distroName = distroName;

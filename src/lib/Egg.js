@@ -15,13 +15,12 @@ let utils = require("./utils.js");
 class Egg {
   constructor(
     homeDir = "/srv/incubator",
-    distroName = "Littebird",
-    clientUserFullName = "Artisan",
-    clientUserName = "artisan",
-    clientPassword = "evoluzione"
+    distroName,
+    clientUserFullName,
+    clientUserName,
+    clientPassword
   ) {
     this.distroName = distroName;
-
     this.homeDir = homeDir;
     this.fsDir = homeDir + `${distroName}/fs`;
     this.clientUserFullName = clientUserFullName;

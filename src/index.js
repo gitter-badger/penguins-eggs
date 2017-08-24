@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usname r/bin/envnode
 
 "use strict";
 import { install } from "source-map-support";
@@ -12,26 +12,32 @@ let utils = require("./lib/utils.js");
 
 const homeDir = "/srv/incubator/";
 let distroName = "littlebird";
-let userfullname="Artisan";
-let username="artisan";
-let password="evolution";
-let version ="0.3.5";
+let userfullname = "Artisan";
+let username = "artisan";
+let password = "evolution";
+let version = "0.3.6";
+
+let isRoot = process.getuid && process.getuid() === 0;
+if (!isRoot){
+  console.log("Eggs need the supervisor privileges! You need to call it with sudo.");
+  bye()
+};
 
 let program = require("commander").version(version);
 
 program
-.command("create", "create egg and netboot if installed")
-.usage("eggs create --distroname littlebird --username scott --password tiger")
-.option("-d --distroname [distroname]", "The name of distro")
-.option("-u --username [username]", "The user of the distro")
-.option("-p --password [password]", "The password for user");
+  .command("create", "create egg and netboot if installed")
+  .usage(
+    "eggs create --distroname littlebird --username scott --password tiger"
+  )
+  .option("-d --distroname [distroname]", "The name of distro")
+  .option("-U --userfullname [userfullname]","The user full name")
+  .option("-u --username [username]", "The name of the user")
+  .option("-p --password [password]", "The password for the user");
 
 program
-.command("rebuild", "rebuild egg and netboot stuffs")
-.usage("eggs rebuild --distroname littlebird --username scott --password tiger")
-.option("-d --distroname [distroname]", "The name of distro")
-.option("-u --username [username]", "The user of the distro")
-.option("-p --password [password]", "The password for user");
+  .command("destroy", "destroy eggs and netboot stuffs")
+  .usage("eggs destroy");
 
 program
   .command("netboot [action]", "netboot")
@@ -45,60 +51,65 @@ program
 program.parse(process.argv);
 
 // Build or purge the Incubator
-distroName=program.distroname;
-username=program.username;
-password=program.password;
-
-let i = new Netboot(homeDir, distroName, userfullname, usename, password);
-let e = new Egg(homeDir, distroName);
+if (program.distroname) {
+  distroName = program.distroname;
+}
+if (program.userfullname) {
+  username = program.userfullname;
+}
+if (program.username) {
+  username = program.username;
+}
+if (program.password) {
+  password = program.password;
+}
+let i = new Netboot(homeDir, distroName, userfullname, username, password);
+let e = new Egg(homeDir, distroName, userfullname, username, password);
 
 let command = process.argv[2];
 if (command == "create") {
-  createAll()
-} else if (program.rebuild) {
-  //REBUILD
-  console.log("Rebuilding...");
+  createAll();
+  bye();
+} else if (command == "destroy") {
   e.erase();
   i.erase();
-  createAll();
+  bye();
 } else if (command == "netboot") {
-  //NETBOOT
   if (program.install) {
     i.install();
-    process.exit();
+    bye();
   }
   if (program.purge) {
     i.purge();
-    process.exit();
+    bye();
   }
   if (program.start) {
     start(version);
-    process.exit();
+    bye();
   }
   if (program.stop) {
     stop(version);
-    process.exit();
+    bye();
   }
   if (program.restart) {
     restart(version);
-    process.exit();
+    bye();
   }
 } else {
   console.log(
     "Usage: eggs [create|rebuild|delete| netboot [start|stop|restart|install|purge]]"
   );
-  process.exit(1);
+  bye();
 }
 
-process.exit(0);
 
-function createAll(){
+function createAll() {
   buildEgg();
   buildNetboot();
 }
 function buildEgg() {
   //build egg
-  e.create();
+   e.create();
   e.copy();
   e.fstab();
   e.hostname();
@@ -118,28 +129,26 @@ function buildNetboot() {
   restart();
 }
 // FINE
-
 function start() {
   console.log(">>> Eggs starting netboot services ");
   utils.exec(`sudo service dnsmasq start`);
   utils.exec(`sudo service nfs-kernel-server start`);
-  bye();
 }
 
 function stop() {
   console.log(">>> Eggs: stopping netboot services ");
   utils.exec(`sudo service dnsmasq stop`);
   utils.exec(`sudo service nfs-kernel-server stop`);
-  bye();
 }
 
 function restart() {
   console.log(">>> Eggs restarting netboot services");
   utils.exec(`sudo service dnsmasq restart`);
   utils.exec(`sudo service nfs-kernel-server restart`);
-  bye();
 }
 
 function bye() {
-  console.log("Enjoy your birds!");
+  console.log("Eggs: enjoy your birds!");
+  console.log("(C) 2017 Piero Proietti <piero.proietti@gmail.com>");
+  process.exit(0);
 }
