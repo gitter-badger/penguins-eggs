@@ -12,8 +12,9 @@ let utils = require("./lib/utils.js");
 
 const homeDir = "/srv/incubator/";
 let distroName = "littlebird";
+let version ="0.3.5";
 
-let program = require("commander").version("0.3.5");
+let program = require("commander").version(version);
 
 program
   .command("create", "create egg and netboot if installed")
@@ -73,7 +74,7 @@ if (command == "create") {
   }
 } else {
   console.log(
-    "Usage: eggs [create|rebuild|netboot [start|stop|restart|install|purge]]"
+    "Usage: eggs [create|rebuild|delete| netboot [start|stop|restart|install|purge]]"
   );
   process.exit(1);
 }
