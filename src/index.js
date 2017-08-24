@@ -12,20 +12,26 @@ let utils = require("./lib/utils.js");
 
 const homeDir = "/srv/incubator/";
 let distroName = "littlebird";
+let userfullname="Artisan";
+let username="artisan";
+let password="evolution";
 let version ="0.3.5";
 
 let program = require("commander").version(version);
 
 program
-  .command("create", "create egg and netboot if installed")
-  .usage(
-    "eggs create --distroname littlebird --username scott --password tiger"
-  )
-  .option("-d --distroname [distroname]", "The name of distro")
-  .option("-u --username [username]", "The user of the distro")
-  .option("-p --password [password]", "The password for user");
+.command("create", "create egg and netboot if installed")
+.usage("eggs create --distroname littlebird --username scott --password tiger")
+.option("-d --distroname [distroname]", "The name of distro")
+.option("-u --username [username]", "The user of the distro")
+.option("-p --password [password]", "The password for user");
 
-program.command("rebuild", "rebuild egg and netboot stuffs");
+program
+.command("rebuild", "rebuild egg and netboot stuffs")
+.usage("eggs rebuild --distroname littlebird --username scott --password tiger")
+.option("-d --distroname [distroname]", "The name of distro")
+.option("-u --username [username]", "The user of the distro")
+.option("-p --password [password]", "The password for user");
 
 program
   .command("netboot [action]", "netboot")
@@ -39,7 +45,11 @@ program
 program.parse(process.argv);
 
 // Build or purge the Incubator
-let i = new Netboot(homeDir, distroName);
+distroName=program.distroname;
+username=program.username;
+password=program.password;
+
+let i = new Netboot(homeDir, distroName, userfullname, usename, password);
 let e = new Egg(homeDir, distroName);
 
 let command = process.argv[2];
@@ -47,9 +57,10 @@ if (command == "create") {
   createAll()
 } else if (program.rebuild) {
   //REBUILD
+  console.log("Rebuilding...");
   e.erase();
   i.erase();
-  createAll
+  createAll();
 } else if (command == "netboot") {
   //NETBOOT
   if (program.install) {
@@ -82,8 +93,8 @@ if (command == "create") {
 process.exit(0);
 
 function createAll(){
-  buildEgg;
-  buildNetboot;
+  buildEgg();
+  buildNetboot();
 }
 function buildEgg() {
   //build egg
@@ -108,24 +119,6 @@ function buildNetboot() {
 }
 // FINE
 
-function help() {
-  console.log(`Eggs version: ${version}`);
-  console.log(
-    `Description: an utility to remaster your system and boot it from remote`
-  );
-  console.log(`Usage: eggs [options]`);
-  console.log(`>>>  help        this help`);
-  console.log(`>>>  rebuild     destroy and rebuild all`);
-  console.log(`>>>  install     install incubator netboot`);
-  console.log(`>>>  purge       purge incubator netboot`);
-  console.log(`>>>  start       start bootserver services`);
-  console.log(`>>>  stop        stop bootserver services`);
-  console.log(`>>>  restart     restart bootserver services`);
-
-  console.log(`Eggs work with Debian 8 jessie and Debian 9 strecth`);
-  console.log(`>>>(C) 2017 piero.proietti@gmail.com<<<`);
-}
-
 function start() {
   console.log(">>> Eggs starting netboot services ");
   utils.exec(`sudo service dnsmasq start`);
@@ -145,15 +138,6 @@ function restart() {
   utils.exec(`sudo service dnsmasq restart`);
   utils.exec(`sudo service nfs-kernel-server restart`);
   bye();
-}
-
-function welcome() {
-  console.log(`>>> Eggs ${version} <<<`);
-  //  console.log(">>> hostnane: " + os.hostname());
-  //  console.log(">>> type: " + os.type());
-  //  console.log(">>> platform: " + os.platform());
-  //  console.log(">>> arch: " + os.arch());
-  //  console.log(">>> release: " + os.release());
 }
 
 function bye() {
