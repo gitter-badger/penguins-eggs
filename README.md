@@ -22,17 +22,35 @@ To test it, you need a functional installation of Linux Debian version 8 or 9, d
 ```
 Eggs, will copy your entire fs in the directory /srv/incubator/[your distro name in my case littlebird], and will create the structure for tftp boot.
 
-## Install nfs, tftp, apache2 and other stuffs
-Eggs to boot the littlebirds, need to install apache2, dnsmasq and nfs. Other syslinux and pxelinux. Don't worry too much, is just a question to open the terminal and write the following lines:
-``` bash
-sudo apt-get update
-sudo apt-get install apache2 dnsmasq nfs-kernel-server syslinux pxelinux
+## Usage
+Installation of netboot stuffs
 ```
+sudo node eggs netboot install
+```
+Creation of a remote distro
+```
+sudo node eggs create --distroname littlebird
+```
+Starting netboot boot
+
+```
+sudo node eggs start
+```
+
 No need other configurations, or better, all the necessary configurations will be created from eggs.
 
-## version
-[history](src/lib/README.md)
-
+## development
+If you want the branch develop, give this command before to try:
+```
+ git clone http://github.com/pieroproietti/eggs
+ cd eggs
+ git checkout develop
+ yarn
+ sudo yarn run dev install
+ sudo yarn run dev
+```
+## [version](src/lib/README.md)
+* master at V.0.3.x
 
 ## development
 If you want the branch develop, give this command before to try:

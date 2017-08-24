@@ -4,7 +4,6 @@
   "description": "",
   "main": "./dist/index.js",
   "scripts": {
-    "dev-original": "babel src --out-dir dist --source-maps inline --watch",
     "dev": "babel-node src --out-dir dist --source-maps inline --watch",
     "build": "babel src --out-dir dist --source-maps inline",
     "prepublish": "npm run build"
@@ -18,11 +17,14 @@
   },
   "license": "MIT",
   "dependencies": {
+    "commander": "^2.11.0",
     "getos": "^3.0.1",
     "ip": "^1.1.5",
+    "is-root": "^1.0.0",
     "shelljs": "^0.7.8",
     "source-map-support": "^0.4.0",
-    "synchronize": "^2.0.0"
+    "synchronize": "^2.0.0",
+    "yargs": "^8.0.2"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",

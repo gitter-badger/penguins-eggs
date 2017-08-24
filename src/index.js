@@ -1,106 +1,154 @@
-#!/usr/bin/env node
+#!/usname r/bin/envnode
 
 "use strict";
-
 import { install } from "source-map-support";
 install();
 
-let version = "0.2.1";
-console.log(`#### incubator ${version} ####`);
-
-import Eggs from "./lib/Eggs.js";
-
-// Check for parameters
-let rebuild = false;
-let help = false;
-process.argv.forEach(function(val, index, array) {
-  if (val == "rebuild") {
-    rebuild = true;
-  } else if (val == "r") {
-    rebuild = true;
-  } else if (val == "help") {
-    help = true;
-  } else if (val == "h") {
-    help = true;
-  }
-});
-
-if (help) {
-  console.log(`incubator version: ${version}`);
-  console.log(
-    `Description: an utility to remaster your system and boot it from remote`
-  );
-  console.log(`Usage: incubator [options]`);
-  console.log(`h,   help        this help`);
-  console.log(`r,   rebuild     destroy and rebuild all`);
-  console.log(`Incubator work, at moment, with Debian 8 and Debian 9`);
-  console.log(`(C) 2017 piero.proietti@gmail.com`);
-  process.exit();
-}
-
+import Egg from "./lib/Egg.js";
+import Netboot from "./lib/Netboot.js";
 let shell = require("shelljs");
-
 var os = require("os");
-console.log("hostnane: " + os.hostname());
-console.log("type: " + os.type());
-console.log("platform: " + os.platform());
-console.log("arch: " + os.arch());
-console.log("release: " + os.release());
+let utils = require("./lib/utils.js");
 
-const distroName = "littlebird";
-const homeDir = "/srv/incubator/" + distroName;
+const homeDir = "/srv/incubator/";
+let distroName = "littlebird";
+let userfullname = "Artisan";
+let username = "artisan";
+let password = "evolution";
+let version = "0.3.6";
 
-let e = new Eggs(homeDir, distroName);
-if (rebuild) {
-  e.eggsErase();
-  e.systemErase();
+let isRoot = process.getuid && process.getuid() === 0;
+if (!isRoot){
+  console.log("Eggs need the supervisor privileges! You need to call it with sudo.");
+  bye()
+};
+
+let program = require("commander").version(version);
+
+program
+  .command("create", "create egg and netboot if installed")
+  .usage(
+    "eggs create --distroname littlebird --username scott --password tiger"
+  )
+  .option("-d --distroname [distroname]", "The name of distro")
+  .option("-U --userfullname [userfullname]","The user full name")
+  .option("-u --username [username]", "The name of the user")
+  .option("-p --password [password]", "The password for the user");
+
+program
+  .command("destroy", "destroy eggs and netboot stuffs")
+  .usage("eggs destroy");
+
+program
+  .command("netboot [action]", "netboot")
+  .option("purge", "purge netboot")
+  .option("install", "install netboot")
+  .option("purge", "purge netboot")
+  .option("start", "start netboot")
+  .option("stop", "stop netboot")
+  .option("restart", "restart netboot");
+
+program.parse(process.argv);
+
+// Build or purge the Incubator
+if (program.distroname) {
+  distroName = program.distroname;
+}
+if (program.userfullname) {
+  username = program.userfullname;
+}
+if (program.username) {
+  username = program.username;
+}
+if (program.password) {
+  password = program.password;
+}
+let i = new Netboot(homeDir, distroName, userfullname, username, password);
+let e = new Egg(homeDir, distroName, userfullname, username, password);
+
+let command = process.argv[2];
+if (command == "create") {
+  createAll();
+  bye();
+} else if (command == "destroy") {
+  e.erase();
+  i.erase();
+  bye();
+} else if (command == "netboot") {
+  if (program.install) {
+    i.install();
+    bye();
+  }
+  if (program.purge) {
+    i.purge();
+    bye();
+  }
+  if (program.start) {
+    start(version);
+    bye();
+  }
+  if (program.stop) {
+    stop(version);
+    bye();
+  }
+  if (program.restart) {
+    restart(version);
+    bye();
+  }
+} else {
+  console.log(
+    "Usage: eggs [create|rebuild|delete| netboot [start|stop|restart|install|purge]]"
+  );
+  bye();
 }
 
-//Fabricator
-e.dropDir();
-e.homeDir();
-e.workDirs();
 
-// System
-e.systemCopy();
+function createAll() {
+  buildEgg();
+  buildNetboot();
+}
+function buildEgg() {
+  //build egg
+   e.create();
+  e.copy();
+  e.fstab();
+  e.hostname();
+  e.resolvConf();
+  e.interfaces();
+  e.hosts();
+}
 
-// Eggs client
-e.fstab();
-e.hostname();
-e.resolvConf();
-e.interfaces();
-e.hosts();
-e.vmlinuz();
-e.initramfs();
+function buildNetboot() {
+  // Build the Incubator
+  i.create();
+  i.vmlinuz();
+  i.initramfs();
+  i.pxelinux();
+  i.dnsmasq();
+  i.exports();
+  restart();
+}
+// FINE
+function start() {
+  console.log(">>> Eggs starting netboot services ");
+  utils.exec(`sudo service dnsmasq start`);
+  utils.exec(`sudo service nfs-kernel-server start`);
+}
 
-// Eggs server
-e.pxelinux();
-e.dnsmasq();
-e.exports();
+function stop() {
+  console.log(">>> Eggs: stopping netboot services ");
+  utils.exec(`sudo service dnsmasq stop`);
+  utils.exec(`sudo service nfs-kernel-server stop`);
+}
 
-//shell.exec("service dnsmasq stop");
-//shell.exec("service dnsmasq start");
-// System
+function restart() {
+  console.log(">>> Eggs restarting netboot services");
+  utils.exec(`sudo service dnsmasq restart`);
+  utils.exec(`sudo service nfs-kernel-server restart`);
+}
 
-//e.tempInstaller();
-//e.tempInstallerMount();
-//e.tempInstallerUmount();
-// f.systemClean();
-// f.systemEdit();
-//f.systemIsoName();
-
-// Uefi
-//f.Uefi();
-
-// f.addExtras();
-// f.bootOptionsSet();
-// f.bootOptionsEdit();
-// f.bootOptionsMenus();
-// f.isoFsMake();
-// f.cleanup();
-// f.finalize();
-
-console.log(`incubator version: ${version}`);
-console.log(`Remember to give the followind command, before to start:`);
-console.log("sudo service dnsmasq restart");
-console.log("Enjoy your birds!");
+function bye() {
+  console.log("Eggs: enjoy your birds!");
+  console.log("(C) 2017 Piero Proietti <piero.proietti@gmail.com>");
+  process.exit(0);
+}
