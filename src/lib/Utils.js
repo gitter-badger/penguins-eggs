@@ -30,28 +30,28 @@ Utils.prototype.netNetmask = function() {
     });
   });
   return netMask;
-};
+}
 
 Utils.prototype.netDomainName = function() {
   return "lan";
-};
+}
 
 Utils.prototype.netDns = function() {
   return dns.getServers()[0];
-};
+}
 
 Utils.prototype.netGateway = function() {
   return "192.168.0.1";
 }
 
-Utils.this.netDomainName = function(){
+Utils.prototype.netDomainName = function() {
   return "lan";
 }
 
 Utils.prototype.netBootServer = function() {
   let ip = require("ip");
   return ip.address();
-};
+}
 
 Utils.prototype.netDeviceName = function() {
   let interfaces = Object.keys(os.networkInterfaces());
