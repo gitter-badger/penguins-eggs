@@ -1,0 +1,1 @@
+nexe -i src/index.js -o bin/eggs

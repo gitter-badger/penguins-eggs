@@ -17,6 +17,9 @@ lib-cov
 # Coverage directory used by tools like istanbul
 coverage
 
+# nexe compiler
+.nexe/
+
 # nyc test coverage
 .nyc_output
 
@@ -58,3 +61,4 @@ typings/
 .env
 
 dist
+bin
