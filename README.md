@@ -24,9 +24,9 @@ Eggs, will copy your entire fs in the directory /srv/incubator/[your distro name
 
 ## Compiling Eggs with nexe
 
-Install nexe, the version beta, please:
+Install nexe, the version '''2.0.0-beta.7''', please:
 ```
-npm i nexe@beta -g
+sudo npm i nexe@2.0.0-beta.7 -g
 cd eggs/src
 nexe -i index.js -o eggs
 ```
