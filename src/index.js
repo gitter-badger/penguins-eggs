@@ -1,8 +1,8 @@
-#!/usname r/bin/envnode
+/* #!/usname r/bin/envnode */
 
 "use strict";
-import { install } from "source-map-support";
-install();
+//import { install } from "source-map-support";
+//install();
 
 import Egg from "./lib/Egg.js";
 import Netboot from "./lib/Netboot.js";

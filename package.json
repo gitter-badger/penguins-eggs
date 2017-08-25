@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "babel-node src --out-dir dist --source-maps inline --watch",
     "build": "babel src --out-dir dist --source-maps inline",
-    "prepublish": "npm run build"
+    "prepublish": "npm run build",
+    "compile": "nexe -i dist/index.js -o bin/eggs"
   },
   "keywords": [],
   "author": "Piero Proietti",
