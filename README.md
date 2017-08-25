@@ -22,6 +22,16 @@ To test it, you need a functional installation of Linux Debian version 8 or 9, d
 ```
 Eggs, will copy your entire fs in the directory /srv/incubator/[your distro name in my case littlebird], and will create the structure for tftp boot.
 
+## Compiling Eggs with nexe
+
+Install nexe, the version beta, please:
+```
+npm i nexe@beta -g
+cd eggs/src
+nexe -i index.js -o eggs
+```
+
+
 ## Usage
 Installation of netboot stuffs
 ```
