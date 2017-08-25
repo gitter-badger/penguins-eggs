@@ -9,8 +9,7 @@ let fs = require("fs");
 let os = require("os");
 let dns = require("dns");
 
-let utils = require("./utils.js");
-
+let Utils = require("./Utils.js");
 
 class Egg {
   constructor(
@@ -27,12 +26,11 @@ class Egg {
     this.clientUserName = clientUserName;
     this.clientPassword = clientPassword;
     this.clientIpAddress = "127.0.1.1";
-    this.kernelVer = os.release();
 
-
-    this.netDomainName="lan";
-    this.netDns=(dns.getServers()[0]);
-
+    this.kernelVer = Utils.kernerlVersion();
+    this.netDeviceName = Utils.netDeviceName();
+    this.netDomainName = "lan";
+    this.netDns = Utils.netDns();
 
     console.log("==========================================");
     console.log("Egg constructor");
@@ -43,7 +41,7 @@ class Egg {
     console.log("==========================================");
     console.log("Egg erase");
     console.log("==========================================");
-    utils.exec(`rm -rf ${this.homeDir}`);
+    Utils.exec(`rm -rf ${this.homeDir}`);
   }
 
   // Check or create a nest
@@ -52,28 +50,28 @@ class Egg {
     console.log("Egg create");
     console.log("==========================================");
     if (!fs.existsSync(this.homeDir)) {
-      utils.exec(`mkdir -p ${this.homeDir}`);
+      Utils.exec(`mkdir -p ${this.homeDir}`);
     }
 
     if (fs.existsSync(this.fsDir)) {
       // Remove and create /var ed /etc
 
-      utils.exec(`rm -rf ${this.fsDir}/var`);
-      utils.exec(`mkdir -p ${this.fsDir}/var`);
-      utils.exec(`rm -rf ${this.fsDir}/etc`);
-      utils.exec(`mkdir -p ${this.fsDir}/etc/live`);
+      Utils.exec(`rm -rf ${this.fsDir}/var`);
+      Utils.exec(`mkdir -p ${this.fsDir}/var`);
+      Utils.exec(`rm -rf ${this.fsDir}/etc`);
+      Utils.exec(`mkdir -p ${this.fsDir}/etc/live`);
     } else {
-      utils.exec(`mkdir -p ${this.fsDir}`);
-      utils.exec(`mkdir -p ${this.fsDir}/dev`);
-      utils.exec(`mkdir -p ${this.fsDir}/etc`);
-      utils.exec(`mkdir -p ${this.fsDir}/etc/intefaces`);
-      utils.exec(`mkdir -p ${this.fsDir}/etc/live`);
-      utils.exec(`mkdir -p ${this.fsDir}/proc`);
-      utils.exec(`mkdir -p ${this.fsDir}/sys`);
-      utils.exec(`mkdir -p ${this.fsDir}/media`);
-      utils.exec(`mkdir -p ${this.fsDir}/run`);
-      utils.exec(`mkdir -p ${this.fsDir}/var`);
-      utils.exec(`mkdir -p ${this.fsDir}/tmp`);
+      Utils.exec(`mkdir -p ${this.fsDir}`);
+      Utils.exec(`mkdir -p ${this.fsDir}/dev`);
+      Utils.exec(`mkdir -p ${this.fsDir}/etc`);
+      Utils.exec(`mkdir -p ${this.fsDir}/etc/intefaces`);
+      Utils.exec(`mkdir -p ${this.fsDir}/etc/live`);
+      Utils.exec(`mkdir -p ${this.fsDir}/proc`);
+      Utils.exec(`mkdir -p ${this.fsDir}/sys`);
+      Utils.exec(`mkdir -p ${this.fsDir}/media`);
+      Utils.exec(`mkdir -p ${this.fsDir}/run`);
+      Utils.exec(`mkdir -p ${this.fsDir}/var`);
+      Utils.exec(`mkdir -p ${this.fsDir}/tmp`);
     }
   }
 
@@ -86,7 +84,7 @@ class Egg {
       `rsync -aq / ${this.fsDir} --exclude="${this
         .homeDir}" --exclude-from="./src/lib/excludes" --delete-before --delete-excluded`
     );
-    utils.rsync(aCommands);
+    Utils.rsync(aCommands);
     return aCommands;
   }
 
@@ -96,13 +94,13 @@ class Egg {
 #proc /proc proc defaults 0 0
 /dev/nfs / nfs defaults 1 1
 `;
-    utils.bashwrite(file, text);
+    Utils.bashwrite(file, text);
   }
 
   hostname() {
     let file = `${this.fsDir}/etc/hostname`;
     let text = this.distroName;
-    utils.bashwrite(file, text);
+    Utils.bashwrite(file, text);
   }
 
   resolvConf() {
@@ -114,7 +112,7 @@ nameserver 8.8.8.8
 nameserver 8.8.4.4
 `;
 
-    utils.bashwrite(file, text);
+    Utils.bashwrite(file, text);
   }
 
   interfaces() {
@@ -122,10 +120,10 @@ nameserver 8.8.4.4
     let text = `
 auto lo
 iface lo inet loopback
-iface this._netDeviceName inet manual
+iface this.netDeviceName inet manual
 `;
 
-    utils.bashwrite(file, text);
+    Utils.bashwrite(file, text);
   }
 
   hosts() {
@@ -143,7 +141,7 @@ ff02::2 ip6-allrouters
 ff02::3 ip6-allhosts
 `;
 
-    utils.bashwrite(file, text);
+    Utils.bashwrite(file, text);
   }
 }
 
