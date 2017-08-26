@@ -3,10 +3,10 @@
 */
 
 "use strict";
-let os = require("os");
-let fs = require("fs");
-let ip = require("ip");
-let network = require("network");
+import os from "os";
+import fs from "fs";
+import ip from "ip";
+import network from "network";
 
 let Utils = require("./Utils.js");
 
@@ -38,10 +38,9 @@ class Netboot {
     this.net = Utils.net(this.netBootServer, this.netNetmask);
 
     this.tftpRoot = "/var/www/html";
-
   }
 
-  inspect(){
+  inspect() {
     console.log("Eggs ha rilevato questi parametri:");
     console.log(">>> kernelVer: " + this.kernelVer);
     console.log(">>> netBootServer: " + this.netBootServer);

@@ -6,11 +6,11 @@
 //});
 ("use strict");
 
-let shell = require("shelljs");
-let fs = require("fs");
-let os = require("os");
-let dns = require("dns");
-let network = require("network");
+import shell from "shelljs";
+import fs from "fs";
+import os from "os";
+import dns from "dns";
+import network from "network";
 
 let Utils = function() {};
 

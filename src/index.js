@@ -1,13 +1,13 @@
 /* #!/usname r/bin/envnode */
 
 "use strict";
-//import { install } from "source-map-support";
-//install();
+import { install } from "source-map-support";
+install();
 
 import Egg from "./lib/Egg.js";
 import Netboot from "./lib/Netboot.js";
-let shell = require("shelljs");
-var os = require("os");
+import shell from "shelljs";
+import os from "os";
 let Utils = require("./lib/Utils.js");
 
 const homeDir = "/srv/incubator/";
