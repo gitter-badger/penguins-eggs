@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "babel-node src --out-dir dist --source-maps inline --watch",
     "build": "babel src --out-dir dist --source-maps inline",
+    "bundle": "rollup -c",
     "prepublish": "npm run build",
     "compile": "nexe -i dist/index.js -o bin/eggs"
   },

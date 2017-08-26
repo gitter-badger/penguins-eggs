@@ -159,4 +159,5 @@ function qdotToInt(ip) {
   return x;
 }
 
-module.exports = new Utils();
+
+export default new Utils();
