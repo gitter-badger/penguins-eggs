@@ -8,7 +8,7 @@ import Egg from "./lib/Egg.js";
 import Netboot from "./lib/Netboot.js";
 import shell from "shelljs";
 import os from "os";
-let Utils = require("./lib/Utils.js");
+import Utils from "./lib/Utils.js";
 
 const homeDir = "/srv/incubator/";
 let distroName = "littlebird";

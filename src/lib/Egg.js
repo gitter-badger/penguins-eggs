@@ -8,8 +8,7 @@ import shell from "shelljs";
 import fs from "fs";
 import os from "os";
 import dns from "dns";
-
-let Utils = require("./Utils.js");
+import Utils from "./Utils.js";
 
 class Egg {
   constructor(

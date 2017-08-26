@@ -1,12 +1,10 @@
 /*
   Utils.js V. 0.3.0
 */
-// require('./commands').forEach(function (command) {
-//  require('./Utils/' + command);
-//});
-("use strict");
+"use strict";
 
 import shell from "shelljs";
+import ip from "ip";
 import fs from "fs";
 import os from "os";
 import dns from "dns";
@@ -49,7 +47,7 @@ Utils.prototype.netDomainName = function() {
 }
 
 Utils.prototype.netBootServer = function() {
-  let ip = require("ip");
+//  let ip = require("ip");
   return ip.address();
 }
 

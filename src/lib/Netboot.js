@@ -7,8 +7,7 @@ import os from "os";
 import fs from "fs";
 import ip from "ip";
 import network from "network";
-
-let Utils = require("./Utils.js");
+import Utils from "./Utils.js";
 
 class Netboot {
   constructor(
