@@ -7,8 +7,8 @@
     "dev": "babel-node src --out-dir dist --source-maps inline --watch",
     "build": "babel src --out-dir dist --source-maps inline",
     "bundle": "rollup -c",
-    "prepublish": "npm run build",
-    "compile": "nexe -i dist/index.js -o bin/eggs"
+    "compile": "nexe -i bundle/index.js -o bin/eggs",
+    "prepublish": "npm run build"
   },
   "keywords": [],
   "author": "Piero Proietti",
@@ -34,6 +34,7 @@
     "babel-plugin-transform-runtime": "^6.8.0",
     "babel-preset-es2015": "^6.6.0",
     "babel-runtime": "^6.6.1",
+    "nexe": "^2.0.0-beta.7",
     "rollup": "^0.48.2"
   }
 }
