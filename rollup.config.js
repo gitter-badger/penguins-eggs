@@ -3,7 +3,7 @@
 export default {
   input: "src/index.js",
   output: {
-    file: "bundle/eggs.js",
+    file: "build/eggs.js",
     format: "cjs",
     name: "Eggs",
     sourcemap: true
