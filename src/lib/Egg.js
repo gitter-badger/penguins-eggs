@@ -8,7 +8,7 @@ import shell from "shelljs";
 import fs from "fs";
 import os from "os";
 import dns from "dns";
-import Utils from "./Utils.js";
+import utils from "./utils.js";
 
 class Egg {
   constructor(
@@ -26,10 +26,10 @@ class Egg {
     this.clientPassword = clientPassword;
     this.clientIpAddress = "127.0.1.1";
 
-    this.kernelVer = Utils.kernerlVersion();
-    this.netDeviceName = Utils.netDeviceName();
+    this.kernelVer = utils.kernerlVersion();
+    this.netDeviceName = utils.netDeviceName();
     this.netDomainName = "lan";
-    this.netDns = Utils.netDns();
+    this.netDns = utils.netDns();
 
     console.log("==========================================");
     console.log("Egg constructor");
@@ -40,7 +40,7 @@ class Egg {
     console.log("==========================================");
     console.log("Egg erase");
     console.log("==========================================");
-    Utils.exec(`rm -rf ${this.homeDir}`);
+    utils.exec(`rm -rf ${this.homeDir}`);
   }
 
   // Check or create a nest
@@ -49,28 +49,28 @@ class Egg {
     console.log("Egg create");
     console.log("==========================================");
     if (!fs.existsSync(this.homeDir)) {
-      Utils.exec(`mkdir -p ${this.homeDir}`);
+      utils.exec(`mkdir -p ${this.homeDir}`);
     }
 
     if (fs.existsSync(this.fsDir)) {
       // Remove and create /var ed /etc
 
-      Utils.exec(`rm -rf ${this.fsDir}/var`);
-      Utils.exec(`mkdir -p ${this.fsDir}/var`);
-      Utils.exec(`rm -rf ${this.fsDir}/etc`);
-      Utils.exec(`mkdir -p ${this.fsDir}/etc/live`);
+      utils.exec(`rm -rf ${this.fsDir}/var`);
+      utils.exec(`mkdir -p ${this.fsDir}/var`);
+      utils.exec(`rm -rf ${this.fsDir}/etc`);
+      utils.exec(`mkdir -p ${this.fsDir}/etc/live`);
     } else {
-      Utils.exec(`mkdir -p ${this.fsDir}`);
-      Utils.exec(`mkdir -p ${this.fsDir}/dev`);
-      Utils.exec(`mkdir -p ${this.fsDir}/etc`);
-      Utils.exec(`mkdir -p ${this.fsDir}/etc/intefaces`);
-      Utils.exec(`mkdir -p ${this.fsDir}/etc/live`);
-      Utils.exec(`mkdir -p ${this.fsDir}/proc`);
-      Utils.exec(`mkdir -p ${this.fsDir}/sys`);
-      Utils.exec(`mkdir -p ${this.fsDir}/media`);
-      Utils.exec(`mkdir -p ${this.fsDir}/run`);
-      Utils.exec(`mkdir -p ${this.fsDir}/var`);
-      Utils.exec(`mkdir -p ${this.fsDir}/tmp`);
+      utils.exec(`mkdir -p ${this.fsDir}`);
+      utils.exec(`mkdir -p ${this.fsDir}/dev`);
+      utils.exec(`mkdir -p ${this.fsDir}/etc`);
+      utils.exec(`mkdir -p ${this.fsDir}/etc/intefaces`);
+      utils.exec(`mkdir -p ${this.fsDir}/etc/live`);
+      utils.exec(`mkdir -p ${this.fsDir}/proc`);
+      utils.exec(`mkdir -p ${this.fsDir}/sys`);
+      utils.exec(`mkdir -p ${this.fsDir}/media`);
+      utils.exec(`mkdir -p ${this.fsDir}/run`);
+      utils.exec(`mkdir -p ${this.fsDir}/var`);
+      utils.exec(`mkdir -p ${this.fsDir}/tmp`);
     }
   }
 
@@ -83,7 +83,7 @@ class Egg {
       `rsync -aq / ${this.fsDir} --exclude="${this
         .homeDir}" --exclude-from="./src/lib/excludes" --delete-before --delete-excluded`
     );
-    Utils.rsync(aCommands);
+    utils.rsync(aCommands);
     return aCommands;
   }
 
@@ -93,13 +93,13 @@ class Egg {
 #proc /proc proc defaults 0 0
 /dev/nfs / nfs defaults 1 1
 `;
-    Utils.bashwrite(file, text);
+    utils.bashwrite(file, text);
   }
 
   hostname() {
     let file = `${this.fsDir}/etc/hostname`;
     let text = this.distroName;
-    Utils.bashwrite(file, text);
+    utils.bashwrite(file, text);
   }
 
   resolvConf() {
@@ -111,7 +111,7 @@ nameserver 8.8.8.8
 nameserver 8.8.4.4
 `;
 
-    Utils.bashwrite(file, text);
+    utils.bashwrite(file, text);
   }
 
   interfaces() {
@@ -122,7 +122,7 @@ iface lo inet loopback
 iface this.netDeviceName inet manual
 `;
 
-    Utils.bashwrite(file, text);
+    utils.bashwrite(file, text);
   }
 
   hosts() {
@@ -140,7 +140,7 @@ ff02::2 ip6-allrouters
 ff02::3 ip6-allhosts
 `;
 
-    Utils.bashwrite(file, text);
+    utils.bashwrite(file, text);
   }
 }
 

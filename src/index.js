@@ -1,14 +1,14 @@
 /* #!/usname r/bin/envnode */
 
 "use strict";
-import { install } from "source-map-support";
-install();
+//import { install } from "source-map-support";
+//install();
 
 import Egg from "./lib/Egg.js";
 import Netboot from "./lib/Netboot.js";
 import shell from "shelljs";
 import os from "os";
-import Utils from "./lib/Utils.js";
+import utils from "./lib/utils.js";
 
 const homeDir = "/srv/incubator/";
 let distroName = "littlebird";
@@ -18,7 +18,7 @@ let password = "evolution";
 let version = "0.3.6";
 
 
-if (!Utils.isRoot()){
+if (!utils.isRoot()){
   console.log("Eggs need to run with supervisor privileges! You need to call it with sudo");
   console.log("Example: ");
   console.log(">>> sudo eggs netboot --install")
@@ -143,20 +143,20 @@ function buildNetboot() {
 // FINE
 function start() {
   console.log(">>> Eggs starting netboot services ");
-  Utils.exec(`sudo service dnsmasq start`);
-  Utils.exec(`sudo service nfs-kernel-server start`);
+  utils.exec(`sudo service dnsmasq start`);
+  utils.exec(`sudo service nfs-kernel-server start`);
 }
 
 function stop() {
   console.log(">>> Eggs: stopping netboot services ");
-  Utils.exec(`sudo service dnsmasq stop`);
-  Utils.exec(`sudo service nfs-kernel-server stop`);
+  utils.exec(`sudo service dnsmasq stop`);
+  utils.exec(`sudo service nfs-kernel-server stop`);
 }
 
 function restart() {
   console.log(">>> Eggs restarting netboot services");
-  Utils.exec(`sudo service dnsmasq restart`);
-  Utils.exec(`sudo service nfs-kernel-server restart`);
+  utils.exec(`sudo service dnsmasq restart`);
+  utils.exec(`sudo service nfs-kernel-server restart`);
 }
 
 function bye() {
