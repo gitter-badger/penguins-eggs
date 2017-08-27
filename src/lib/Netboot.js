@@ -108,8 +108,8 @@ PROMPT 0
 KBDMAP it.kbd
 DISPLAY display.txt
 SAY Uso la tastiera e locale per italiano.
-MENU TITLE Giant-Turle
-MENU BACKGROUND wallpaper.png
+MENU TITLE Tux's eggs
+MENU BACKGROUND eggs.png
 
 LABEL ${this.distroName}
 MENU LABEL ${this.distroName}
@@ -145,7 +145,7 @@ include common.cfg`;
     utils.exec(
       `ln /usr/lib/PXELINUX/lpxelinux.0  ${this.tftpRoot}/lpxelinux.0`
     );
-    utils.exec(`ln src/assets/wallpaper.png ${this.tftpRoot}/wallpaper.png`);
+    utils.exec(`ln src/assets/eggs.jpg ${this.tftpRoot}/eggs.jpg`);
 
     utils.exec(
       `ln /usr/lib/syslinux/modules/bios/vesamenu.c32 ${this
