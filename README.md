@@ -27,7 +27,7 @@ Eggs, will copy your entire fs in the directory /srv/incubator/[your distro name
 yarn build
 ```
 
-## Compiling Eggs with nexe
+## compiling Eggs with nexe
 
 Install nexe, the version '''2.0.0-beta.7''', please:
 ```
@@ -67,12 +67,9 @@ If you want the branch develop, give this command before to try:
 * master at V.0.3.x
 
 ## development
-If you want the branch develop, give this command before to try:
-```
- git checkout develop
-```
-## [history](src/lib/README.md)
+Actully there is the only master version.
 
+## informations
 For other informations, write me.
 
 The author
