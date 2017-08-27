@@ -18,19 +18,23 @@ To test it, you need a functional installation of Linux Debian version 8 or 9, d
 ```
 (give a look at Eggs.js in the src/lib folder, and run it
 ``` bash
- sudo yarn run dev
+ sudo yarn start
 ```
 Eggs, will copy your entire fs in the directory /srv/incubator/[your distro name in my case littlebird], and will create the structure for tftp boot.
+
+## build
+```
+yarn build
+```
 
 ## Compiling Eggs with nexe
 
 Install nexe, the version '''2.0.0-beta.7''', please:
 ```
 sudo npm i nexe@2.0.0-beta.7 -g
-cd eggs/src
-nexe -i index.js -o eggs
+cd eggs/
+nexe -i build/eggs.js -o bin/eggs
 ```
-
 
 ## Usage
 Installation of netboot stuffs
