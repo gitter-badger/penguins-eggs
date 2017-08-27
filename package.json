@@ -4,13 +4,13 @@
   "description": "",
   "main": "./dist/index.js",
   "scripts": {
-    "dev": "babel-node src --out-dir dist --source-maps inline --watch",
+    "start": "babel-node src",
     "build": "rollup -c rollup.config.js",
     "build-dev": "rollup -c rollup.config-dev.js",
     "compile": "nexe -i build/eggs.js -o bin/eggs",
     "prepublish": "npm run build"
   },
-  "keywords": [],
+  "keywords": ["remastering", "pxe-server", "èxe-boot", "iso", "backup" ],
   "author": "Piero Proietti",
   "homepage": "https://github.com/pieroproietti/eggs",
   "repository": {
