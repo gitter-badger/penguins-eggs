@@ -4,6 +4,7 @@ import commonjs from "rollup-plugin-commonjs";
 import nodeResolve from "rollup-plugin-node-resolve";
 import nodeBuiltins from "rollup-plugin-node-builtins";
 import nodeGlobals from "rollup-plugin-node-globals";
+import babel from 'rollup-plugin-babel';
 
 export default {
   input: "src/index.js",
@@ -14,6 +15,9 @@ export default {
     sourcemap: true
   },
   plugins: [
+    babel({
+      exclude: "node_modules/**"
+    }),
     json(),
     commonjs({
       // non-CommonJS modules will be ignored, but you can also
