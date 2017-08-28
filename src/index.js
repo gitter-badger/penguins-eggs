@@ -6,27 +6,27 @@ install();
 
 import Egg from "./lib/Egg.js";
 import Netboot from "./lib/Netboot.js";
+import Iso from "./lib/Iso.js";
 import shell from "shelljs";
 import os from "os";
 import utils from "./lib/utils.js";
-
-
 
 const homeDir = "/srv/incubator/";
 let distroName = "littlebird";
 let userfullname = "Artisan";
 let username = "artisan";
 let password = "evolution";
-let version = "0.3.6";
+let version = "0.4.0";
 
-
-if (!utils.isRoot()){
-  console.log("Eggs need to run with supervisor privileges! You need to call it with sudo");
+if (!utils.isRoot()) {
+  console.log(
+    "Eggs need to run with supervisor privileges! You need to call it with sudo"
+  );
   console.log("Example: ");
-  console.log(">>> sudo eggs netboot --install")
-  console.log(">>> sudo eggs create --distroname littlebird")
-  bye()
-};
+  console.log(">>> sudo eggs install netboot");
+  console.log(">>> sudo eggs create --distroname littlebird");
+  bye();
+}
 
 let program = require("commander").version(version);
 
@@ -36,7 +36,7 @@ program
     "eggs create --distroname littlebird --username scott --password tiger"
   )
   .option("-d --distroname [distroname]", "The name of distro")
-  .option("-U --userfullname [userfullname]","The user full name")
+  .option("-U --userfullname [userfullname]", "The user full name")
   .option("-u --username [username]", "The name of the user")
   .option("-p --password [password]", "The password for the user");
 
@@ -45,17 +45,24 @@ program
   .usage("eggs destroy");
 
 program
-  .command("inspect", "inspect eggs and netboot stuffs")
-  .usage("eggs debug");
+  .command("show [incubator]", "show parameters incubator")
+  .option("netboot", "show parameters incubator netboot")
+  .option("iso", "show parameters incubator iso");
 
 program
-  .command("netboot [action]", "netboot")
-  .option("purge", "purge netboot")
-  .option("install", "install netboot")
-  .option("purge", "purge netboot")
-  .option("start", "start netboot")
-  .option("stop", "stop netboot")
-  .option("restart", "restart netboot");
+  .command("install [incubator]", "install incubator")
+  .option("netboot", "install netboot")
+  .option("iso", "install incubator iso");
+
+program
+  .command("purge [incubator]", "install incubator")
+  .option("netboot", "remove and purge incubator netboot")
+  .option("iso", "remove and purge incubator iso");
+
+program
+  .command("start", "start netboot services")
+  .command("stop", "stop netboot services")
+  .command("restart", "restart netboot services");
 
 program.parse(process.argv);
 
@@ -72,50 +79,54 @@ if (program.username) {
 if (program.password) {
   password = program.password;
 }
-let i = new Netboot(homeDir, distroName, userfullname, username, password);
-let command = process.argv[2];
-if (command == "inspect") {
-  i.inspect();
-  bye();
-}
+
+let n = new Netboot(homeDir, distroName, userfullname, username, password);
+let i = new Iso(homeDir, distroName, userfullname, username, password);
 let e = new Egg(homeDir, distroName, userfullname, username, password);
 
-
+let command = process.argv[2];
 if (command == "create") {
   createAll();
-  bye();
 } else if (command == "destroy") {
   e.erase();
+  n.erase();
   i.erase();
-  bye();
-} else if (command == "netboot") {
-  if (program.install) {
+} else if (command == "start") {
+  start();
+} else if (command == "stop") {
+  stop();
+} else if (command == "restart") {
+  restart();
+} else if (command == "install") {
+  if (program.netboot) {
+    n.install();
+  } else if (program.iso) {
     i.install();
-    bye();
+  } else {
+    console.log("Usage: eggs install [netboot|iso]");
   }
-  if (program.purge) {
+} else if (command == "show") {
+  if (program.netboot) {
+    n.show();
+  } else if (program.iso) {
+    i.show();
+  } else {
+    console.log("Usage: eggs show [netboot|iso]");
+  }
+} else if (command == "purge") {
+  if (program.netboot) {
+    n.purge();
+  } else if (program.iso) {
     i.purge();
-    bye();
-  }
-  if (program.start) {
-    start(version);
-    bye();
-  }
-  if (program.stop) {
-    stop(version);
-    bye();
-  }
-  if (program.restart) {
-    restart(version);
-    bye();
+  } else {
+    console.log("Usage: eggs purge [netboot|iso]");
   }
 } else {
   console.log(
-    "Usage: eggs [create|rebuild|delete| netboot [start|stop|restart|install|purge]]"
+    "Usage: eggs [create|rebuild|install[netboot|iso]|purge[netboot|iso]|start|stop|restart]"
   );
-  bye();
 }
-
+bye();
 
 function createAll() {
   buildEgg();
@@ -123,7 +134,7 @@ function createAll() {
 }
 function buildEgg() {
   //build egg
-   e.create();
+  e.create();
   e.copy();
   e.fstab();
   e.hostname();
@@ -134,12 +145,12 @@ function buildEgg() {
 
 function buildNetboot() {
   // Build the Incubator
-  i.create();
-  i.vmlinuz();
-  i.initramfs();
-  i.pxelinux();
-  i.dnsmasq();
-  i.exports();
+  n.create();
+  n.vmlinuz();
+  n.initramfs();
+  n.pxelinux();
+  n.dnsmasq();
+  n.exports();
   restart();
 }
 // FINE

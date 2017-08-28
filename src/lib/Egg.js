@@ -30,15 +30,11 @@ class Egg {
     this.netDeviceName = utils.netDeviceName();
     this.netDomainName = "lan";
     this.netDns = utils.netDns();
-
-    console.log("==========================================");
-    console.log("Egg constructor");
-    console.log("==========================================");
   }
 
   erase() {
     console.log("==========================================");
-    console.log("Egg erase");
+    console.log("Eggs erase");
     console.log("==========================================");
     utils.exec(`rm -rf ${this.homeDir}`);
   }
@@ -46,7 +42,7 @@ class Egg {
   // Check or create a nest
   create() {
     console.log("==========================================");
-    console.log("Egg create");
+    console.log("Eggs create");
     console.log("==========================================");
     if (!fs.existsSync(this.homeDir)) {
       utils.exec(`mkdir -p ${this.homeDir}`);

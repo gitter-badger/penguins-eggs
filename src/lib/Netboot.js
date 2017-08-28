@@ -39,7 +39,7 @@ class Netboot {
     this.tftpRoot = "/var/www/html";
   }
 
-  inspect() {
+  show() {
     console.log("Eggs ha rilevato questi parametri:");
     console.log(">>> kernelVer: " + this.kernelVer);
     console.log(">>> netBootServer: " + this.netBootServer);
