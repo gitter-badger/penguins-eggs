@@ -42,7 +42,7 @@ class Iso {
     console.log("Incubator iso: create");
     console.log("==========================================");
     if (!fs.existsSync(this.isoDir)) {
-      utils.exec(`mkdir -p ${this.isoDir}/incubator`);
+      utils.exec(`mkdir -p ${this.isoDir}/live`);
       utils.exec(`mkdir -p ${this.isoDir}/isolinux`);
       utils.exec(`mkdir -p ${this.isoDir}/EFI`);
       utils.exec(`mkdir -p ${this.isoDir}/boot`);
@@ -54,34 +54,6 @@ class Iso {
     console.log("Incubator iso: erase");
     console.log("==========================================");
     utils.exec(`rm -rf ${this.isoDir}`);
-  }
-
-  vmlinuz() {
-    utils.exec(`mkdir -p ${this.isoDir}/${this.distroName}`);
-    console.log(`### Copia di vmlinuz-${this.kernelVer} ###`);
-    utils.exec(`cp /boot/vmlinuz-${this.kernelVer}  ${this.isoDir}`);
-    utils.exec(`chmod -R 777  ${this.isoDir}`);
-  }
-
-  initramfs() {
-    console.log(`### creazione initramfs ###`);
-
-    let conf = `/etc/initramfs-tools/initramfs.conf`;
-    let initrdFile = `/tmp/initrd.img-${this.kernelVer}`;
-
-    let search = "MODULES=netboot";
-    let replace = "MODULES=most";
-    utils.sr(conf, search, replace);
-
-    search = "BOOT=nfs";
-    replace = "BOOT=local";
-    utils.sr(conf, search, replace);
-
-    utils.exec(`mkinitramfs -o /tmp/initrd.img-${this.kernelVer}`);
-
-    console.log(`### Copia di initrd.img-${this.kernelVer} ###`);
-    utils.exec(`cp ${initrdFile}  ${this.isoDir}`);
-    console.log(`### file initramfs ###`);
   }
 
   install() {
@@ -112,18 +84,18 @@ MENU BACKGROUND eggs.png
 
 LABEL ${this.distroName}
   MENU LABEL ^${this.distroName}
-  kernel /incubator/vmlinuz
-  append boot=live initrd=/incubator/initrd.img quiet splash
+  kernel /live/vmlinuz
+  append boot=live initrd=/live/initrd.img quiet splash
 
 label ${this.distroName} install
   MENU LABEL ^${this.distroName} install
-  kernel /incubator/vmlinuz
-  append boot=live initrd=/incubator/initrd.img quiet splash finstall
+  kernel /live/vmlinuz
+  append boot=live initrd=/live/initrd.img quiet splash finstall
 
 label ${this.distroName} safe
   MENU LABEL ^${this.distroName} safe
-  kernel /incubator/vmlinuz
-  append boot=live initrd=/incubator/initrd.img xforcevesa nomodeset quiet splash`;
+  kernel /live/vmlinuz
+  append boot=live initrd=/live/initrd.img xforcevesa nomodeset quiet splash`;
     utils.bashwrite(file, text);
 
     utils.exec(`cp src/assets/eggs.png ${this.isoDir}/isolinux`);
@@ -154,18 +126,15 @@ label ${this.distroName} safe
   }
 
   copyKernel() {
-    utils.exec(`cp /vmlinuz ${this.isoDir}/incubator/`);
-    utils.exec(`cp /initrd.img ${this.isoDir}/incubator/`);
+    utils.exec(`cp /vmlinuz ${this.isoDir}/live/`);
+    utils.exec(`cp /initrd.img ${this.isoDir}/live/`);
   }
-  // filesystem(){}
-  // efi(){}
-  // extras(){}
-  // bootOptions(){}
+
   squashFilesystem() {
     let option = "-comp xz";
     utils.exec(
       `mksquashfs ${this.fsDir} ${this
-        .isoDir}/incubator/filesystem.squashfs ${option} -noappend`
+        .isoDir}/live/filesystem.squashfs ${option} -noappend`
     );
   }
   makeIso() {
