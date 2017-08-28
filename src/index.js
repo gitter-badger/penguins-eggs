@@ -31,10 +31,12 @@ if (!utils.isRoot()) {
 let program = require("commander").version(version);
 
 program
-  .command("create", "create egg and netboot if installed")
+  .command("create [incubator]", "create egg and netboot if installed")
   .usage(
     "eggs create --distroname littlebird --username scott --password tiger"
   )
+  .option("netboot", "create netboot")
+  .option("iso", "create  incubator iso")
   .option("-d --distroname [distroname]", "The name of distro")
   .option("-U --userfullname [userfullname]", "The user full name")
   .option("-u --username [username]", "The name of the user")
@@ -86,7 +88,14 @@ let e = new Egg(homeDir, distroName, userfullname, username, password);
 
 let command = process.argv[2];
 if (command == "create") {
-  createAll();
+  buildEgg();
+  if (program.netboot) {
+    buildNetboot();
+  } else if (program.iso) {
+    buildIso();
+  } else {
+    console.log("usage: eggs create [netboot|iso]");
+  }
 } else if (command == "destroy") {
   e.erase();
   n.erase();
@@ -154,6 +163,15 @@ function buildNetboot() {
   n.exports();
   restart();
 }
+function buildIso() {
+  i.create();
+  i.copyIsolinux();
+  i.isolinuxCfg();
+  i.copyKernel();
+  //i.squashFilesystem();
+  i.makeIso();
+}
+
 // FINE
 function start() {
   console.log(">>> Eggs starting netboot services ");
@@ -174,6 +192,8 @@ function restart() {
 }
 
 function bye() {
-  console.log(`eggs version ${version} (C) 2017 Piero Proietti <piero.proietti@gmail.com>`);
+  console.log(
+    `eggs version ${version} (C) 2017 Piero Proietti <piero.proietti@gmail.com>`
+  );
   process.exit(0);
 }
