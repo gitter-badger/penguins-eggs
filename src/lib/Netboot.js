@@ -40,7 +40,7 @@ class Netboot {
   }
 
   show() {
-    console.log("Eggs ha rilevato questi parametri:");
+    console.log("Eggs: incubator netboot parameters ");
     console.log(">>> kernelVer: " + this.kernelVer);
     console.log(">>> netBootServer: " + this.netBootServer);
     console.log(">>> netDeviceName: " + this.netDeviceName);

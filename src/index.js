@@ -123,7 +123,7 @@ if (command == "create") {
   }
 } else {
   console.log(
-    "Usage: eggs [create|rebuild|install[netboot|iso]|purge[netboot|iso]|start|stop|restart]"
+    "Usage: eggs [show|create|rebuild|install[netboot|iso]|purge[netboot|iso]|start|stop|restart]"
   );
 }
 bye();
@@ -132,6 +132,7 @@ function createAll() {
   buildEgg();
   buildNetboot();
 }
+
 function buildEgg() {
   //build egg
   e.create();
@@ -173,6 +174,6 @@ function restart() {
 }
 
 function bye() {
-  console.log("Eggs (C) 2017 Piero Proietti <piero.proietti@gmail.com>");
+  console.log(`eggs version ${version} (C) 2017 Piero Proietti <piero.proietti@gmail.com>`);
   process.exit(0);
 }

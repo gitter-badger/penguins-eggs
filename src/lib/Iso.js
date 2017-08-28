@@ -31,7 +31,7 @@ class Iso {
   }
 
   show() {
-    console.log("Eggs ha rilevato questi parametri:");
+    console.log("Eggs: incubator iso parameters ");
     console.log(">>> kernelVer: " + this.kernelVer);
     console.log(">>> netDomainName: " + this.netDomainName);
   }
