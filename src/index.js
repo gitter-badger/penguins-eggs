@@ -168,7 +168,7 @@ function buildIso() {
   i.copyIsolinux();
   i.isolinuxCfg();
   i.copyKernel();
-  //i.squashFilesystem();
+  i.squashFilesystem();
   i.makeIso();
 }
 

@@ -179,7 +179,7 @@ label ${this.distroName} safe
       "_" +
       pad(d.getUTCFullYear()) +
       "-" +
-      pad(d.getUTCMonth()+1) +
+      pad(d.getUTCMonth() + 1) +
       "-" +
       pad(d.getUTCDate()) +
       "_at_" +
@@ -193,6 +193,7 @@ label ${this.distroName} safe
     );
   }
 }
+
 function pad(number) {
   if (number < 10) {
     return "0" + number;
