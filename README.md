@@ -60,9 +60,11 @@ If you want the branch develop, give this command before to try:
  git clone http://github.com/pieroproietti/eggs
  cd eggs
  git checkout develop
+ 
  yarn
- sudo yarn run dev install
- sudo yarn run dev
+ 
+ sudo yarn netboot install
+ sudo yarn create
 ```
 ## [version](src/lib/README.md)
 * master at V.0.3.x
