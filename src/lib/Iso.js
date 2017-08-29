@@ -69,7 +69,30 @@ class Iso {
     );
   }
 
-  // snapshot(){}
+  Isolinux() {
+    let isolinuxbin = "/usr/lib/ISOLINUX/isolinux.bin";
+    let vesamenu = "/usr/lib/syslinux/modules/bios/vesamenu.c32";
+
+    utils.exec(
+      `rsync -a /usr/lib/syslinux/modules/bios/chain.c32 ${this
+        .isoDir}/isolinux/`
+    );
+    utils.exec(
+      `rsync -a /usr/lib/syslinux/modules/bios/ldlinux.c32 ${this
+        .isoDir}/isolinux/`
+    );
+    utils.exec(
+      `rsync -a /usr/lib/syslinux/modules/bios/libcom32.c32 ${this
+        .isoDir}/isolinux/`
+    );
+    utils.exec(
+      `rsync -a /usr/lib/syslinux/modules/bios/libutil.c32 ${this
+        .isoDir}/isolinux/`
+    );
+    utils.exec(`rsync -a ${isolinuxbin} ${this.isoDir}/isolinux/`);
+    utils.exec(`rsync -a ${vesamenu} ${this.isoDir}/isolinux/`);
+  }
+
   isolinuxCfg() {
     let file = `${this.isoDir}/isolinux/isolinux.cfg`;
     let text = `
@@ -101,42 +124,20 @@ label ${this.distroName} safe
     utils.exec(`cp src/assets/eggs.png ${this.isoDir}/isolinux`);
   }
 
-  copyIsolinux() {
-    let isolinuxbin = "/usr/lib/ISOLINUX/isolinux.bin";
-    let vesamenu = "/usr/lib/syslinux/modules/bios/vesamenu.c32";
 
-    utils.exec(
-      `rsync -a /usr/lib/syslinux/modules/bios/chain.c32 ${this
-        .isoDir}/isolinux/`
-    );
-    utils.exec(
-      `rsync -a /usr/lib/syslinux/modules/bios/ldlinux.c32 ${this
-        .isoDir}/isolinux/`
-    );
-    utils.exec(
-      `rsync -a /usr/lib/syslinux/modules/bios/libcom32.c32 ${this
-        .isoDir}/isolinux/`
-    );
-    utils.exec(
-      `rsync -a /usr/lib/syslinux/modules/bios/libutil.c32 ${this
-        .isoDir}/isolinux/`
-    );
-    utils.exec(`rsync -a ${isolinuxbin} ${this.isoDir}/isolinux/`);
-    utils.exec(`rsync -a ${vesamenu} ${this.isoDir}/isolinux/`);
-  }
-
-  copyKernel() {
+  alive() {
     utils.exec(`cp /vmlinuz ${this.isoDir}/live/`);
     utils.exec(`cp /initrd.img ${this.isoDir}/live/`);
   }
 
-  squashFilesystem() {
+  squashFs() {
     let option = "-comp xz";
     utils.exec(
       `mksquashfs ${this.fsDir} ${this
         .isoDir}/live/filesystem.squashfs ${option} -noappend`
     );
   }
+  
   makeIso() {
     let isoHybridOption = "-isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin ";
     let uefiOption = "";
@@ -171,3 +172,4 @@ function pad(number) {
 }
 
 export default Iso;
+s

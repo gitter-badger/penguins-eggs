@@ -165,10 +165,10 @@ function buildNetboot() {
 }
 function buildIso() {
   i.create();
-  i.copyIsolinux();
+  i.isolinux();
   i.isolinuxCfg();
-  i.copyKernel();
-  i.squashFilesystem();
+  i.alive();
+  i.squashFs();
   i.makeIso();
 }
 
