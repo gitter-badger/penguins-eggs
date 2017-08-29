@@ -69,7 +69,7 @@ class Iso {
     );
   }
 
-  Isolinux() {
+  isolinux() {
     let isolinuxbin = "/usr/lib/ISOLINUX/isolinux.bin";
     let vesamenu = "/usr/lib/syslinux/modules/bios/vesamenu.c32";
 
@@ -137,7 +137,7 @@ label ${this.distroName} safe
         .isoDir}/live/filesystem.squashfs ${option} -noappend`
     );
   }
-  
+
   makeIso() {
     let isoHybridOption = "-isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin ";
     let uefiOption = "";
@@ -172,4 +172,3 @@ function pad(number) {
 }
 
 export default Iso;
-s
