@@ -1,7 +1,8 @@
 "use strict";
 import { install } from "source-map-support";
 install();
-import {version} from "../package.json";
+
+//import { version } from "../package.json";
 
 import Egg from "./lib/Egg.js";
 import Netboot from "./lib/Netboot.js";

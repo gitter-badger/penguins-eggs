@@ -1,12 +1,12 @@
 {
   "bin": {
-    "teggs": "./dist/index.js"
+    "teggs": "./build/index.js"
   },
   "author": "Piero Proietti",
   "name": "teggs",
   "version": "0.5.5",
   "description": "",
-  "main": "./dist/index.js",
+  "main": "./build/index.js",
   "scripts": {
     "start": "babel-node src",
     "build": "rollup -c rollup.config.js",
