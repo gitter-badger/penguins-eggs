@@ -3,8 +3,8 @@
 export default {
   input: "src/index.js",
   output: {
-    file: "build/tux-eggs.js",
+    file: "build/teggs.js",
     format: "cjs",
-    name: "tux-eggs",
+    name: "teggs",
     sourcemap: true
   }};
