@@ -16,7 +16,7 @@ let distroName = "littlebird";
 let userfullname = "Artisan";
 let username = "artisan";
 let password = "evolution";
-let version = "0.5.0";
+let version = process.env.npm_package_version;
 
 if (!utils.isRoot()) {
   console.log(

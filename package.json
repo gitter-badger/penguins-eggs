@@ -22,10 +22,10 @@
     "backup",
     "systemback"
   ],
-  "homepage": "https://github.com/pieroproietti/tux-eggs",
+  "homepage": "https://github.com/pieroproietti/teggs",
   "repository": {
     "type": "git",
-    "url": "https://github.com/pieroproietti/tux-eggs"
+    "url": "https://github.com/pieroproietti/teggs"
   },
   "license": "MIT",
   "dependencies": {
