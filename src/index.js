@@ -7,6 +7,7 @@ install();
 import Egg from "./lib/Egg.js";
 import Netboot from "./lib/Netboot.js";
 import Iso from "./lib/Iso.js";
+import Arises from "./lib/Arises.js";
 import shell from "shelljs";
 import os from "os";
 import utils from "./lib/utils.js";
@@ -31,40 +32,39 @@ if (!utils.isRoot()) {
 let program = require("commander").version(version);
 
 program
-  .command("create [incubator]", "create egg and netboot if installed")
-  .usage(
-    "eggs create --distroname littlebird --username scott --password tiger"
-  )
-  .option("netboot", "create netboot")
-  .option("iso", "create  incubator iso")
+  .option("netboot", "define incubator netboot")
+  .option("iso", "define incubator iso")
   .option("-d --distroname [distroname]", "The name of distro")
   .option("-U --userfullname [userfullname]", "The user full name")
   .option("-u --username [username]", "The name of the user")
   .option("-p --password [password]", "The password for the user");
 
 program
+  .command("create [incubator]", "create egg and netboot if installed")
+  .usage(
+    "eggs create --distroname littlebird --username scott --password tiger"
+  );
+
+program
   .command("destroy", "destroy eggs and netboot stuffs")
   .usage("eggs destroy");
 
 program
-  .command("show [incubator]", "show parameters incubator")
-  .option("netboot", "show parameters incubator netboot")
-  .option("iso", "show parameters incubator iso");
+  .command("show [incubator]", "show parameters incubator");
 
 program
-  .command("install [incubator]", "install incubator")
-  .option("netboot", "install netboot")
-  .option("iso", "install incubator iso");
+  .command("install [incubator]", "install incubator");
 
 program
-  .command("purge [incubator]", "install incubator")
-  .option("netboot", "remove and purge incubator netboot")
-  .option("iso", "remove and purge incubator iso");
+  .command("purge [incubator]", "install incubator");
 
 program
   .command("start", "start netboot services")
   .command("stop", "stop netboot services")
   .command("restart", "restart netboot services");
+
+program
+  .command("arises", "arises the penguin");
 
 program.parse(process.argv);
 
@@ -85,13 +85,15 @@ if (program.password) {
 let n = new Netboot(homeDir, distroName, userfullname, username, password);
 let i = new Iso(homeDir, distroName, userfullname, username, password);
 let e = new Egg(homeDir, distroName, userfullname, username, password);
+let a = new Arises();
 
 let command = process.argv[2];
 if (command == "create") {
-  buildEgg();
   if (program.netboot) {
+    buildEgg();
     buildNetboot();
   } else if (program.iso) {
+    buildEgg();
     buildIso();
   } else {
     console.log("usage: eggs create [netboot|iso]");
@@ -130,6 +132,8 @@ if (command == "create") {
   } else {
     console.log("Usage: eggs purge [netboot|iso]");
   }
+} else if (command == "arises") {
+  a.setDestinationDrive();
 } else {
   console.log(
     "Usage: eggs [show|create|rebuild|install[netboot|iso]|purge[netboot|iso]|start|stop|restart]"

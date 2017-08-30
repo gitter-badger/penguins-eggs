@@ -10,7 +10,13 @@
     "compile": "nexe -i build/eggs.js -o bin/eggs",
     "prepublish": "npm run build"
   },
-  "keywords": ["remastering", "pxe-server", "èxe-boot", "iso", "backup" ],
+  "keywords": [
+    "remastering",
+    "pxe-server",
+    "èxe-boot",
+    "iso",
+    "backup"
+  ],
   "author": "Piero Proietti",
   "homepage": "https://github.com/pieroproietti/eggs",
   "repository": {
@@ -20,6 +26,7 @@
   "license": "MIT",
   "dependencies": {
     "commander": "^2.11.0",
+    "drivelist": "^5.1.8",
     "getos": "^3.0.1",
     "ip": "^1.1.5",
     "network": "^0.3.2",
