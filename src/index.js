@@ -8,6 +8,7 @@ import Egg from "./lib/Egg.js";
 import Netboot from "./lib/Netboot.js";
 import Iso from "./lib/Iso.js";
 import Arises from "./lib/Arises.js";
+
 import shell from "shelljs";
 import os from "os";
 import utils from "./lib/utils.js";
@@ -21,7 +22,7 @@ let version = "0.5.0";
 
 if (!utils.isRoot()) {
   console.log(
-    "Eggs need to run with supervisor privileges! You need to call it with sudo"
+    "Eggs need to run with supervisor privileges! You need to prefix it with sudo"
   );
   console.log("Example: ");
   console.log(">>> sudo eggs install netboot");
@@ -38,7 +39,7 @@ program
   .option("-d --distroname [distroname]", "The name of distro")
   .option("-U --userfullname [userfullname]", "The user full name")
   .option("-u --username [username]", "The name of the user")
-  .option("-p --password [password]", "The password for the user");
+  .option("-p --password [password]", "The password for the user")
 
 program
   .command("create [incubator]", "create egg and netboot if installed")
@@ -54,6 +55,7 @@ program
 program.parse(process.argv);
 
 // Build or purge the Incubator
+
 if (program.distroname) {
   distroName = program.distroname;
 }
@@ -121,7 +123,7 @@ if (command == "create") {
   a.setDestinationDrive();
 } else {
   console.log(
-    "Usage: eggs [show|create|rebuild|install[netboot|iso]|purge[netboot|iso]|start|stop|restart]"
+    "Usage: eggs [show|create|install|purge|start|stop|restart|arises] options [iso|netboot]"
   );
 }
 bye();
@@ -152,6 +154,7 @@ function buildNetboot() {
   n.exports();
   restart();
 }
+
 function buildIso() {
   i.create();
   i.isolinux();
