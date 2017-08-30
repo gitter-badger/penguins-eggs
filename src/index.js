@@ -17,7 +17,7 @@ let distroName = "littlebird";
 let userfullname = "Artisan";
 let username = "artisan";
 let password = "evolution";
-let version = "0.4.0";
+let version = "0.5.0";
 
 if (!utils.isRoot()) {
   console.log(
@@ -26,6 +26,7 @@ if (!utils.isRoot()) {
   console.log("Example: ");
   console.log(">>> sudo eggs install netboot");
   console.log(">>> sudo eggs create --distroname littlebird");
+  console.log(">>> sudo eggs arises");
   bye();
 }
 
@@ -41,29 +42,13 @@ program
 
 program
   .command("create [incubator]", "create egg and netboot if installed")
-  .usage(
-    "eggs create --distroname littlebird --username scott --password tiger"
-  );
-
-program
   .command("destroy", "destroy eggs and netboot stuffs")
-  .usage("eggs destroy");
-
-program
-  .command("show [incubator]", "show parameters incubator");
-
-program
-  .command("install [incubator]", "install incubator");
-
-program
-  .command("purge [incubator]", "install incubator");
-
-program
+  .command("show [incubator]", "show parameters incubator")
+  .command("install [incubator]", "install incubator packages")
+  .command("purge [incubator]", "remove and purge incubator packages")
   .command("start", "start netboot services")
   .command("stop", "stop netboot services")
-  .command("restart", "restart netboot services");
-
-program
+  .command("restart", "restart netboot services")
   .command("arises", "arises the penguin");
 
 program.parse(process.argv);
