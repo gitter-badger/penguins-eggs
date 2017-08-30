@@ -1,6 +1,7 @@
 // new rollup.config.js
 
 import shebang from 'rollup-plugin-shebang';
+import json from "rollup-plugin-json";
 
 export default {
   input: "src/index.js",
@@ -11,6 +12,7 @@ export default {
     sourcemap: true
   },
   plugins: [
-     shebang()
+     shebang(),
+     json()
    ]
 };
