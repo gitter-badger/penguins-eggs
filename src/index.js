@@ -1,4 +1,4 @@
-/* #!/usname r/bin/envnode */
+#!/usr/bin/env node
 
 "use strict";
 import { install } from "source-map-support";
