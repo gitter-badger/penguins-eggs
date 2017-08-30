@@ -1,5 +1,7 @@
 // new rollup.config.js
 
+import shebang from 'rollup-plugin-shebang';
+
 export default {
   input: "src/index.js",
   output: {
@@ -7,4 +9,8 @@ export default {
     format: "cjs",
     name: "teggs",
     sourcemap: true
-  }};
+  },
+  plugins: [
+     shebang()
+   ]
+};

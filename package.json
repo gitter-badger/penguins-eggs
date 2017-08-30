@@ -1,4 +1,8 @@
 {
+  "bin": {
+    "teggs": "./dist/index.js"
+  },
+  "author": "Piero Proietti",
   "name": "teggs",
   "version": "0.5.1",
   "description": "",
@@ -47,6 +51,7 @@
     "rollup-plugin-node-builtins": "^2.1.2",
     "rollup-plugin-node-globals": "^1.1.0",
     "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-shebang": "^0.1.4",
     "xml2js": "^0.4.19"
   }
 }

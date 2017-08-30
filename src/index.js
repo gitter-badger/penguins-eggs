@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 "use strict";
 import { install } from "source-map-support";
 install();
@@ -157,6 +155,7 @@ function buildNetboot() {
 
 function buildIso() {
   i.create();
+  i.fstab();
   i.isolinux();
   i.isolinuxCfg();
   i.alive();

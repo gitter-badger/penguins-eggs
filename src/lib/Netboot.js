@@ -6,7 +6,7 @@
 import os from "os";
 import fs from "fs";
 import ip from "ip";
-import network from "network";
+//import network from "network";
 import utils from "./utils.js";
 
 class Netboot {

@@ -6,7 +6,7 @@
 import os from "os";
 import fs from "fs";
 import ip from "ip";
-import network from "network";
+//import network from "network";
 import utils from "./utils.js";
 
 class Iso {
@@ -67,6 +67,13 @@ class Iso {
     utils.exec(
       `apt-get remove --purge squashfs-tools xorriso live-boot live-boot-initramfs-tools live-config live-config-systemd syslinux syslinux-common isolinux -y`
     );
+  }
+  fstab() {
+    let file = `${this.fsDir}/etc/fstab`;
+    let text = `
+#proc /proc proc defaults 0 0
+`;
+    utils.bashwrite(file, text);
   }
 
   isolinux() {
