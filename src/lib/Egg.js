@@ -34,7 +34,7 @@ class Egg {
 
   erase() {
     console.log("==========================================");
-    console.log("Eggs erase");
+    console.log("teggs erase");
     console.log("==========================================");
     utils.exec(`rm -rf ${this.homeDir}`);
   }
@@ -42,7 +42,7 @@ class Egg {
   // Check or create a nest
   create() {
     console.log("==========================================");
-    console.log("Eggs create");
+    console.log("teggs create");
     console.log("==========================================");
     if (!fs.existsSync(this.homeDir)) {
       utils.exec(`mkdir -p ${this.homeDir}`);
