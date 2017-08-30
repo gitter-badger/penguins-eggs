@@ -1,6 +1,7 @@
 "use strict";
 import { install } from "source-map-support";
 install();
+import {version} from "../package.json";
 
 import Egg from "./lib/Egg.js";
 import Netboot from "./lib/Netboot.js";
@@ -16,7 +17,6 @@ let distroName = "littlebird";
 let userfullname = "Artisan";
 let username = "artisan";
 let password = "evolution";
-let version = process.env.npm_package_version;
 
 if (!utils.isRoot()) {
   console.log(
