@@ -9,9 +9,9 @@ import babel from "rollup-plugin-babel";
 export default {
   input: "src/index.js",
   output: {
-    file: "build/eggs.js",
+    file: "build/tux-eggs.js",
     format: "cjs",
-    name: "Eggs",
+    name: "tux-eggs",
     sourcemap: true
   },
   plugins: [
