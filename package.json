@@ -13,9 +13,10 @@
   "keywords": [
     "remastering",
     "pxe-server",
-    "èxe-boot",
+    "pxe-boot",
     "iso",
-    "backup"
+    "backup",
+    "systemback"
   ],
   "author": "Piero Proietti",
   "homepage": "https://github.com/pieroproietti/eggs",
