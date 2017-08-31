@@ -67,7 +67,7 @@ If you want the branch develop, give this command before to try:
  sudo yarn create
 ```
 ## [version](src/lib/README.md)
-* master at V.0.5.x
+* master at V.0.4.x
 
 ## informations
 For other informations, write me.
