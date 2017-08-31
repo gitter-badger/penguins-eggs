@@ -11,7 +11,7 @@
     "start": "babel-node src",
     "build": "rollup -c rollup.config.js",
     "build-dev": "rollup -c rollup.config-dev.js",
-    "prepublish": "npm run build"
+    "prepublish": "yarn build"
   },
   "keywords": [
     "remastering",
