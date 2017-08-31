@@ -21,7 +21,7 @@ let password = "evolution";
 
 if (!utils.isRoot()) {
   console.log(
-    "eggs need to run with supervisor privileges! You need to prefix it with sudo"
+    `${name} need to run with supervisor privileges! You need to prefix it with sudo`
   );
   console.log("Example: ");
   console.log(">>> sudo eggs install netboot");
@@ -42,7 +42,7 @@ program
 
 program
   .command("create [incubator]", "create egg and netboot if installed")
-  .command("destroy", "destroy teggs and netboot stuffs")
+  .command("destroy", "destroy eggs and netboot stuffs")
   .command("show [incubator]", "show parameters incubator")
   .command("install [incubator]", "install incubator packages")
   .command("purge [incubator]", "remove and purge incubator packages")
@@ -166,26 +166,26 @@ function buildIso() {
 
 // FINE
 function start() {
-  console.log(">>> eggs starting netboot services ");
+  console.log(`>>> ${name}: starting netboot services`);
   utils.exec(`sudo service dnsmasq start`);
   utils.exec(`sudo service nfs-kernel-server start`);
 }
 
 function stop() {
-  console.log(">>> eggs: stopping netboot services ");
+  console.log(`>>> ${name}: stopping netboot services`);
   utils.exec(`sudo service dnsmasq stop`);
   utils.exec(`sudo service nfs-kernel-server stop`);
 }
 
 function restart() {
-  console.log(">>> eggs restarting netboot services");
+  console.log(`>>> ${name}: restarting netboot services`);
   utils.exec(`sudo service dnsmasq restart`);
   utils.exec(`sudo service nfs-kernel-server restart`);
 }
 
 function bye() {
   console.log(
-    `penguins-eggs version ${version} (C) 2017 ${author} <${mail}>`
+    `${name} version ${version} (C) 2017 ${author} <${mail}>`
   );
   process.exit(0);
 }
