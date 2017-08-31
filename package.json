@@ -1,16 +1,17 @@
 {
-  "name": "teggs",
-  "version": "0.5.11",
+  "name": "penguins-eggs",
+  "version": "0.4.9",
   "author": "Piero Proietti",
+  "mail": "piero.proietti@gmail.com",
   "description": "remaster your system and distribuite it by netboot or iso",
   "license": "MIT",
-  "homepage": "https://github.com/pieroproietti/teggs",
+  "homepage": "https://www.piojoris15.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/pieroproietti/teggs"
+    "url": "https://github.com/pieroproietti/penguins-eggs"
   },
   "bin": {
-    "teggs": "./build/index.js"
+    "eggs": "./build/index.js"
   },
   "main": "./build/index.js",
   "scripts": {

@@ -2,7 +2,7 @@
 import { install } from "source-map-support";
 install();
 
-import { version } from "../package.json";
+import { version, name, author, mail, homepage } from "../package.json";
 
 import Egg from "./lib/Egg.js";
 import Netboot from "./lib/Netboot.js";
@@ -21,12 +21,12 @@ let password = "evolution";
 
 if (!utils.isRoot()) {
   console.log(
-    "teggs need to run with supervisor privileges! You need to prefix it with sudo"
+    "eggs need to run with supervisor privileges! You need to prefix it with sudo"
   );
   console.log("Example: ");
-  console.log(">>> sudo teggs install netboot");
-  console.log(">>> sudo teggs create --distroname littlebird");
-  console.log(">>> sudo teggs arises");
+  console.log(">>> sudo eggs install netboot");
+  console.log(">>> sudo eggs create --distroname littlebird");
+  console.log(">>> sudo eggs arises");
   bye();
 }
 
@@ -82,7 +82,7 @@ if (command == "create") {
     buildEgg();
     buildIso();
   } else {
-    console.log("usage: teggs create [netboot|iso]");
+    console.log("usage: eggs create [netboot|iso]");
   }
 } else if (command == "destroy") {
   e.erase();
@@ -100,7 +100,7 @@ if (command == "create") {
   } else if (program.iso) {
     i.install();
   } else {
-    console.log("Usage: teggs install [netboot|iso]");
+    console.log("Usage: eggs install [netboot|iso]");
   }
 } else if (command == "show") {
   if (program.netboot) {
@@ -108,7 +108,7 @@ if (command == "create") {
   } else if (program.iso) {
     i.show();
   } else {
-    console.log("Usage: teggs show [netboot|iso]");
+    console.log("Usage: eggs show [netboot|iso]");
   }
 } else if (command == "purge") {
   if (program.netboot) {
@@ -116,13 +116,13 @@ if (command == "create") {
   } else if (program.iso) {
     i.purge();
   } else {
-    console.log("Usage: teggs purge [netboot|iso]");
+    console.log("Usage: eggs purge [netboot|iso]");
   }
 } else if (command == "arises") {
   a.setDestinationDrive();
 } else {
   console.log(
-    "Usage: teggs [show|create|install|purge|start|stop|restart|arises] options [iso|netboot]"
+    "Usage: eggs [show|create|install|purge|start|stop|restart|arises] options [iso|netboot]"
   );
 }
 bye();
@@ -166,26 +166,26 @@ function buildIso() {
 
 // FINE
 function start() {
-  console.log(">>> teggs starting netboot services ");
+  console.log(">>> eggs starting netboot services ");
   utils.exec(`sudo service dnsmasq start`);
   utils.exec(`sudo service nfs-kernel-server start`);
 }
 
 function stop() {
-  console.log(">>> teggs: stopping netboot services ");
+  console.log(">>> eggs: stopping netboot services ");
   utils.exec(`sudo service dnsmasq stop`);
   utils.exec(`sudo service nfs-kernel-server stop`);
 }
 
 function restart() {
-  console.log(">>> teggs restarting netboot services");
+  console.log(">>> eggs restarting netboot services");
   utils.exec(`sudo service dnsmasq restart`);
   utils.exec(`sudo service nfs-kernel-server restart`);
 }
 
 function bye() {
   console.log(
-    `teggs version ${version} (C) 2017 Piero Proietti <piero.proietti@gmail.com>`
+    `penguins-eggs version ${version} (C) 2017 ${author} <${mail}>`
   );
   process.exit(0);
 }
