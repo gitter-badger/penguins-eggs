@@ -47,7 +47,6 @@
     "rollup-plugin-node-builtins": "^2.1.2",
     "rollup-plugin-node-globals": "^1.1.0",
     "rollup-plugin-node-resolve": "^3.0.0",
-    "rollup-plugin-shebang": "^0.1.4",
-    "xml2js": "^0.4.19"
+    "rollup-plugin-shebang": "^0.1.4"
   }
 }
