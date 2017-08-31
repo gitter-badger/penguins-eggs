@@ -69,8 +69,9 @@ if (program.password) {
   password = program.password;
 }
 
-let rootDir = path.normalize(path.dirname(process.argv[1] + ".."));
-let e = new Egg(rootDir, homeDir, distroName, userfullname, username, password);
+
+
+let e = new Egg(homeDir, distroName, userfullname, username, password);
 let n = new Netboot(homeDir, distroName, userfullname, username, password);
 let i = new Iso(homeDir, distroName, userfullname, username, password);
 let a = new Arises();
