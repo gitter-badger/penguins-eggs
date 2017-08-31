@@ -29,7 +29,6 @@
   ],
   "dependencies": {
     "commander": "^2.11.0",
-    "drivelist": "^5.1.8",
     "getos": "^3.0.1",
     "ip": "^1.1.5",
     "network": "^0.3.2",
