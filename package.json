@@ -1,11 +1,17 @@
 {
+  "name": "teggs",
+  "version": "0.5.8",
+  "author": "Piero Proietti",
+  "description": "remaster your system and distribuite it by netboot or iso",
+  "license": "MIT",
+  "homepage": "https://github.com/pieroproietti/teggs",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pieroproietti/teggs"
+  },
   "bin": {
     "teggs": "./build/index.js"
   },
-  "author": "Piero Proietti",
-  "name": "teggs",
-  "version": "0.5.8",
-  "description": "remaster your system and distribuite it by netboot or iso",
   "main": "./build/index.js",
   "scripts": {
     "start": "babel-node src",
@@ -21,12 +27,6 @@
     "backup",
     "systemback"
   ],
-  "homepage": "https://github.com/pieroproietti/teggs",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/pieroproietti/teggs"
-  },
-  "license": "MIT",
   "dependencies": {
     "commander": "^2.11.0",
     "drivelist": "^5.1.8",
