@@ -108,7 +108,7 @@ PROMPT 0
 KBDMAP it.kbd
 DISPLAY display.txt
 SAY Uso la tastiera e locale per italiano.
-MENU TITLE Tux's eggs
+MENU TITLE Penguins eggs Booting from LAN 
 MENU BACKGROUND eggs.png
 
 LABEL ${this.distroName}

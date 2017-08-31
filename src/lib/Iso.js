@@ -108,7 +108,7 @@ DEFAULT vesamenu.c32
 PROMPT 0
 TIMEOUT 30
 
-MENU TITLE Tux's eggs
+MENU TITLE Penguins eggs Bootong from CD/DVD
 MENU TABMSG Press TAB key to edit
 MENU BACKGROUND eggs.png
 
