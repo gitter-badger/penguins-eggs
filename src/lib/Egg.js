@@ -12,12 +12,14 @@ import utils from "./utils.js";
 
 class Egg {
   constructor(
+    rootDir="",
     homeDir = "/srv/incubator",
     distroName,
     clientUserFullName,
     clientUserName,
     clientPassword
   ) {
+    this.rootDir=rootDir;
     this.distroName = distroName;
     this.homeDir = homeDir;
     this.fsDir = homeDir + `${distroName}/fs`;
@@ -77,7 +79,7 @@ class Egg {
     let aCommands = [];
     aCommands.push(
       `rsync -aq / ${this.fsDir} --exclude="${this
-        .homeDir}" --exclude-from="../src/lib/excludes" --delete-before --delete-excluded`
+        .homeDir}" --exclude-from="${this.rootDir}/src/lib/excludes" --delete-before --delete-excluded`
     );
     utils.rsync(aCommands);
     return aCommands;

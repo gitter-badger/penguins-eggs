@@ -9,6 +9,7 @@ import Netboot from "./lib/Netboot.js";
 import Iso from "./lib/Iso.js";
 import Arises from "./lib/Arises.js";
 
+import path from "path";
 import shell from "shelljs";
 import os from "os";
 import utils from "./lib/utils.js";
@@ -38,7 +39,7 @@ program
   .option("-d --distroname [distroname]", "The name of distro")
   .option("-U --userfullname [userfullname]", "The user full name")
   .option("-u --username [username]", "The name of the user")
-  .option("-p --password [password]", "The password for the user")
+  .option("-p --password [password]", "The password for the user");
 
 program
   .command("create [incubator]", "create egg and netboot if installed")
@@ -68,9 +69,10 @@ if (program.password) {
   password = program.password;
 }
 
+let rootDir = path.normalize(path.dirname(process.argv[1] + ".."));
+let e = new Egg(rootDir, homeDir, distroName, userfullname, username, password);
 let n = new Netboot(homeDir, distroName, userfullname, username, password);
 let i = new Iso(homeDir, distroName, userfullname, username, password);
-let e = new Egg(homeDir, distroName, userfullname, username, password);
 let a = new Arises();
 
 let command = process.argv[2];
@@ -184,8 +186,6 @@ function restart() {
 }
 
 function bye() {
-  console.log(
-    `${name} version ${version} (C) 2017 ${author} <${mail}>`
-  );
+  console.log(`${name} version ${version} (C) 2017 ${author} <${mail}>`);
   process.exit(0);
 }
