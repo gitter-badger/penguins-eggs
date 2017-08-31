@@ -187,6 +187,7 @@ function restart() {
 }
 
 function bye() {
+
   console.log(`${name} version ${version} (C) 2017 ${author} <${mail}>`);
   process.exit(0);
 }
