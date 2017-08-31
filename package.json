@@ -1,11 +1,11 @@
 {
   "name": "penguins-eggs",
-  "version": "0.4.9",
+  "version": "0.4.80",
   "author": "Piero Proietti",
   "mail": "piero.proietti@gmail.com",
   "description": "remaster your system and distribuite it by netboot or iso",
   "license": "MIT",
-  "homepage": "https://www.piojoris15.com",
+  "homepage": "http://www.piojoris15.com",
   "repository": {
     "type": "git",
     "url": "https://github.com/pieroproietti/penguins-eggs"
