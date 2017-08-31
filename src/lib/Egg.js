@@ -77,7 +77,7 @@ class Egg {
     let aCommands = [];
     aCommands.push(
       `rsync -aq / ${this.fsDir} --exclude="${this
-        .homeDir}" --exclude-from="./excludes" --delete-before --delete-excluded`
+        .homeDir}" --exclude-from="/usr/lib/node_modules/penguins-eggs/excludes" --delete-before --delete-excluded`
     );
     utils.rsync(aCommands);
     return aCommands;
