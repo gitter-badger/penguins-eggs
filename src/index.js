@@ -69,8 +69,6 @@ if (program.password) {
   password = program.password;
 }
 
-
-
 let e = new Egg(homeDir, distroName, userfullname, username, password);
 let n = new Netboot(homeDir, distroName, userfullname, username, password);
 let i = new Iso(homeDir, distroName, userfullname, username, password);
@@ -187,7 +185,6 @@ function restart() {
 }
 
 function bye() {
-
   console.log(`${name} version ${version} (C) 2017 ${author} <${mail}>`);
   process.exit(0);
 }

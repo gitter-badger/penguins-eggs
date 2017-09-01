@@ -75,9 +75,11 @@ class Egg {
     console.log("Egg copy");
     console.log("==========================================");
     let aCommands = [];
+    let path = utils.path();
+    console.log("Percorso: " + path);
     aCommands.push(
       `rsync -aq / ${this.fsDir} --exclude="${this
-        .homeDir}" --exclude-from="./src/lib/excludes" --delete-before --delete-excluded`
+        .homeDir}" --exclude-from="${path}/src/lib/excludes" --delete-before --delete-excluded`
     );
     utils.rsync(aCommands);
     return aCommands;

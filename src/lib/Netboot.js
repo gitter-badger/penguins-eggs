@@ -145,7 +145,7 @@ include common.cfg`;
     utils.exec(
       `ln /usr/lib/PXELINUX/lpxelinux.0  ${this.tftpRoot}/lpxelinux.0`
     );
-    utils.exec(`ln src/assets/eggs.png ${this.tftpRoot}/eggs.png`);
+    utils.exec(`ln ${path}/src/assets/eggs.png ${this.tftpRoot}/eggs.png`);
 
     utils.exec(
       `ln /usr/lib/syslinux/modules/bios/vesamenu.c32 ${this

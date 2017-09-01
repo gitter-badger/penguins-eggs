@@ -12,44 +12,52 @@ import dns from "dns";
 
 let utils = function() {};
 
+utils.prototype.path = function() {
+  let path = "/usr/lib/node_modules/penguins-eggs";
+  if (getCurrentDirectoryName() == "lib") {
+    path = ".";
+  }
+  return path;
+};
+
 utils.prototype.netNetmask = function() {
-  var netMask="";
+  var netMask = "";
   var ifaces = os.networkInterfaces();
 
-  Object.keys(ifaces).forEach(function (ifname) {
+  Object.keys(ifaces).forEach(function(ifname) {
     var alias = 0;
 
-    ifaces[ifname].forEach(function (iface) {
-      if ('IPv4' !== iface.family || iface.internal !== false) {
+    ifaces[ifname].forEach(function(iface) {
+      if ("IPv4" !== iface.family || iface.internal !== false) {
         // skip over internal (i.e. 127.0.0.1) and non-ipv4 addresses
         return;
       }
-      netMask= iface.netmask;
+      netMask = iface.netmask;
     });
   });
   return netMask;
-}
+};
 
 utils.prototype.netDomainName = function() {
   return "lan";
-}
+};
 
 utils.prototype.netDns = function() {
   return dns.getServers()[0];
-}
+};
 
 utils.prototype.netGateway = function() {
   return "192.168.0.1";
-}
+};
 
 utils.prototype.netDomainName = function() {
   return "lan";
-}
+};
 
 utils.prototype.netBootServer = function() {
-//  let ip = require("ip");
+  //  let ip = require("ip");
   return ip.address();
-}
+};
 
 utils.prototype.netDeviceName = function() {
   let interfaces = Object.keys(os.networkInterfaces());
@@ -159,5 +167,11 @@ function qdotToInt(ip) {
   return x;
 }
 
+function getCurrentDirectoryName() {
+  var fullPath = __dirname;
+  var path = fullPath.split("/");
+  var cwd = path[path.length - 1];
+  return cwd;
+}
 
 export default new utils();
