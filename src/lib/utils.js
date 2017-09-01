@@ -16,6 +16,9 @@ utils.prototype.path = function() {
   let path = "/usr/lib/node_modules/penguins-eggs";
   if (getCurrentDirectoryName() == "lib") {
     path = ".";
+  } else {
+    // "build"
+    path="..";
   }
   return path;
 };
@@ -171,6 +174,11 @@ function getCurrentDirectoryName() {
   var fullPath = __dirname;
   var path = fullPath.split("/");
   var cwd = path[path.length - 1];
+  console.log("Full path: " +fullPath);
+  // Se  fullPath comorende node_moduels
+  if(fullPath.indexOf("node_modules") > -1) {
+    cwd="build";
+  }
   return cwd;
 }
 

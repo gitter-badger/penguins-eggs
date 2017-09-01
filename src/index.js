@@ -9,7 +9,6 @@ import Netboot from "./lib/Netboot.js";
 import Iso from "./lib/Iso.js";
 import Arises from "./lib/Arises.js";
 
-import path from "path";
 import shell from "shelljs";
 import os from "os";
 import utils from "./lib/utils.js";
