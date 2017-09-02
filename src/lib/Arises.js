@@ -9,7 +9,7 @@ import fs from "fs";
 import os from "os";
 import dns from "dns";
 import utils from "./utils.js";
-//import drivelist from "drivelist";
+import drivelist from "drivelist";
 
 class Arises {
   constructor(
@@ -32,15 +32,15 @@ class Arises {
 
   setDestinationDrive() {
     console.log("Arises::setDestinationDrive()");
-/*    drivelist.list((error, drives) => {
+
+    drivelist.list((error, drives) => {
       if (error) {
         throw error;
       }
       drives.forEach(drive => {
-        console.log(drive);
+        console.log( drive);
       });
     });
-*/
   }
 
   partDrive(destinationdrive) {
