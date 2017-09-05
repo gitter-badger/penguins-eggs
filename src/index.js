@@ -8,6 +8,7 @@ import Egg from "./lib/Egg.js";
 import Netboot from "./lib/Netboot.js";
 import Iso from "./lib/Iso.js";
 import Arises from "./lib/Arises.js";
+import chrooted from "./lib/chrooted.js";
 
 import shell from "shelljs";
 import os from "os";
@@ -35,6 +36,7 @@ let program = require("commander").version(version);
 program
   .option("netboot", "define incubator netboot")
   .option("iso", "define incubator iso")
+  .option("users", "userlist")
   .option("-d --distroname [distroname]", "The name of distro")
   .option("-U --userfullname [userfullname]", "The user full name")
   .option("-u --username [username]", "The name of the user")
@@ -49,6 +51,7 @@ program
   .command("start", "start netboot services")
   .command("stop", "stop netboot services")
   .command("restart", "restart netboot services")
+  .command("test", "test")
   .command("arises", "arises the penguin");
 
 program.parse(process.argv);
@@ -73,7 +76,9 @@ let n = new Netboot(homeDir, distroName, userfullname, username, password);
 let i = new Iso(homeDir, distroName, userfullname, username, password);
 let a = new Arises();
 
+
 let command = process.argv[2];
+
 if (command == "create") {
   if (program.netboot) {
     buildEgg();
@@ -107,8 +112,10 @@ if (command == "create") {
     n.show();
   } else if (program.iso) {
     i.show();
+  } else if (program.users) {
+    chrooted.show();
   } else {
-    console.log("Usage: eggs show [netboot|iso]");
+    console.log("Usage: eggs show [netboot|iso|users]");
   }
 } else if (command == "purge") {
   if (program.netboot) {

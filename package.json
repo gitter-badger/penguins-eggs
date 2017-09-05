@@ -35,6 +35,7 @@
     "getos": "^3.0.1",
     "ip": "^1.1.5",
     "network": "^0.3.2",
+    "passwd-groups": "^1.1.1",
     "shelljs": "^0.7.8",
     "source-map-support": "^0.4.16"
   },

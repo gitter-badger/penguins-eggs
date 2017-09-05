@@ -175,9 +175,11 @@ function getCurrentDirectoryName() {
   var path = fullPath.split("/");
   var cwd = path[path.length - 1];
   console.log("Full path: " +fullPath);
-  // Se  fullPath comorende node_moduels
-  if(fullPath.indexOf("node_modules") > -1) {
-    cwd="build";
+
+  // Se  fullPath comprende node_moduels
+  if(!fullPath.indexOf("node_modules") > -1) {
+    // restituisco lib
+    cwd="lib";
   }
   return cwd;
 }
