@@ -10,8 +10,8 @@ import Iso from "./lib/Iso.js";
 import Arises from "./lib/Arises.js";
 import chrooted from "./lib/chrooted.js";
 
-import shell from "shelljs";
-import os from "os";
+//import shell from "shelljs";
+//import os from "os";
 import utils from "./lib/utils.js";
 
 const homeDir = "/srv/incubator/";
@@ -76,7 +76,6 @@ let n = new Netboot(homeDir, distroName, userfullname, username, password);
 let i = new Iso(homeDir, distroName, userfullname, username, password);
 let a = new Arises();
 
-
 let command = process.argv[2];
 
 if (command == "create") {
@@ -134,11 +133,6 @@ if (command == "create") {
 }
 bye();
 
-function createAll() {
-  buildEgg();
-  buildNetboot();
-}
-
 function buildEgg() {
   //build egg
   e.create();
@@ -191,6 +185,8 @@ function restart() {
 }
 
 function bye() {
-  console.log(`${name} version ${version} (C) 2017 ${author} <${mail}>`);
+  console.log(
+    `${name} version ${version} (C) 2017 ${author} <${mail}> site <${homepage}`
+  );
   process.exit(0);
 }

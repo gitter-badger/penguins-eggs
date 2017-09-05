@@ -18,7 +18,7 @@ utils.prototype.path = function() {
     path = ".";
   } else {
     // "build"
-    path="..";
+    path = "..";
   }
   return path;
 };
@@ -28,7 +28,7 @@ utils.prototype.netNetmask = function() {
   var ifaces = os.networkInterfaces();
 
   Object.keys(ifaces).forEach(function(ifname) {
-    var alias = 0;
+    //var alias = 0;
 
     ifaces[ifname].forEach(function(iface) {
       if ("IPv4" !== iface.family || iface.internal !== false) {
@@ -174,12 +174,12 @@ function getCurrentDirectoryName() {
   var fullPath = __dirname;
   var path = fullPath.split("/");
   var cwd = path[path.length - 1];
-  console.log("Full path: " +fullPath);
+  console.log("Full path: " + fullPath);
 
   // Se  fullPath comprende node_moduels
-  if(!fullPath.indexOf("node_modules") > -1) {
+  if (!fullPath.indexOf("node_modules") > -1) {
     // restituisco lib
-    cwd="lib";
+    cwd = "lib";
   }
   return cwd;
 }

@@ -4,10 +4,10 @@
 
 "use strict";
 
-import shell from "shelljs";
-import fs from "fs";
-import os from "os";
-import dns from "dns";
+//import shell from "shelljs";
+//import fs from "fs";
+//import os from "os";
+//import dns from "dns";
 import utils from "./utils.js";
 import drivelist from "drivelist";
 

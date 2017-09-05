@@ -3,9 +3,9 @@
 */
 
 "use strict";
-import os from "os";
+//import os from "os";
 import fs from "fs";
-import ip from "ip";
+//import ip from "ip";
 //import network from "network";
 import utils from "./utils.js";
 
@@ -148,9 +148,9 @@ label ${this.distroName} safe
 
   makeIso() {
     let isoHybridOption = "-isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin ";
-    let uefiOption = "";
+    //let uefiOption = "";
     //"-eltorito-alt-boot -e boot/grub/efiboot.img -isohybrid-gpt-basdat -no-emul-boot";
-    let volid = `\"${this.distroName}\"`;
+    let volid = `"${this.distroName}"`;
     let isoName = `${this.distroRoot}/${this.distroName}`;
     let d = new Date();
     let ver =

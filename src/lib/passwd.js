@@ -111,9 +111,9 @@ function passwd(username, pass, opts, cb) {
 }
 
 function get(username, cb) {
-  getUsers(function(users) {
-    foundUser = false;
-    for (i = 0; i < users.length; i++) {
+  getAll(function(users) {
+    //var foundUser = false;
+    for (var i = 0; i < users.length; i++) {
       var user = users[i];
       if (user.username == username) {
         cb(user);
