@@ -33,6 +33,8 @@
 - /etc/initramfs-tools/conf.d/cryptroot  # see remove-cryptroot and nocrypt.sh
 - /etc/popularity-contest.conf
 - /srv/incubator
+- /etc/pve
+- /lib/pve/
 
 # Added for newer version of live-config/live-boot in wheezy
 # These are only relevant here if you create a snapshot while
