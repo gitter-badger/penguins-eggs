@@ -37,10 +37,10 @@ program
   .option("netboot", "define incubator netboot")
   .option("iso", "define incubator iso")
   .option("users", "userlist")
-  .option("-d --distroname [distroname]", "The name of distro")
-  .option("-U --userfullname [userfullname]", "The user full name")
-  .option("-u --username [username]", "The name of the user")
-  .option("-p --password [password]", "The password for the user");
+  .option("-d, --distroname <dname>", "The name of the distribution")
+  .option("-U, --userfullname <userfullname>", "The user full name")
+  .option("-u, --username <username>", "The name of the user")
+  .option("-p, --password <password>", "The password for the user");
 
 program
   .command("create [incubator]", "create egg and netboot if installed")
@@ -59,7 +59,7 @@ program.parse(process.argv);
 // Build or purge the Incubator
 
 if (program.distroname) {
-  distroName = program.distroname;
+  distroName = program.dname;
 }
 if (program.userfullname) {
   username = program.userfullname;
@@ -70,6 +70,10 @@ if (program.username) {
 if (program.password) {
   password = program.password;
 }
+console.log ("distroname=" + distroName);
+console.log ("par distro\=" + program.distroname);
+
+bye();
 
 let e = new Egg(homeDir, distroName, userfullname, username, password);
 let n = new Netboot(homeDir, distroName, userfullname, username, password);
