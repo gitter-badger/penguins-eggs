@@ -35,7 +35,7 @@
 - /srv/incubator
 - /etc/pve/*
 - /var/lib/lxcfs/*
-- /lib/usr/vz/*
+- /var/lib/vz/*
 
 # Added for newer version of live-config/live-boot in wheezy
 # These are only relevant here if you create a snapshot while
