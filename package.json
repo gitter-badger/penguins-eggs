@@ -19,7 +19,7 @@
     "lint": "eslint src",
     "build": "rollup -c rollup.config.js",
     "build-dev": "rollup -c rollup.config-dev.js",
-    "prepublish": "yarn build"
+    "prepublish": "npm run build"
   },
   "keywords": [
     "remastering",
