@@ -134,8 +134,8 @@ label ${this.distroName} safe
 
 
   alive() {
-    utils.exec(`cp /vmlinuz ${this.isoDir}/live/`);
-    utils.exec(`cp /initrd.img ${this.isoDir}/live/`);
+    utils.exec(`cp /boot/vmlinuz-4.10.17-2-pve ${this.isoDir}/live/vmlinux`);
+    utils.exec(`cp /boot/vmlinuz-4.10.17-2-pve ${this.isoDir}/live/`);
   }
 
   squashFs() {
