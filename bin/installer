@@ -121,7 +121,7 @@ if [ $? != 0 ]; then
 	exit 0
 fi
 
-TARGETPART="/sda1"
+TARGETPART="sda1"
 FSTYPE="ext4"
 HFSTYPE="ext4"
 
@@ -223,33 +223,6 @@ fi
 echo "$ZONESINFO" > /etc/timezone
 cp /usr/share/zoneinfo/$ZONESINFO /etc/localtime
 
-if [ "$HOMEPART" != "root" ]; then
-	HOMETEXT="IMPORTANTE: il mount point /var/lib/vz sarà su $HOMEPART che SARA' FORMATTATO con $HFSTYPE "
-
-	if [ "$HFSTYPE" = "noformat" ]; then
-		HOMETEXT="IMPORTANTE: il mount point /var/lib/vz sarà su $HOMEPART con fs $HFSTYPE, SENZA ESSERE FORMATTATO "
-	fi
-else
-	HOMETEXT="IMPORTANTE: /var/lib/vz sarà parte del disco di root"
-fi
-
-if [ "$testmode" = "" ]; then
-  yesNoBox "
-Verificate ATTENTAMENTE le infomazioni.\n\n-Il sistema sarà creato su:
-$TARGETPART che verrà formatatta $FSTYPE;
-- $HOMETEXT\n\n- sarà creato l\'utente $TARGETUSER;
-- grub sarà installato su  $GRUBLOCTEXT.
-
-Volete continuare?
-"
-
-  if [ $? != 0 ]; then
-		kindMessage "La procedura sarà terminata!"
-	  exit 1
-	fi
-fi
-
-
 #
 # Formattazione
 #
@@ -279,7 +252,6 @@ mount /dev/$TARGETPART /TARGET -o rw
 sleep 2
 echo "Using tune2fs to prevent the forced checks on boot"
 tune2fs -c 0 -i 0 /dev/$TARGETPART
-rm -rf "/TARGET/lost+found"
 progressbarkill
 
 #
@@ -291,8 +263,6 @@ Questa operazione può durare a lungo... Attendere!\n" &
 
 ## /lib/live/mount/medium/live/filesystem.squashfs
 rsync -a / /TARGET --ignore-existing --exclude=/{TARGET,live,cdrom,mnt,proc,run,sys,media,.systemback} --exclude=/lib/live/mount/*
-
-# Creo anche la home
 mkdir -p /TARGET/{proc,mnt,run,sys,media/cdrom,home}
 
 progressbarkill
@@ -303,14 +273,6 @@ rm -rf /TARGET/root/.ssh
 # Rimozione e creazione directory /etc/pve
 rm -rf /TARGET/etc/pve
 mkdir /TARGET/etc/pve
-
-# Creazione delle directory di log per apache2 e pveproxy
-mkdir /TARGET/var/log/apache2
-mkdir /TARGET/var/log/pveproxy
-chown www-data:www-data /TARGET/var/log/apache2
-chown www-data:www-data /TARGET/var/log/pveproxy
-
-
 
 ######################################################################################################
 #
@@ -339,15 +301,6 @@ cat > /TARGET/etc/fstab <<FOO
 proc /proc proc defaults 0 0
 # /dev/$TARGETPART
 /dev/$TARGETPART / $FSTYPE relatime,errors=remount-ro 0 1
-# /dev/$TARGETBOOT boot
-/dev/$TARGETBOOT /boot ext4 relatime 0 0
-# /dev/$HOMEPART home
-/dev/$HOMEPART /var/lib/vz $HFSTYPE relatime 0 0
-# /dev/$SWAP
-/dev/$SWAP none swap sw 0 0
-# cdrom
-$TARGETCDROM /media/cdrom udf,iso9660 user,noauto,exec,utf8 0 0
-
 FOO
 
 
