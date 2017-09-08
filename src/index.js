@@ -14,7 +14,7 @@ import chrooted from "./lib/chrooted.js";
 //import os from "os";
 import utils from "./lib/utils.js";
 
-const homeDir = "/srv/incubator/";
+const homeDir = "/srv/penguins-eggs/";
 let distroName = "littlebird";
 let userfullname = "Artisan";
 let username = "artisan";
