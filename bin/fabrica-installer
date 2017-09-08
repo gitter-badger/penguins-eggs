@@ -121,10 +121,9 @@ if [ $? != 0 ]; then
 	exit 0
 fi
 
-TARGETPART="/dev/sda1"
+TARGETPART="/sda1"
 FSTYPE="ext4"
 HFSTYPE="ext4"
-
 
 TARGETUSERFULLNAME=`artisan`
 TARGETUSER=`artisan`
