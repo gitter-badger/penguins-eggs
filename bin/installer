@@ -80,22 +80,20 @@ kindMessage()
 
 # Impostazione delle opzioni
 RINUNCIA='Rinuncia Esce'
-
-# Queste variabili sono state impostate fisse!
 PARTITIONPROG="gparted"
 TARGETCDROM="/dev/cdrom"
 LIVEMODE="DIST"
 DEFAULTGROUPS="audio,cdrom,dialout,floppy,video,plugdev,sudo"
+
 PARTDRIVE="sda"
 TARGETPART="sda1"
 FSTYPE="ext4"
 HFSTYPE="ext4"
+
 TARGETUSERFULLNAME=`artisan`
 TARGETUSER=`artisan`
 TARGETPASS=`evoluzione`
-TARGETPASS2=`evoluzione`
 TARGETROOTPASS=`evoluzione`
-TARGETROOTPASS2=`evoluzione`
 TARGETHOSTNAME=`eggs-ve`
 TARGETDOMAIN=`lan`
 IPADDRESS=`192.168.0.2`
@@ -105,13 +103,12 @@ TARGETDNS= `192.168.0.2`
 
 FILE="/tmp/out.$$"
 GREP="/bin/grep"
+
 #....
 # Make sure only root can run our script
 if [ "$(id -u)" != "0" ]; then
    kindMessage \
-   "Questo installer può essere utilizzato solo la root.
-    Apri una finestra di terminale, digita:
-    \$>sudo fabrica-installer"
+   "Questo installer può essere utilizzato solo la root."
    exit 0
 fi
 
@@ -124,14 +121,7 @@ if [ -z $chkIsLive  ]; then
 fi
 
 #
-# AVVISO utente
-#
-yesNoBox "ATTENZIONE: Questo installer cancellerà completamente il vostro disco rigido. Siete sicuri di voler continuare?"
-if [ $? != 0 ]; then
-	exit 0
-fi
-
-yesNoBox "A questo punto, distruggerò il disco: /dev/$PARTDRIVE Siete sicuri di voler continuare?"
+yesNoBox "Attenzione: distruggerò il disco: /dev/$PARTDRIVE Siete sicuri di voler continuare?"
 if [ $? != 0 ]; then
 	exit 0
 fi
@@ -193,7 +183,7 @@ cat /usr/share/zoneinfo/zone.tab | awk '{print $3}' | grep "/" | sort > /tmp/rem
 for i in `cat /tmp/remastersys.zoneinfo`; do
 	ZONES="$ZONES $i Timezone"
 done
-#rm /tmp/remastersys.zoneinfo
+rm /tmp/remastersys.zoneinfo
 
 ZONESINFO=""
 while [ "$ZONESINFO" = "" ]
@@ -347,7 +337,7 @@ echo "#" >/TARGET/etc/hosts
 echo "# created by fabrica-installer" >>/TARGET/etc/hosts
 echo "#" >>/TARGET/etc/hosts
 echo "127.0.0.1 localhost.localdomain localhost" >>/TARGET/etc/hosts
-echo "$IPADDRESS $TARGETHOSTNAME.$TARGETDOMAIN $TARGETHOSTNAME" >>/TARGET/etc/hosts
+echo "$IPADDRESS $TARGETHOSTNAME.$TARGETDOMAIN $TARGETHOSTNAME pvelocal" >>/TARGET/etc/hosts
 echo "" >>/TARGET/etc/hosts
 echo "# The following lines are desirable for IPv6 capable hosts" >>/TARGET/etc/hosts
 echo "" >>/TARGET/etc/hosts
@@ -365,6 +355,9 @@ echo "# created by fabrica-installer" >>/TARGET/etc/resolv.conf
 echo "#" >>/TARGET/etc/resolv.conf
 echo "domain $TARGETDPMAIN" >>/TARGET/etc/resolv.conf
 echo "nameserver $TARGETDNS" >>/TARGET/etc/resolv.conf
+echo "nameserver 8.8.8.8" >>/TARGET/etc/resolv.conf
+echo "nameserver 8.8.4.4" >>/TARGET/etc/resolv.conf
+
 
 
 progressbar "Creazione di tempinstallerscript\n" &
@@ -381,17 +374,13 @@ dpkg-divert --remove --rename --quiet /usr/sbin/update-initramfs
 dpkg-divert --remove --rename --quiet /usr/sbin/anacron
 update-initramfs -t -c -k $(/bin/uname -r)
 shadowconfig on
-
 FOO
-
-
 progressbarkill
 
 progressbar "Avvio di tempinstallerscript per aggiornamento di initramfs.\n" &
 chmod 755 /TARGET/bin/tempinstallerscript
 chroot /TARGET /bin/tempinstallerscript
-rm /TARGET/bin/tempinstallerscript
-# cp ???
+#rm /TARGET/bin/tempinstallerscript
 progressbarkill
 
 
@@ -437,10 +426,10 @@ progressbarkill
 # Co sarebbero da smontare...
 #/dev/loop0 on /lib/live/mount/rootfs/filesystem.squashfs
 #tmpfs on /lib/live/mount/overlay type tmpfs
-kingMessage "Provo a smontare /lib/live/mount/rootfs/filesystem.squashfs "
+kindMessage "Provo a smontare /lib/live/mount/rootfs/filesystem.squashfs "
 umont /lib/live/mount/rootfs/filesystem.squashfs
 
-kingMessage "Provo a smontare /lib/live/mount/overlay "
+kindMessage "Provo a smontare /lib/live/mount/overlay "
 umount /lib/live/mount/overlay
 
 
