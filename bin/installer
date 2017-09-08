@@ -86,6 +86,22 @@ PARTITIONPROG="gparted"
 TARGETCDROM="/dev/cdrom"
 LIVEMODE="DIST"
 DEFAULTGROUPS="audio,cdrom,dialout,floppy,video,plugdev,sudo"
+PARTDRIVE="sda"
+TARGETPART="sda1"
+FSTYPE="ext4"
+HFSTYPE="ext4"
+TARGETUSERFULLNAME=`artisan`
+TARGETUSER=`artisan`
+TARGETPASS=`evoluzione`
+TARGETPASS2=`evoluzione`
+TARGETROOTPASS=`evoluzione`
+TARGETROOTPASS2=`evoluzione`
+TARGETHOSTNAME=`eggs-ve`
+TARGETDOMAIN=`lan`
+IPADDRESS=`192.168.0.2`
+IPNETMASK=`255.255.255.0`
+IPGATEWAY=`192.168.0.2`
+TARGETDNS= `192.168.0.2`
 
 FILE="/tmp/out.$$"
 GREP="/bin/grep"
@@ -115,28 +131,11 @@ if [ $? != 0 ]; then
 	exit 0
 fi
 
-echo "partdrive=/dev/sda"
 yesNoBox "A questo punto, distruggerò il disco: /dev/$PARTDRIVE Siete sicuri di voler continuare?"
 if [ $? != 0 ]; then
 	exit 0
 fi
 
-TARGETPART="sda1"
-FSTYPE="ext4"
-HFSTYPE="ext4"
-
-TARGETUSERFULLNAME=`artisan`
-TARGETUSER=`artisan`
-TARGETPASS=`evoluzione`
-TARGETPASS2=`evoluzione`
-TARGETROOTPASS=`evoluzione`
-TARGETROOTPASS2=`evoluzione`
-TARGETHOSTNAME=`eggs-ve`
-TARGETDOMAIN=`lan`
-IPADDRESS=`192.168.0.2`
-IPNETMASK=`255.255.255.0`
-IPGATEWAY=`192.168.0.2`
-TARGETDNS= `192.168.0.2`
 
 #grub location
 GRUBLOCTEST=""
@@ -260,17 +259,11 @@ progressbarkill
 progressbar "
 Copia dei file nel sistema di destinazione... \n
 Questa operazione può durare a lungo... Attendere!\n" &
-
-## /lib/live/mount/medium/live/filesystem.squashfs
 rsync -a / /TARGET --ignore-existing --exclude=/{TARGET,live,cdrom,mnt,proc,run,sys,media,.systemback} --exclude=/lib/live/mount/*
 mkdir -p /TARGET/{proc,mnt,run,sys,media/cdrom,home}
-
 progressbarkill
 
-#Rimozione della directory .ssh di root
 rm -rf /TARGET/root/.ssh
-
-# Rimozione e creazione directory /etc/pve
 rm -rf /TARGET/etc/pve
 mkdir /TARGET/etc/pve
 
@@ -284,12 +277,7 @@ mount -o bind /proc /TARGET/proc
 mount -o bind /dev /TARGET/dev
 mount -o bind /sys /TARGET/sys
 
-
 rm -rf /TARGET/etc/fstab
-
-#
-#create the new fstab
-#
 cat > /TARGET/etc/fstab <<FOO
 #
 # created by fabrica-installer
@@ -327,23 +315,6 @@ if [ -f /TARGET/etc/remastersys/adept_notifier_auto.desktop ]; then
 	mv /TARGET/etc/remastersys/adept_notifier_auto.desktop /TARGET/usr/share/autostart/adept_notifier_auto.desktop
 fi
 progressbarkill
-
-
-#
-# copy trackerd stuff as live-initramfs disables it
-#
-progressbar "copy trackerd stuff as live-initramfs disables it\n" &
-if [ -f /TARGET/etc/remastersys/tracker-applet.desktop ]; then
-	mv /TARGET/etc/remastersys/tracker-applet.desktop /TARGET/etc/xdg/autostart/tracker-applet.desktop
-fi
-if [ -f /TARGET/etc/remastersys/trackerd.desktop.xdg ]; then
-	mv /TARGET/etc/remastersys/trackerd.desktop.xdg /TARGET/etc/xdg/autostart/trackerd.desktop
-fi
-if [ -f /TARGET/etc/remastersys/trackerd.desktop.share ]; then
-	mv /TARGET/etc/remastersys/trackerd.desktop.share /TARGET/usr/share/autostart/trackerd.desktop
-fi
-progressbarkill
-
 
 #restore original inittab as live-initramfs changes it
 cp /TARGET/usr/share/sysvinit/inittab /TARGET/etc/inittab
