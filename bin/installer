@@ -79,7 +79,7 @@ kindMessage()
 
 
 # Impostazione delle opzioni
-RINUNCIA='Rinuncia Esce'
+RINUNCIA="Rinuncia Esce"
 PARTITIONPROG="gparted"
 TARGETCDROM="/dev/cdrom"
 LIVEMODE="DIST"
@@ -90,18 +90,17 @@ TARGETPART="sda1"
 FSTYPE="ext4"
 HFSTYPE="ext4"
 
-TARGETUSERFULLNAME=`artisan`
-TARGETUSER=`artisan`
-TARGETPASS=`evoluzione`
-TARGETROOTPASS=`evoluzione`
-TARGETHOSTNAME=`eggs-ve`
-TARGETDOMAIN=`lan`
-IPADDRESS=`192.168.0.2`
-IPNETMASK=`255.255.255.0`
-IPGATEWAY=`192.168.0.1`
-TARGETDNS= `192.168.0.1`
+TARGETUSERFULLNAME="artisan"
+TARGETUSER="artisan"
+TARGETPASS="evoluzione"
+TARGETROOTPASS="evoluzione"
+TARGETHOSTNAME="eggs-ve"
+TARGETDOMAIN="lan"
+IPADDRESS="192.168.0.2"
+IPNETMASK="255.255.255.0"
+IPGATEWAY="192.168.0.1"
+TARGETDNS= "192.168.0.1"
 
-FILE="/tmp/out.$$"
 GREP="/bin/grep"
 
 #....
