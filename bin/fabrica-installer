@@ -125,63 +125,19 @@ TARGETPART="/dev/sda1"
 FSTYPE="ext4"
 HFSTYPE="ext4"
 
-#check mode and get new user info if it is a dist mode
-testmode=`grep "1000" /etc/passwd | grep -v "Live"`
-testmode="" # da rimuovere
-if [ "$testmode" = "" ]; then
-	while [ "$PASSOK" != "Yes" ]; do
 
-		CHOICES=`yad \
-      --window-icon=/usr/share/icons/fabrica-installer/Factory_Yellow_2_Icon_32.png \
-      --image=/usr/share/icons/fabrica-installer/Factory_Yellow_2_Icon_256.png \
-      --title="Fabrica VE - installer LVM" \
-      --center \
-			--dialog-sep \
-			--width=600 --height=300 --center\
-			--form \
-			--field="Nome utente completo" \
-			--field="Nome utente" \
-			--field="Password utente":H \
-			--field="Conferma password utente":H \
-			--field="Password per root":H \
-			--field="Conferma password per root":H \
-			--field="Nome dell\'host" \
-			--field="Dominio internet" \
-			--field="Indirizzo IP" \
-			--field="Maschera di rete" \
-			--field="Gateway" \
-			--field="DNS"`
-
-
-		if [ "$?" = "0" ]; then
-			TARGETUSERFULLNAME=`echo $CHOICES | cut -d "|" -f 1`
-			TARGETUSER=`echo $CHOICES | cut -d "|" -f 2`
-			TARGETPASS=`echo $CHOICES | cut -d "|" -f 3`
-			TARGETPASS2=`echo $CHOICES | cut -d "|" -f 4`
-			TARGETROOTPASS=`echo $CHOICES | cut -d "|" -f 5`
-			TARGETROOTPASS2=`echo $CHOICES | cut -d "|" -f 6`
-			TARGETHOSTNAME=`echo $CHOICES | cut -d "|" -f 7`
-			TARGETDOMAIN=`echo $CHOICES | cut -d "|" -f 8`
-			IPADDRESS=`echo $CHOICES | cut -d "|" -f 9`
-			IPNETMASK=`echo $CHOICES | cut -d "|" -f 10`
-			IPGATEWAY=`echo $CHOICES | cut -d "|" -f 11`
-			TARGETDNS= `echo $CHOICES | cut -d "|" -f 12`
-		else
-			kindMessage "La procedura sarà terminata"
-		  	exit 1
-		fi
-
-		[ "$TARGETROOTPASS" != "" ] && \
-		[ "$TARGETROOTPASS" = "$TARGETROOTPASS2" ] && \
-		[ "$TARGETHOSTNAME" != "" ]
-		PASSOK="Yes"
-
-		ERROR_GIVE="yad --center --title --always-print-result --dialog-sep --image=application-system --title="Artisan-Lab-Installer"TEXT --button=OK:0 --width=400 --height=200 --window-icon=gtk-abort --text="
-		[ "$TARGETROOTPASS" = "" ] && $ERROR_GIVE"La password di root non può essere blank."
-		[ "$TARGETROOTPASS" != "$TARGETROOTPASS2" ] && $ERROR_GIVE"La password di root non corrisponde."
-		[ "$TARGETHOSTNAME" = "" ] && $ERROR_GIVE"Deve essere inserito il nome dell'host."
-	done
-fi
+TARGETUSERFULLNAME=`artisan`
+TARGETUSER=`artisan`
+TARGETPASS=`evoluzione`
+TARGETPASS2=`evoluzione`
+TARGETROOTPASS=`evoluzione`
+TARGETROOTPASS2=`evoluzione`
+TARGETHOSTNAME=`eggs-ve`
+TARGETDOMAIN=`lan`
+IPADDRESS=`192.168.0.2`
+IPNETMASK=`255.255.255.0`
+IPGATEWAY=`192.168.0.2`
+TARGETDNS= `192.168.0.2`
 
 #grub location
 GRUBLOCTEST=""
