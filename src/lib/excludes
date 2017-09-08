@@ -32,7 +32,7 @@
 - /etc/initramfs-tools/conf.d/resume     # see remove-cryptroot and nocrypt.sh
 - /etc/initramfs-tools/conf.d/cryptroot  # see remove-cryptroot and nocrypt.sh
 - /etc/popularity-contest.conf
-- /srv/incubator
+- /srv/penguins-eggs
 - /etc/pve/*
 - /var/lib/lxcfs/*
 - /var/lib/vz/*
