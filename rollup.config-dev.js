@@ -5,7 +5,7 @@ import nodeResolve from "rollup-plugin-node-resolve";
 import nodeBuiltins from "rollup-plugin-node-builtins";
 import nodeGlobals from "rollup-plugin-node-globals";
 import babel from "rollup-plugin-babel";
-import shebang from 'rollup-plugin-shebang';
+import shebang from "rollup-plugin-shebang";
 
 export default {
   input: "src/index.js",

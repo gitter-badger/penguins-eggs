@@ -1,6 +1,6 @@
 // new rollup.config.js
 
-import shebang from 'rollup-plugin-shebang';
+import shebang from "rollup-plugin-shebang";
 import json from "rollup-plugin-json";
 
 export default {
@@ -11,8 +11,5 @@ export default {
     name: "teggs",
     sourcemap: true
   },
-  plugins: [
-     shebang(),
-     json()
-   ]
+  plugins: [shebang(), json()]
 };
