@@ -10,13 +10,14 @@ import fs from "fs";
 import utils from "./utils.js";
 
 class Virtual {
-  constructor(ipAddress, ipNetmask, ipGateway, ipDns, hostname, domain) {
+  constructor(ipAddress, ipNetmask, ipGateway, ipDns, hostname, domain, netDeviceName) {
     this.ipAddress = ipAddress;
     this.ipNetmask = ipNetmask;
     this.ipGateway = ipGateway;
     this.ipDns = ipDns;
     this.hostname=hostname;
     this.domain=domain;
+    this.netDeviceName=netDeviceName;
   }
 
   hosts() {

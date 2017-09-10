@@ -82,7 +82,8 @@ let v = new Virtual(
   "255.255.255.0",
   "192.168.0.1",
   "eggs-ve",
-  "lan"
+  "lan",
+  "enp0s31f6"
 );
 
 let command = process.argv[2];
