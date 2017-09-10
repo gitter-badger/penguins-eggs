@@ -8,6 +8,7 @@ import Egg from "./lib/Egg.js";
 import Netboot from "./lib/Netboot.js";
 import Iso from "./lib/Iso.js";
 import Arises from "./lib/Arises.js";
+import Virtual from "./lib/Virtual.js";
 import chrooted from "./lib/chrooted.js";
 
 //import shell from "shelljs";
@@ -36,6 +37,7 @@ let program = require("commander").version(version);
 program
   .option("netboot", "define incubator netboot")
   .option("iso", "define incubator iso")
+  .option("ve", "virtual environment")
   .option("users", "userlist")
   .option("-d, --distroname <distroname>", "The name of the distribution")
   .option("-U, --userfullname <userfullname>", "The user full name")
@@ -75,6 +77,13 @@ let e = new Egg(homeDir, distroName, userfullname, username, password);
 let n = new Netboot(homeDir, distroName, userfullname, username, password);
 let i = new Iso(homeDir, distroName, userfullname, username, password);
 let a = new Arises();
+let v = new Virtual(
+  "192.168.0.2",
+  "255.255.255.0",
+  "192.168.0.1",
+  "eggs-ve",
+  "lan"
+);
 
 let command = process.argv[2];
 
@@ -103,6 +112,8 @@ if (command == "create") {
     n.install();
   } else if (program.iso) {
     i.install();
+  } else if (program.ve) {
+    v.install();
   } else {
     console.log("Usage: eggs install [netboot|iso]");
   }
