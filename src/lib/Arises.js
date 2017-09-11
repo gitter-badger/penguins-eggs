@@ -13,7 +13,7 @@ import utils from "./utils.js";
 
 class Arises {
   constructor(
-    homeDir = "/srv/incubator",
+    homeDir = "",
     distroName,
     clientUserFullName,
     clientUserName,
