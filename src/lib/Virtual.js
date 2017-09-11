@@ -54,13 +54,10 @@ iface vmbr0 inet static
   }
 
   install() {
-    utils.exec(
-      `wget http://download.proxmox.com/debian/proxmox-ve-release-5.x.gpg -O /etc/apt/trusted.gpg.d/proxmox-ve-release-5.x.gpg`
-    );
-    utils.exec(`apt-get update`);
-    utils.exec(`apt-get upgrade`);
+    //utils.exec(`apt-get update -y`);
+    //utils.exec(`apt-get upgrade -y`);
     utils.exec(`apt-get install proxmox-ve postfix open-iscsi -y`);
-    utils.exec(`apt remove --purge os-prober`);
+    utils.exec(`apt-get remove --purge os-prober -y`);
   }
 
   purge() {

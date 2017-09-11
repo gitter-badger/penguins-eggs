@@ -99,7 +99,7 @@ utils.prototype.bashwrite = function(file, text) {
 
 utils.prototype.exec = function(cmd) {
   console.log(`[utils] >>> exec ${cmd}`);
-  shell.exec(cmd);
+  shell.exec(cmd, false);
 };
 
 utils.prototype.rsync = function(commands) {
