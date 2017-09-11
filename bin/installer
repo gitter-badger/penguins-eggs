@@ -255,7 +255,7 @@ echo "#" >/TARGET/etc/hosts
 echo "# created by fabrica-installer" >>/TARGET/etc/hosts
 echo "#" >>/TARGET/etc/hosts
 echo "127.0.0.1 localhost.localdomain localhost" >>/TARGET/etc/hosts
-echo "$IPADDRESS $TARGETHOSTNAME.$TARGETDOMAIN $TARGETHOSTNAME pvelocal" >>/TARGET/etc/hosts
+echo "$IPADDRESS $TARGETHOSTNAME.$TARGETDOMAIN $TARGETHOSTNAME pvelocalhost" >>/TARGET/etc/hosts
 echo "" >>/TARGET/etc/hosts
 echo "# The following lines are desirable for IPv6 capable hosts" >>/TARGET/etc/hosts
 echo "" >>/TARGET/etc/hosts
@@ -344,10 +344,11 @@ progressbarkill
 # Co sarebbero da smontare...
 #/dev/loop0 on /lib/live/mount/rootfs/filesystem.squashfs
 #tmpfs on /lib/live/mount/overlay type tmpfs
-kindMessage "Provo a smontare /lib/live/mount/rootfs/filesystem.squashfs "
+
+#kindMessage "Provo a smontare /lib/live/mount/rootfs/filesystem.squashfs "
 umont /lib/live/mount/rootfs/filesystem.squashfs
 
-kindMessage "Provo a smontare /lib/live/mount/overlay "
+#kindMessage "Provo a smontare /lib/live/mount/overlay "
 umount /lib/live/mount/overlay
 
 
