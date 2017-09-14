@@ -7,13 +7,14 @@ import { version, name, author, mail, homepage } from "../package.json";
 import Egg from "./lib/Egg.js";
 import Netboot from "./lib/Netboot.js";
 import Iso from "./lib/Iso.js";
-import Arises from "./lib/Arises.js";
 import Virtual from "./lib/Virtual.js";
 import chrooted from "./lib/chrooted.js";
 
 //import shell from "shelljs";
 //import os from "os";
 import utils from "./lib/utils.js";
+import hatch from "./lib/hatch.js";
+let wait = require("wait.for-es6");
 
 const homeDir = "/srv/penguins-eggs/";
 let distroName = "littlebird";
@@ -54,7 +55,7 @@ program
   .command("stop", "stop netboot services")
   .command("restart", "restart netboot services")
   .command("test", "test")
-  .command("arises", "arises the penguin");
+  .command("hatch", "hatch the penguin's egg");
 
 program.parse(process.argv);
 
@@ -76,7 +77,6 @@ if (program.password) {
 let e = new Egg(homeDir, distroName, userfullname, username, password);
 let n = new Netboot(homeDir, distroName, userfullname, username, password);
 let i = new Iso(homeDir, distroName, userfullname, username, password);
-let a = new Arises();
 let v = new Virtual(
   "192.168.0.2",
   "255.255.255.0",
@@ -136,8 +136,9 @@ if (command == "create") {
   } else {
     console.log("Usage: eggs purge [netboot|iso]");
   }
-} else if (command == "arises") {
-  a.setDestinationDrive();
+} else if (command == "hatch") {
+  const user = wait.launchFiber(hatch.getUser());
+  const disk = wait.launchFiber(hatch.getDisk());
 } else {
   console.log(
     "Usage: eggs [show|create|install|purge|start|stop|restart|arises] options [iso|netboot]"
