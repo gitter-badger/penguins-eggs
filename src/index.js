@@ -7,16 +7,12 @@ import { version, name, author, mail, homepage } from "../package.json";
 import Egg from "./lib/Egg.js";
 import Netboot from "./lib/Netboot.js";
 import Iso from "./lib/Iso.js";
-import Virtual from "./lib/Virtual.js";
-import chrooted from "./lib/chrooted.js";
 
 //import shell from "shelljs";
 //import os from "os";
 import utils from "./lib/utils.js";
-import hatch from "./lib/hatch.js";
-let wait = require("wait.for-es6");
 
-const homeDir = "/srv/penguins-eggs/";
+const homeDir = "/var/lib/vz/penguins-eggs/";
 let distroName = "littlebird";
 let userfullname = "Artisan";
 let username = "artisan";
@@ -29,7 +25,7 @@ if (!utils.isRoot()) {
   console.log("Example: ");
   console.log(">>> sudo eggs install netboot");
   console.log(">>> sudo eggs create --distroname littlebird");
-  console.log(">>> sudo eggs arises");
+  console.log(">>> sudo eggs hatching");
   bye();
 }
 
@@ -55,7 +51,7 @@ program
   .command("stop", "stop netboot services")
   .command("restart", "restart netboot services")
   .command("test", "test")
-  .command("hatch", "hatch the penguin's egg");
+  .command("hatch", "hatching the penguin's egg");
 
 program.parse(process.argv);
 
@@ -77,14 +73,6 @@ if (program.password) {
 let e = new Egg(homeDir, distroName, userfullname, username, password);
 let n = new Netboot(homeDir, distroName, userfullname, username, password);
 let i = new Iso(homeDir, distroName, userfullname, username, password);
-let v = new Virtual(
-  "192.168.0.2",
-  "255.255.255.0",
-  "192.168.0.1",
-  "eggs-ve",
-  "lan",
-  "enp0s31f6"
-);
 
 let command = process.argv[2];
 
@@ -137,11 +125,12 @@ if (command == "create") {
     console.log("Usage: eggs purge [netboot|iso]");
   }
 } else if (command == "hatch") {
-  const user = wait.launchFiber(hatch.getUser());
-  const disk = wait.launchFiber(hatch.getDisk());
+  console.log("At the moment you need to install penguins-hatching to hatch");
+  console.log("Install: sudo npm penguins-hatching -g");
+  console.log("usage: sudo penguins-hatching");
 } else {
   console.log(
-    "Usage: eggs [show|create|install|purge|start|stop|restart|arises] options [iso|netboot]"
+    "Usage: eggs [show|create|install|purge|start|stop|restart|hatch] options [iso|netboot]"
   );
 }
 bye();

@@ -12,7 +12,7 @@ import utils from "./utils.js";
 
 class Egg {
   constructor(
-    homeDir = "/srv/incubator",
+    homeDir = "/srv/penguins-eggs",
     distroName,
     clientUserFullName,
     clientUserName,
@@ -46,6 +46,7 @@ class Egg {
     console.log("==========================================");
     if (!fs.existsSync(this.homeDir)) {
       utils.exec(`mkdir -p ${this.homeDir}`);
+      utils.exec(`ln -s ${this.homeDir} /srv/penguins-eggs`);
     }
 
     if (fs.existsSync(this.fsDir)) {
