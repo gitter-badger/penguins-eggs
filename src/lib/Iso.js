@@ -59,13 +59,14 @@ class Iso {
   install() {
     utils.exec(`apt-get update`);
     utils.exec(
-      `apt-get install squashfs-tools xorriso live-boot live-boot-initramfs-tools live-config live-config-systemd syslinux syslinux-common isolinux -y`
+      `apt-get install squashfs-tools xorriso live-boot syslinux syslinux-common isolinux -y`
     );
   }
 
   purge() {
     utils.exec(
-      `apt-get remove --purge squashfs-tools xorriso live-boot live-boot-initramfs-tools live-config live-config-systemd syslinux syslinux-common isolinux -y`
+      //live-boot-initramfs-tools live-config live-config-systemd`
+      `apt-get remove --purge squashfs-tools xorriso live-boot syslinux syslinux-common isolinux -y`
     );
   }
   fstab() {
