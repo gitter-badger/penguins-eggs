@@ -7,6 +7,9 @@ import { version, name, author, mail, homepage } from "../package.json";
 import Egg from "./lib/Egg.js";
 import Netboot from "./lib/Netboot.js";
 import Iso from "./lib/Iso.js";
+import hatch from "./lib/hatch.js";
+const inquirer = require("inquirer");
+const drivelist = require("drivelist");
 
 //import shell from "shelljs";
 //import os from "os";
@@ -25,7 +28,7 @@ if (!utils.isRoot()) {
   console.log("Example: ");
   console.log(">>> sudo eggs install netboot");
   console.log(">>> sudo eggs create --distroname littlebird");
-  console.log(">>> sudo eggs hatching");
+  console.log(">>> sudo eggs hatch");
   bye();
 }
 
@@ -125,9 +128,8 @@ if (command == "create") {
     console.log("Usage: eggs purge [netboot|iso]");
   }
 } else if (command == "hatch") {
-  console.log("At the moment you need to install penguins-hatching to hatch");
-  console.log("Install: sudo npm penguins-hatching -g");
-  console.log("usage: sudo penguins-hatching");
+  console.log("The penguin start to hatch...");
+  hatch.install();
 } else {
   console.log(
     "Usage: eggs [show|create|install|purge|start|stop|restart|hatch] options [iso|netboot]"

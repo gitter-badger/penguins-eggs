@@ -1,0 +1,781 @@
+#!/bin/bash
+#
+#
+#  fabrica-installer is an alternative installer for remastered livecd/dvd's
+#
+#  Created by Piero Proietti
+#  Copyright 2012 Under the GNU GPL2 License
+#  It work with Debian Jessie and PVE Proxmox 4.0
+#  It is compatible with
+#  Depends on:
+#  - yad
+#  - systemback
+#
+#  Original based on refractainstaller
+#
+#  Copyright 2008-2015 Under the GNU GPL2 License
+#
+# Licence: GPL-3
+# This is free software with no warrantees. Use at your own risk.
+#
+#
+#https://packages.debian.org/stretch/amd64/yad/download
+
+# disk_prepare.sh /dev/sda
+
+
+###########
+# Funzioni
+###########
+progressbar() {
+    tail -f /usr/bin/fabrica-installer|yad \
+    --window-icon=/usr/share/icons/fabrica-installer/Factory_Yellow_2_Icon_32.png \
+    --image=/usr/share/icons/fabrica-installer/Factory_Yellow_2_Icon_256.png \
+    --center \
+    --always-print-result \
+    --dialog-sep \
+    --title="Fabrica VE - installer LVM" \
+    --no-buttons \
+    --progress \
+    --pulsate \
+    --auto-close \
+    --text "$@"
+}
+
+progressbarkill() {
+    killall -KILL tail
+}
+
+#
+# yesNoBox()
+#
+yesNoBox()
+{
+	yad \
+  --window-icon=/usr/share/icons/fabrica-installer/Factory_Yellow_2_Icon_32.png \
+  --image=/usr/share/icons/fabrica-installer/Factory_Yellow_2_Icon_256.png \
+  --title="Fabrica VE - installer LVM" \
+	--center \
+	--button=gtk-yes:0 \
+	--button=gtk-no:1 \
+    --text "$@"
+}
+
+#
+# kindMessage()
+#
+kindMessage()
+{
+	yad  \
+    --window-icon=/usr/share/icons/fabrica-installer/Factory_Yellow_2_Icon_32.png \
+    --image=/usr/share/icons/fabrica-installer/Factory_Yellow_2_Icon_256.png \
+    --title="Fabrica VE - installer LVM" \
+		--center \
+		--button=gtk-ok:0 \
+		--text "$@"
+}
+
+###########
+# Fine Funzioni
+###########
+
+
+# Impostazione delle opzioni
+RINUNCIA='Rinuncia Esce'
+
+# Queste variabili sono state impostate fisse!
+PARTITIONPROG="gparted"
+TARGETCDROM="/dev/cdrom"
+LIVEMODE="DIST"
+DEFAULTGROUPS="audio,cdrom,dialout,floppy,video,plugdev,sudo"
+
+FILE="/tmp/out.$$"
+GREP="/bin/grep"
+#....
+# Make sure only root can run our script
+if [ "$(id -u)" != "0" ]; then
+   kindMessage \
+   "Questo installer può essere utilizzato solo la root.
+    Apri una finestra di terminale, digita:
+    \$>sudo fabrica-installer"
+   exit 0
+fi
+
+# Controllo se esiste il device /dev/loop0
+chkIsLive=$(mount|grep squashfs)
+echo chkIsLive=$chkIsLive
+if [ -z $chkIsLive  ]; then
+	kindMessage "Sembra che tu stia utilizzando una versione installata. L'installazione sarà terminata!"
+		exit 0
+fi
+
+#
+# AVVISO utente
+#
+yesNoBox "ATTENZIONE: Questo installer cancellerà completamente il vostro disco rigido. Siete sicuri di voler continuare?"
+if [ $? != 0 ]; then
+	exit 0
+fi
+
+#
+# Inizio
+#
+DRIVES=`cat /proc/partitions | grep -v loop | grep -v major | grep -v "^$" | awk '{print $4}' | grep -v "[0-9]"`
+
+for i in $DRIVES; do
+  partdrive="$i"
+  partdrivesize=`grep -m 1 "$i" /proc/partitions | awk '{print $3}'`
+  partdrivemenu="$partdrivemenu $partdrive $partdrivesize"
+done
+
+PARTDRIVE=""
+while [ "$PARTDRIVE" = "" ]
+do
+	PARTDRIVE=`yad \
+      --window-icon=/usr/share/icons/fabrica-installer/Factory_Yellow_2_Icon_32.png \
+			--image=/usr/share/icons/fabrica-installer/Factory_Yellow_2_Icon_256.png \
+      --title="Fabrica VE - installer LVM" \
+      --center \
+			--always-print-result \
+			--dialog-sep \
+			--width=600 \
+			--height=300  \
+			--text \
+	"Selezionate il disco per installazione.\n
+	Se il solo disco disponibile è Rinuncia, allora nessun disco è stato trovato." \
+	--list \
+		--column=Disco \
+		--column Dimensioni \
+		$RINUNCIA \
+		$partdrivemenu`
+done
+
+PARTDRIVE=`echo $PARTDRIVE | cut -d "|" -f 1`
+if [ "$PARTDRIVE" = "Rinuncia" ]; then
+    kindMessage "La procesura sarà terminata"
+  exit 1
+fi
+
+
+echo "partdrive=$PARTDRIVE"
+
+
+yesNoBox "A questo punto, distruggerò il disco: /dev/$PARTDRIVE Siete sicuri di voler continuare?"
+if [ $? != 0 ]; then
+	exit 0
+fi
+
+	# rimuovo disco pve
+	lvremove pve
+
+	# create a label first
+	parted --script /dev/$PARTDRIVE mklabel msdos
+	sleep 1
+	HD_SIZE_MB=`parted -s /dev/$PARTDRIVE unit mb print free | grep Free | awk '{print $3}' | cut -d "M" -f1`
+	echo "HD_SIZE_MB= $HD_SIZE_MB"
+
+
+	# Crea partizione boot
+	parted --script /dev/$PARTDRIVE mkpart primary ext4 1 512
+	parted --script --align optimal  /dev/$PARTDRIVE set 1 boot on
+	sleep 1
+
+	# Crea partizione lvm
+	parted --script --align optimal /dev/$PARTDRIVE mkpart primary ext2 512 $HD_SIZE_MB
+  parted --script /dev/$PARTDRIVE set 2 lvm on
+	sleep 1
+
+
+
+LVM_PARTNAME=`fdisk /dev/$PARTDRIVE -l | grep 8e | awk '{print $1}' | cut -d "/" -f3`
+LVM_SIZE=`cat /proc/partitions | grep $LVM_PARTNAME| awk '{print $3}' | grep "[0-9]"`
+echo "LVM_SIZE=$LVM_SIZE"
+LVM_SIZE=$(($LVM_SIZE/1024))
+echo "LVM_SIZE=$LVM_SIZE"
+
+PVE_SWAP="/dev/pve/swap"
+PVE_ROOT="/dev/pve/root"
+PVE_DATA="dev/pve/data"
+
+# La partizione di root viene posta ad 1/4 della partizione LVM.
+# Viene limitata fino ad un massimo di 100 GB
+
+LVM_SWAP_SIZE=$((4*1024))
+echo "LVM_SWAP_SIZE=$LVM_SWAP_SIZE"
+
+LVM_ROOT_SIZE=$(($LVM_SIZE/8))
+LVM_ROOT_SIZE_MINIMUN=8192
+if [ $LVM_ROOT_SIZE  -le $LVM_ROOT_SIZE_MINIMUN ]; then
+	LVM_ROOT_SIZE=$LVM_ROOT_SIZE_MINIMUN
+fi
+echo "LVM_ROOT_SIZE=$LVM_ROOT_SIZE"
+
+LVM_DATA_SIZE=$(($LVM_SIZE-$LVM_SWAP_SIZE-$LVM_ROOT_SIZE))
+echo "LVM_DATA_SIZE=$LVM_DATA_SIZE"
+
+LVM_DATA_SIZE=$(($LVM_SIZE-$LVM_SWAP_SIZE-$LVM_ROOT_SIZE))
+echo "LVM_DATA_SIZE=$LVM_DATA_SIZE"
+GB=1048576
+GB=1024
+
+echo "LVM_SIZE=$(($LVM_SIZE/$GB)) GB, $LVM_SIZE"
+echo "LVM_SWAP_SIZE=$(($LVM_SWAP_SIZE/$GB)) GB, $LVM_SWAP_SIZE"
+echo "LVM_ROOT_SIZE=$(($LVM_ROOT_SIZE/$GB)) GB, $LVM_ROOT_SIZE"
+echo "LVM_DATA_SIZE=$(($LVM_DATA_SIZE/$GB)) GB, $LVM_DATA_SIZE"
+
+
+yesNoBox "Il disco selezionato è di $((HD_SIZE_MB/1024)) GB
+		Verranno create:
+		- partizione /boot su /dev/$PARTDRIVE  512 MB
+		- partizione LVM $LVM_PARTNAME di $(($LVM_SIZE/$GB)) GB
+		pvcreate /dev/$LVM_PARTNAME # volume fisico su /dev/$LVM_PARTNAME
+		vgcreate pve /dev/$LVM_PARTNAME # Creazione del gruppo pve
+		vgchange -an # disattiva il gruppo di volumi
+		lvcreate -L $LVM_SWAP_SIZE -nswap pve # area swap $(($LVM_SWAP_SIZE/$GB)) GB
+		lvcreate -L $LVM_ROOT_SIZE -nroot pve # area root $(($LVM_ROOT_SIZE/$GB)) GB
+		lvcreate -L $LVM_DATA_SIZE -ndata pve # area dati $(($LVM_DATA_SIZE/$GB)) GB
+		vgchange -a y pve
+"
+if [ $? != 0 ]; then
+	yad \
+    --window-icon=/usr/share/icons/fabrica-installer/Factory_Yellow_2_Icon_32.png \
+		--image=/usr/share/icons/fabrica-installer/Factory_Yellow_2_Icon_256.png \
+    --title="Fabrica VE - installer LVM" \
+    --center \
+		--button=gtk-ok:0 \
+		--text="Operazione abortita!"
+	exit 0
+else
+	# Suddivisione della partizione LVM2
+	echo "pvcreate /dev/$LVM_PARTNAME"
+	echo "vgcreate pve /dev/$LVM_PARTNAME"
+	echo "vgchange -an"
+	echo "lvcreate -L $LVM_SWAP_SIZE  -nswap pve"
+	echo "lvcreate -L $LVM_ROOT_SIZE -nroot pve"
+	echo "lvcreate -l 100%FREE -ndata pve"
+	echo "vgchange -a y pve"
+
+	pvcreate /dev/$LVM_PARTNAME
+	vgcreate pve /dev/$LVM_PARTNAME
+	vgchange -an
+	lvcreate -L $LVM_SWAP_SIZE  -nswap pve
+	lvcreate -L $LVM_ROOT_SIZE -nroot pve
+	lvcreate -l 100%FREE -ndata pve
+	vgchange -a y pve
+fi
+
+SWAP="pve/swap"
+TARGETPART="pve/root"
+FSTYPE="ext4"
+HOMEPART="pve/data"
+HFSTYPE="ext4"
+
+#check mode and get new user info if it is a dist mode
+testmode=`grep "1000" /etc/passwd | grep -v "Live"`
+testmode="" # da rimuovere
+if [ "$testmode" = "" ]; then
+	while [ "$PASSOK" != "Yes" ]; do
+
+		CHOICES=`yad \
+      --window-icon=/usr/share/icons/fabrica-installer/Factory_Yellow_2_Icon_32.png \
+      --image=/usr/share/icons/fabrica-installer/Factory_Yellow_2_Icon_256.png \
+      --title="Fabrica VE - installer LVM" \
+      --center \
+			--dialog-sep \
+			--width=600 --height=300 --center\
+			--form \
+			--field="Nome utente completo" \
+			--field="Nome utente" \
+			--field="Password utente":H \
+			--field="Conferma password utente":H \
+			--field="Password per root":H \
+			--field="Conferma password per root":H \
+			--field="Nome dell\'host" \
+			--field="Dominio internet" \
+			--field="Indirizzo IP" \
+			--field="Maschera di rete" \
+			--field="Gateway" \
+			--field="DNS"`
+
+
+		if [ "$?" = "0" ]; then
+			TARGETUSERFULLNAME=`echo $CHOICES | cut -d "|" -f 1`
+			TARGETUSER=`echo $CHOICES | cut -d "|" -f 2`
+			TARGETPASS=`echo $CHOICES | cut -d "|" -f 3`
+			TARGETPASS2=`echo $CHOICES | cut -d "|" -f 4`
+			TARGETROOTPASS=`echo $CHOICES | cut -d "|" -f 5`
+			TARGETROOTPASS2=`echo $CHOICES | cut -d "|" -f 6`
+			TARGETHOSTNAME=`echo $CHOICES | cut -d "|" -f 7`
+			TARGETDOMAIN=`echo $CHOICES | cut -d "|" -f 8`
+			IPADDRESS=`echo $CHOICES | cut -d "|" -f 9`
+			IPNETMASK=`echo $CHOICES | cut -d "|" -f 10`
+			IPGATEWAY=`echo $CHOICES | cut -d "|" -f 11`
+			TARGETDNS= `echo $CHOICES | cut -d "|" -f 12`
+		else
+			kindMessage "La procedura sarà terminata"
+		  	exit 1
+		fi
+
+		[ "$TARGETROOTPASS" != "" ] && \
+		[ "$TARGETROOTPASS" = "$TARGETROOTPASS2" ] && \
+		[ "$TARGETHOSTNAME" != "" ]
+		PASSOK="Yes"
+
+		ERROR_GIVE="yad --center --title --always-print-result --dialog-sep --image=application-system --title="Artisan-Lab-Installer"TEXT --button=OK:0 --width=400 --height=200 --window-icon=gtk-abort --text="
+		[ "$TARGETROOTPASS" = "" ] && $ERROR_GIVE"La password di root non può essere blank."
+		[ "$TARGETROOTPASS" != "$TARGETROOTPASS2" ] && $ERROR_GIVE"La password di root non corrisponde."
+		[ "$TARGETHOSTNAME" = "" ] && $ERROR_GIVE"Deve essere inserito il nome dell'host."
+	done
+fi
+
+#grub location
+GRUBLOCTEST=""
+while [ "$GRUBLOCTEST" = "" ]
+do
+	GRUBLOCTEST=`
+	yad \
+    --window-icon=/usr/share/icons/fabrica-installer/Factory_Yellow_2_Icon_32.png \
+    --image=/usr/share/icons/fabrica-installer/Factory_Yellow_2_Icon_256.png \
+    --title="Fabrica VE - installer LVM" \
+    --center \
+		--always-print-result \
+		--dialog-sep \
+        --width=600 \
+        --height=400 \
+        --text="Selezionate dove desiderate installare grub.\n" \
+        --list --column=Posizione --column=Utilizzo \
+			mbr "Installa Grub nel master boot becord del primo disco - Installazione standard" \
+			root "Installa grub sulla partizione root - Per l\'utilizzo con un altro boot manager" \
+			rootmbr "Partizione mbr del disco di root - Installazione su chiavetta USB"
+	`
+done
+
+GRUBLOCTEST=`echo $GRUBLOCTEST | cut -d "|" -f 1`
+if [ "$GRUBLOCTEST" = "root" ]; then
+	GRUBLOCTEXT="partizione root di $TARGETPART (Installazione con altro boot manager)"
+	GRUBLOC="root"
+elif [ "$GRUBLOCTEST" = "rootmbr" ]; then
+	GRUBLOCTEXT="mbr della partizione root di $TARGETPART (Installazione su chiavetta USB. Controllate se il dispositivo è EFFETTIVAMENTE una chiavetta USB)"
+	GRUBLOC="rootmbr"
+else
+	GRUBLOCTEXT="master boot record del primo disco (Installazione normale)"
+	GRUBLOC=""
+fi
+
+#Timezone setting
+yad \
+  --window-icon=/usr/share/icons/fabrica-installer/Factory_Yellow_2_Icon_32.png \
+  --image=/usr/share/icons/fabrica-installer/Factory_Yellow_2_Icon_256.png \
+  --title="Fabrica VE - installer LVM" \
+  --center \
+	--always-print-result \
+	--dialog-sep \
+	--button=Locale:0 \
+	--button=UTC:1 \
+   --text="Il tuo sistema è impostato sull\'orario locale o UTC?"
+
+if [ $? = 0 ]; then
+	sed -i -e 's/^UTC=.*/UTC=no/g' /etc/default/rcS
+else
+	sed -i -e 's/^UTC=.*/UTC=yes/g' /etc/default/rcS
+fi
+
+cat /usr/share/zoneinfo/zone.tab | awk '{print $3}' | grep "/" | sort > /tmp/remastersys.zoneinfo
+for i in `cat /tmp/remastersys.zoneinfo`; do
+	ZONES="$ZONES $i Timezone"
+done
+#rm /tmp/remastersys.zoneinfo
+
+ZONESINFO=""
+while [ "$ZONESINFO" = "" ]
+do
+	ZONESINFO=`yad --window-icon=/usr/share/icons/fabrica-installer/Factory_Yellow_2_Icon_32.png \
+      --image=/usr/share/icons/fabrica-installer/Factory_Yellow_2_Icon_256.png \
+      --title="Fabrica VE - installer LVM" \
+      --center \
+			--always-print-result \
+			--dialog-sep \
+			--width=600 \
+			--height=300 \
+			--text="Seleziona la timezone per il tuo sistema" \
+			--list \
+				--column=Scegli \
+				--column=Info \
+				 $ZONES`
+done
+
+ZONESINFO=`echo $ZONESINFO | cut -d "|" -f 1`
+
+if [ "$ZONESINFO" = "Rinuncia" ]; then
+	kindMessage "La procedura sarà terminata!"
+  exit 1
+fi
+echo "$ZONESINFO" > /etc/timezone
+cp /usr/share/zoneinfo/$ZONESINFO /etc/localtime
+
+if [ "$HOMEPART" != "root" ]; then
+	HOMETEXT="IMPORTANTE: il mount point /var/lib/vz sarà su $HOMEPART che SARA' FORMATTATO con $HFSTYPE "
+
+	if [ "$HFSTYPE" = "noformat" ]; then
+		HOMETEXT="IMPORTANTE: il mount point /var/lib/vz sarà su $HOMEPART con fs $HFSTYPE, SENZA ESSERE FORMATTATO "
+	fi
+else
+	HOMETEXT="IMPORTANTE: /var/lib/vz sarà parte del disco di root"
+fi
+
+if [ "$testmode" = "" ]; then
+  yesNoBox "
+Verificate ATTENTAMENTE le infomazioni.\n\n-Il sistema sarà creato su:
+$TARGETPART che verrà formatatta $FSTYPE;
+- $HOMETEXT\n\n- sarà creato l\'utente $TARGETUSER;
+- grub sarà installato su  $GRUBLOCTEXT.
+
+Volete continuare?
+"
+
+  if [ $? != 0 ]; then
+		kindMessage "La procedura sarà terminata!"
+	  exit 1
+	fi
+fi
+
+
+#
+# Installazione sull'hard disk
+#
+
+progressbar "Impostazione della swap..." &
+sleep 2
+echo "Preparing swap partition now"
+mkswap /dev/$SWAP
+swapon /dev/$SWAP
+progressbarkill
+
+#
+# Formattazione
+#
+progressbar "Formattazione $TARGETPART ...\n" &
+## Check for safe mode and change the grub line.
+TestSafeMode=$(grep -B 0  "noapic noapm nodma nomce nolapic nomodeset radeon.modeset=0 nouveau.modeset=0" /proc/cmdline)
+if [ "$TestSafeMode" != "" ]; then
+ OldGrubLine=$(grep -B 0  "GRUB_CMDLINE_LINUX=" /etc/default/grub)
+ sed -i -e "s/$OldGrubLine/GRUB_CMDLINE_LINUX=\"noapic noapm nodma nomce nolapic nomodeset radeon.modeset=0 nouveau.modeset=0 nosmp\"/g" /etc/default/grub
+fi
+
+#make the filesystem and mount the partition on /TARGET
+if [ "`mount | grep $TARGETPART`" ]; then
+	echo "Unmounting the partition we are going to use and format now"
+	umount /dev/$TARGETPART
+fi
+mke2fs -t $FSTYPE /dev/$TARGETPART
+mkdir -p /TARGET
+sleep 2
+progressbarkill
+
+#
+# Monto la partizione
+#
+progressbar "Monto la partizione TARGET...\n" &
+mount /dev/$TARGETPART /TARGET -o rw
+sleep 2
+echo "Using tune2fs to prevent the forced checks on boot"
+tune2fs -c 0 -i 0 /dev/$TARGETPART
+rm -rf "/TARGET/lost+found"
+progressbarkill
+
+#
+# Partizione di boot
+#
+progressbar "Monto la partizione di boot...\n" &
+TARGETBOOT=sda1
+mke2fs -t ext4 /dev/$TARGETBOOT
+mkdir -p /TARGET/boot
+mount /dev/$TARGETBOOT  /TARGET/boot -o rw
+sleep 2
+tune2fs -c 0 -i 0 /dev/$TARGETBOOT
+progressbarkill
+
+
+
+#
+# Formattazione e mount di /var/lib/vz
+#
+if [ "$HFSTYPE" != "noformat" ]; then
+	progressbar "Formattazione e mount di /var/lib/vz...\n" &
+	if [ "`mount | grep $HOMEPART`" ]; then
+		echo "Unmounting the partition we are going to use and format now"
+		umount /dev/$HOMEPART
+	fi
+	mke2fs -t $HFSTYPE /dev/$HOMEPART
+	progressbarkill
+fi
+
+progressbar "Monto la partizione /var/lib/vz...\n" &
+mkdir -p /TARGET/var/lib/vz
+mount /dev/$HOMEPART /TARGET/var/lib/vz -o rw
+tune2fs -c 0 -i 0 /dev/$HOMEPART
+rm -rf "/TARGET/var/lib/vz/lost+found"
+sleep 2
+# Get fs type for home partition in case the user chose not to format
+if [ "$HFSTYPE" = "noformat" ]; then
+	HFSTYPE=`mount | grep "/dev/$HOMEPART" | awk '{print $5}'`
+fi
+progressbarkill
+
+
+
+#
+# Copia del sistema...
+#
+progressbar "
+Copia dei file nel sistema di destinazione... \n
+Questa operazione può durare a lungo... Attendere!\n" &
+
+## /lib/live/mount/medium/live/filesystem.squashfs
+rsync -a / /TARGET --ignore-existing --exclude=/{TARGET,live,cdrom,mnt,proc,run,sys,media,.systemback} --exclude=/lib/live/mount/*
+
+# Creo anche la home
+mkdir -p /TARGET/{proc,mnt,run,sys,media/cdrom,home}
+
+progressbarkill
+
+#Rimozione della directory .ssh di root
+rm -rf /TARGET/root/.ssh
+
+# Rimozione e creazione directory /etc/pve
+rm -rf /TARGET/etc/pve
+mkdir /TARGET/etc/pve
+
+# Creazione delle directory di log per apache2 e pveproxy
+mkdir /TARGET/var/log/apache2
+mkdir /TARGET/var/log/pveproxy
+chown www-data:www-data /TARGET/var/log/apache2
+chown www-data:www-data /TARGET/var/log/pveproxy
+
+
+
+######################################################################################################
+#
+#Preparazione dell'ambiente chroot per i passi di post installazione...
+#
+######################################################################################################
+progressbar "Preparazione dell\'ambiente chroot e creazione fstab,  per i passi di post installazione...\n" &
+mount -o bind /proc /TARGET/proc
+mount -o bind /dev /TARGET/dev
+mount -o bind /sys /TARGET/sys
+
+
+rm -rf /TARGET/etc/fstab
+
+#
+#create the new fstab
+#
+cat > /TARGET/etc/fstab <<FOO
+#
+# created by fabrica-installer
+#
+# /etc/fstab: static file system information.
+# /var/lib/vz è montato su /dev/$HOMEPART
+# <file system> <mount point>   <type>  <options>       <dump>  <pass>
+
+proc /proc proc defaults 0 0
+# /dev/$TARGETPART
+/dev/$TARGETPART / $FSTYPE relatime,errors=remount-ro 0 1
+# /dev/$TARGETBOOT boot
+/dev/$TARGETBOOT /boot ext4 relatime 0 0
+# /dev/$HOMEPART home
+/dev/$HOMEPART /var/lib/vz $HFSTYPE relatime 0 0
+# /dev/$SWAP
+/dev/$SWAP none swap sw 0 0
+# cdrom
+$TARGETCDROM /media/cdrom udf,iso9660 user,noauto,exec,utf8 0 0
+
+FOO
+
+
+progressbarkill
+
+
+#
+# remove diverted update-initramfs as live-initramfs makes it a dummy file when booting the livecd
+#
+progressbar "Rimozione diversioni ...\n" &
+if [ -f /TARGET/usr/sbin/update-initramfs.debian ]; then
+	rm -f /TARGET/usr/sbin/update-initramfs
+fi
+# remove diverted update-notifier as it is disabled by live-config
+if [ -f /TARGET/usr/lib/update-notifier/apt-check.debian ]; then
+	rm -f /TARGET/usr/lib/update-notifier/apt-check
+fi
+# remove diverted anacron as it is disabled by live-config
+if [ -f /TARGET/usr/sbin/anacron.debian ]; then
+	rm -f /TARGET/usr/sbin/anacron
+fi
+# fix adept_notifier by copying the file we saved when remastersys first ran as live-initramfs removes it
+if [ -f /TARGET/etc/remastersys/adept_notifier_auto.desktop ]; then
+	mv /TARGET/etc/remastersys/adept_notifier_auto.desktop /TARGET/usr/share/autostart/adept_notifier_auto.desktop
+fi
+progressbarkill
+
+
+#
+# copy trackerd stuff as live-initramfs disables it
+#
+progressbar "copy trackerd stuff as live-initramfs disables it\n" &
+if [ -f /TARGET/etc/remastersys/tracker-applet.desktop ]; then
+	mv /TARGET/etc/remastersys/tracker-applet.desktop /TARGET/etc/xdg/autostart/tracker-applet.desktop
+fi
+if [ -f /TARGET/etc/remastersys/trackerd.desktop.xdg ]; then
+	mv /TARGET/etc/remastersys/trackerd.desktop.xdg /TARGET/etc/xdg/autostart/trackerd.desktop
+fi
+if [ -f /TARGET/etc/remastersys/trackerd.desktop.share ]; then
+	mv /TARGET/etc/remastersys/trackerd.desktop.share /TARGET/usr/share/autostart/trackerd.desktop
+fi
+progressbarkill
+
+
+#restore original inittab as live-initramfs changes it
+cp /TARGET/usr/share/sysvinit/inittab /TARGET/etc/inittab
+
+# Creazione /etc/hostname
+echo "$TARGETHOSTNAME" > /TARGET/etc/hostname
+
+
+#Creazione /etc/interfaces
+echo "#" >/TARGET/etc/network/interfaces
+echo "# created by fabrica-installer" >>/TARGET/etc/network/interfaces
+echo "#" >>/TARGET/etc/network/interfaces
+echo "# network interface settings" >>/TARGET/etc/network/interfaces
+echo "auto lo" >>/TARGET/etc/network/interfaces
+echo "iface lo inet loopback" >>/TARGET/etc/network/interfaces
+echo "" >>/TARGET/etc/network/interfaces
+echo "iface eth0 inet manual" >>/TARGET/etc/network/interfaces
+echo "" >>/TARGET/etc/network/interfaces
+echo "auto vmbr0" >>/TARGET/etc/network/interfaces
+echo "iface vmbr0 inet static" >>/TARGET/etc/network/interfaces
+echo "	address  $IPADDRESS" >>/TARGET/etc/network/interfaces
+echo "	netmask  $IPNETMASK" >>/TARGET/etc/network/interfaces
+echo "	gateway  $IPGATEWAY" >>/TARGET/etc/network/interfaces
+echo "	bridge_ports eth0" >>/TARGET/etc/network/interfaces
+echo "	bridge_stp off" >>/TARGET/etc/network/interfaces
+echo "	bridge_fd 0" >>/TARGET/etc/network/interfaces
+
+#Creazione di /etc/hosts
+echo "#" >/TARGET/etc/hosts
+echo "# created by fabrica-installer" >>/TARGET/etc/hosts
+echo "#" >>/TARGET/etc/hosts
+echo "127.0.0.1 localhost.localdomain localhost" >>/TARGET/etc/hosts
+echo "$IPADDRESS $TARGETHOSTNAME.$TARGETDOMAIN $TARGETHOSTNAME" >>/TARGET/etc/hosts
+echo "" >>/TARGET/etc/hosts
+echo "# The following lines are desirable for IPv6 capable hosts" >>/TARGET/etc/hosts
+echo "" >>/TARGET/etc/hosts
+echo "::1     ip6-localhost ip6-loopback" >>/TARGET/etc/hosts
+echo "fe00::0 ip6-localnet" >>/TARGET/etc/hosts
+echo "ff00::0 ip6-mcastprefix" >>/TARGET/etc/hosts
+echo "ff02::1 ip6-allnodes" >>/TARGET/etc/hosts
+echo "ff02::2 ip6-allrouters" >>/TARGET/etc/hosts
+echo "ff02::3 ip6-allhosts" >>/TARGET/etc/hosts
+
+#Creazione di /etc/resolv.conf
+#touch /TARGET/etc/resolv.conf
+echo "#" >TARGET/etc/resolv.conf
+echo "# created by fabrica-installer" >>/TARGET/etc/resolv.conf
+echo "#" >>/TARGET/etc/resolv.conf
+echo "domain $TARGETDPMAIN" >>/TARGET/etc/resolv.conf
+echo "nameserver $TARGETDNS" >>/TARGET/etc/resolv.conf
+
+
+progressbar "Creazione di tempinstallerscript\n" &
+cat > /TARGET/bin/tempinstallerscript <<FOO
+#!/bin/bash
+echo -e "$TARGETROOTPASS\n$TARGETROOTPASS\n" | passwd root
+userdel -f -r $LIVE_USERNAME
+sed -i '/$LIVE_USERNAME/d' /etc/sudoers
+groupadd -g 1000 $TARGETUSER
+useradd -u 1000 -g 1000 -c "$TARGETUSERFULLNAME,,," -G $DEFAULTGROUPS -s /bin/bash -m $TARGETUSER
+echo -e "$TARGETPASS\n$TARGETPASS\n" | passwd $TARGETUSER
+dpkg-divert --remove --rename --quiet /usr/lib/update-notifier/apt-check
+dpkg-divert --remove --rename --quiet /usr/sbin/update-initramfs
+dpkg-divert --remove --rename --quiet /usr/sbin/anacron
+update-initramfs -t -c -k $(/bin/uname -r)
+shadowconfig on
+
+FOO
+
+
+progressbarkill
+
+progressbar "Avvio di tempinstallerscript per aggiornamento di initramfs.\n" &
+chmod 755 /TARGET/bin/tempinstallerscript
+chroot /TARGET /bin/tempinstallerscript
+rm /TARGET/bin/tempinstallerscript
+# cp ???
+progressbarkill
+
+
+#
+# Setup di grub
+#
+progressbar "Setup di grub...\n" &
+echo "Installing and setting up grub."
+echo ""
+echo "chroot /TARGET grub-install /dev/$PARTDRIVE"
+chroot /TARGET grub-install /dev/$PARTDRIVE
+echo "chroot /TARGET update-grub"
+chroot /TARGET update-grub
+progressbarkill
+
+#
+# Setup di openssh-server
+#
+progressbar "Setup di openssh-server...\n" &
+echo "Setup di openssh-server...."
+chroot /TARGET dpkg-reconfigure openssh-server
+progressbarkill
+
+#
+# Smonto /TARGET
+#
+progressbar "Smonto la partizione /TARGET...\n" &
+sleep 1
+umount /TARGET/proc
+sleep 1
+umount /TARGET/dev
+sleep 1
+umount /TARGET/sys
+sleep 1
+umount /TARGET/boot
+sleep 1
+umount /TARGET/var/lib/vz
+sleep 1
+umount /TARGET
+sleep 1
+progressbarkill
+
+# Co sarebbero da smontare...
+#/dev/loop0 on /lib/live/mount/rootfs/filesystem.squashfs
+#tmpfs on /lib/live/mount/overlay type tmpfs
+kingMessage "Provo a smontare /lib/live/mount/rootfs/filesystem.squashfs "
+umont /lib/live/mount/rootfs/filesystem.squashfs
+
+kingMessage "Provo a smontare /lib/live/mount/overlay "
+umount /lib/live/mount/overlay
+
+
+
+#
+# Concludo
+#
+kindMessage "L\'installazione è stata completata.
+
+Dovresti avere la tua Fabrica configurata e pronta all\'uso, altrimenti, puoi sempre collaborare a migliorare lo script!
+
+L\'autore
+
+sito: http://www.piojoris15.com
+email: Piero Proietti piero.proietti@gmail.com"
+if [ $? != 0 ]; then
+	exit 0
+else
+	reboot
+fi
