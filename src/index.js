@@ -8,8 +8,6 @@ import Egg from "./lib/Egg.js";
 import Netboot from "./lib/Netboot.js";
 import Iso from "./lib/Iso.js";
 import hatch from "./lib/hatch.js";
-const inquirer = require("inquirer");
-const drivelist = require("drivelist");
 
 //import shell from "shelljs";
 //import os from "os";
@@ -130,6 +128,7 @@ if (command == "create") {
 } else if (command == "hatch") {
   console.log("The penguin start to hatch...");
   hatch.install();
+  console.log("The penguin end hatch...");
 } else {
   console.log(
     "Usage: eggs [show|create|install|purge|start|stop|restart|hatch] options [iso|netboot]"
