@@ -7,10 +7,10 @@ import { version, name, author, mail, homepage } from "../package.json";
 import Egg from "./lib/Egg.js";
 import Netboot from "./lib/Netboot.js";
 import Iso from "./lib/Iso.js";
+const hatch =require( "./lib/hatch.js");
 
 //import shell from "shelljs";
 //import os from "os";
-import hatch from "./lib/hatch.js";
 import utils from "./lib/utils.js";
 
 const homeDir = "/var/lib/vz/penguins-eggs/";
@@ -123,12 +123,13 @@ if (command == "create") {
   }
 } else if (command == "hatch") {
   console.log("The penguin start to hatch...");
-  hatch.install();
+  hatch.hatch();
 } else {
   console.log(
     "Usage: eggs [show|create|install|purge|start|stop|restart|hatch] options [iso|netboot]"
   );
 }
+
 bye();
 
 function buildEgg() {

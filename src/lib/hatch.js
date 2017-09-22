@@ -1,36 +1,17 @@
+"use strict";
 import utils from "./utils.js";
-("use strict");
 import fs from "fs";
 const inquirer = require("inquirer");
 const drivelist = require("drivelist");
 
-let hatch = function() {};
-
-hatch.prototype.install = function() {
-  Choices();
-};
-
-function Drives() {
-  return new Promise(function(resolve, reject) {
-    drivelist.list((error, drives) => {
-      if (error) {
-        reject(error);
-      }
-      resolve(drives);
-    });
-  });
-}
-
-async function Choices() {
-  let varDrives = await Drives();
+exports.hatch = await function () {
+  console.log("dovrebbe andar...");
+  let varDrives = Drives();
   let driveList = [];
-  console.log("choices: test OK");
-
   for (var key in varDrives) {
     //console.log(varDrives[key].device);
     driveList.push(varDrives[key].device);
   }
-
   var questions = [
     {
       type: "input",
@@ -91,7 +72,7 @@ async function Choices() {
       }
     },
     {
-      tyoe: "input",
+      type: "input",
       name: "netMask",
       message: "Insert netmask: ",
       default: "255.255.255.0",
@@ -133,6 +114,17 @@ async function Choices() {
     }
   ];
   inquirer.prompt(questions).then(config);
+};
+
+function Drives() {
+  return new Promise(function(resolve, reject) {
+    drivelist.list((error, drives) => {
+      if (error) {
+        reject(error);
+      }
+      resolve(drives);
+    });
+  });
 }
 
 var config = function(data) {
@@ -155,12 +147,6 @@ var config = function(data) {
     default: "No"
   };
   inquirer.prompt(questions).then(confirm);
-
-  disk_prepare;
-  disk_get_size;
-  partition_prepare_boot;
-  partition_prepare_lvm;
-  pve_prepare;
 };
 
 var exec = require("child_process").exec;
@@ -183,33 +169,4 @@ function isLive() {
   return out;
 }
 
-var puppo = function(pippo) {
-  let file = `./scripts/config`;
-  let text = `
-#!/bin/bash
-PARTDRIVE="${data.installationDisk}"
-TARGETUSERFULLNAME="${data.userfullname}"
-TARGETUSER="${data.username}"
-TARGETPASS="${data.userpassword}"
-TARGETROOTPASS="${data.rootpassword}"
-TARGETHOSTNAME="${data.hostname}"
-TARGETDOMAIN="${data.domain}"
-NETINTERFACE="${data.NetInteface}"
-NETADDRESSTYPE="${data.netAddressType}"
-IPADDRESS="${data.address}"
-IPNETMASK="${data.netmask}"
-IPGATEWAY="${data.gateway}"
-ROOTPART="pve/root"
-DATAPART="pve/data"
-SWAPPART="pve/swap"
-ROOTFSTYPE="${data.fsType}"
-DATAFSTYPE="${data.fsType}"
-GRUBLOC=""
-ZONESINFO="Europe/Rome"
-`;
-  utils.bashwrite(file, text);
-};
-
 var ifaces = fs.readdirSync("/sys/class/net/");
-
-export default new hatch();
