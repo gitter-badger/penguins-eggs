@@ -1,5 +1,5 @@
-"use strict";
 import utils from "./utils.js";
+("use strict");
 import fs from "fs";
 const inquirer = require("inquirer");
 const drivelist = require("drivelist");
@@ -24,6 +24,8 @@ function Drives() {
 async function Choices() {
   let varDrives = await Drives();
   let driveList = [];
+  console.log("choices: test OK");
+
   for (var key in varDrives) {
     //console.log(varDrives[key].device);
     driveList.push(varDrives[key].device);
@@ -154,12 +156,11 @@ var config = function(data) {
   };
   inquirer.prompt(questions).then(confirm);
 
-  disk_prepare
-  disk_get_size
-  partition_prepare_boot
-  partition_prepare_lvm
-  pve_prepare
-
+  disk_prepare;
+  disk_get_size;
+  partition_prepare_boot;
+  partition_prepare_lvm;
+  pve_prepare;
 };
 
 var exec = require("child_process").exec;

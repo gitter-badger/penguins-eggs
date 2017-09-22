@@ -7,10 +7,10 @@ import { version, name, author, mail, homepage } from "../package.json";
 import Egg from "./lib/Egg.js";
 import Netboot from "./lib/Netboot.js";
 import Iso from "./lib/Iso.js";
-import hatch from "./lib/hatch.js";
 
 //import shell from "shelljs";
 //import os from "os";
+import hatch from "./lib/hatch.js";
 import utils from "./lib/utils.js";
 
 const homeDir = "/var/lib/vz/penguins-eggs/";
@@ -29,6 +29,7 @@ if (!utils.isRoot()) {
   console.log(">>> sudo eggs hatch");
   bye();
 }
+
 
 let program = require("commander").version(version);
 
@@ -76,7 +77,6 @@ let n = new Netboot(homeDir, distroName, userfullname, username, password);
 let i = new Iso(homeDir, distroName, userfullname, username, password);
 
 let command = process.argv[2];
-
 if (command == "create") {
   if (program.netboot) {
     buildEgg();
@@ -102,8 +102,6 @@ if (command == "create") {
     n.install();
   } else if (program.iso) {
     i.install();
-  } else if (program.ve) {
-    v.install();
   } else {
     console.log("Usage: eggs install [netboot|iso]");
   }
@@ -112,8 +110,6 @@ if (command == "create") {
     n.show();
   } else if (program.iso) {
     i.show();
-  } else if (program.users) {
-    chrooted.show();
   } else {
     console.log("Usage: eggs show [netboot|iso|users]");
   }
@@ -128,7 +124,6 @@ if (command == "create") {
 } else if (command == "hatch") {
   console.log("The penguin start to hatch...");
   hatch.install();
-  console.log("The penguin end hatch...");
 } else {
   console.log(
     "Usage: eggs [show|create|install|purge|start|stop|restart|hatch] options [iso|netboot]"

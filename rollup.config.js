@@ -1,4 +1,6 @@
 // new rollup.config.js
+import resolve from 'rollup-plugin-node-resolve';
+import commonjs from 'rollup-plugin-commonjs';
 
 import shebang from "rollup-plugin-shebang";
 import json from "rollup-plugin-json";
@@ -8,8 +10,13 @@ export default {
   output: {
     file: "./build/index.js",
     format: "cjs",
-    name: "teggs",
+    name: "eggs",
     sourcemap: true
   },
-  plugins: [shebang(), json()]
+  plugins: [
+    shebang(),
+    json()/*,
+    resolve(),
+    commonjs() */
+  ]
 };
