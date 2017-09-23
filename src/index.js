@@ -7,7 +7,7 @@ import { version, name, author, mail, homepage } from "../package.json";
 import Egg from "./lib/Egg.js";
 import Netboot from "./lib/Netboot.js";
 import Iso from "./lib/Iso.js";
-const hatch =require( "./lib/hatch.js");
+const test = require("./lib/test.js");
 
 //import shell from "shelljs";
 //import os from "os";
@@ -29,7 +29,6 @@ if (!utils.isRoot()) {
   console.log(">>> sudo eggs hatch");
   bye();
 }
-
 
 let program = require("commander").version(version);
 
@@ -123,7 +122,7 @@ if (command == "create") {
   }
 } else if (command == "hatch") {
   console.log("The penguin start to hatch...");
-  hatch.hatch();
+  test.start();
 } else {
   console.log(
     "Usage: eggs [show|create|install|purge|start|stop|restart|hatch] options [iso|netboot]"

@@ -4,12 +4,10 @@ import fs from "fs";
 const inquirer = require("inquirer");
 const drivelist = require("drivelist");
 
-exports.hatch = await function () {
-  console.log("dovrebbe andar...");
+module.exports = {start: async function(){
   let varDrives = Drives();
   let driveList = [];
   for (var key in varDrives) {
-    //console.log(varDrives[key].device);
     driveList.push(varDrives[key].device);
   }
   var questions = [
@@ -63,7 +61,7 @@ exports.hatch = await function () {
       default: "dhcp"
     },
     {
-      tyoe: "input",
+      type: "input",
       name: "netAddress",
       message: "Insert IP address: ",
       default: "192.168.0.2",
@@ -114,7 +112,8 @@ exports.hatch = await function () {
     }
   ];
   inquirer.prompt(questions).then(config);
-};
+}
+}
 
 function Drives() {
   return new Promise(function(resolve, reject) {
@@ -148,6 +147,7 @@ var config = function(data) {
   };
   inquirer.prompt(questions).then(confirm);
 };
+}
 
 var exec = require("child_process").exec;
 function execute(command, callback) {
