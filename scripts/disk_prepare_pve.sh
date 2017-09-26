@@ -39,18 +39,18 @@ echo "LVM_ROOT_SIZE=$(($LVM_ROOT_SIZE/$GB)) GB, $LVM_ROOT_SIZE"
 echo "LVM_DATA_SIZE=$(($LVM_DATA_SIZE/$GB)) GB, $LVM_DATA_SIZE"
 
 
-	echo "pvcreate /dev/$LVM_PARTNAME"
-	echo "vgcreate pve /dev/$LVM_PARTNAME"
-	echo "vgchange -an"
-	echo "lvcreate -L $LVM_SWAP_SIZE  -nswap pve"
-	echo "lvcreate -L $LVM_ROOT_SIZE -nroot pve"
-	echo "lvcreate -l 100%FREE -ndata pve"
-	echo "vgchange -a y pve"
+echo "pvcreate /dev/$LVM_PARTNAME"
+echo "vgcreate pve /dev/$LVM_PARTNAME"
+echo "vgchange -an"
+echo "lvcreate -L $LVM_SWAP_SIZE  -nswap pve"
+echo "lvcreate -L $LVM_ROOT_SIZE -nroot pve"
+echo "lvcreate -l 100%FREE -ndata pve"
+echo "vgchange -a y pve"
 
-	pvcreate /dev/$LVM_PARTNAME
-	vgcreate pve /dev/$LVM_PARTNAME
-	vgchange -an
-	lvcreate -L $LVM_SWAP_SIZE  -nswap pve
-	lvcreate -L $LVM_ROOT_SIZE -nroot pve
-	lvcreate -l 100%FREE -ndata pve
-	vgchange -a y pve
+pvcreate /dev/$LVM_PARTNAME
+vgcreate pve /dev/$LVM_PARTNAME
+vgchange -an
+lvcreate -L $LVM_SWAP_SIZE  -nswap pve
+lvcreate -L $LVM_ROOT_SIZE -nroot pve
+lvcreate -l 100%FREE -ndata pve
+vgchange -a y pve

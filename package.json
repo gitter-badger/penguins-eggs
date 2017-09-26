@@ -20,7 +20,6 @@
     "debug": "babel-node --inspect src",
     "lint": "eslint src",
     "build": "rollup -c rollup.config.js",
-    "build-dev": "rollup -c rollup.config-dev.js",
     "prepublish": "npm run build"
   },
   "keywords": [
@@ -32,31 +31,27 @@
     "systemback"
   ],
   "dependencies": {
-    "babel-preset-stage-2": "^6.24.1",
-    "inquirer": "^3.3.0",
     "commander": "^2.11.0",
     "drivelist": "^5.1.8",
-    "getos": "^3.0.1",
+    "inquirer": "^3.3.0",
     "ip": "^1.1.5",
     "network": "^0.3.2",
-    "passwd-groups": "^1.1.1",
-    "shelljs": "^0.7.8",
-    "source-map-support": "^0.4.16"
+    "shelljs": "^0.7.8"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
+    "babel-preset-node8": "^1.2.0",
     "babel-plugin-external-helpers": "^6.22.0",
-    "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-preset-env": "^1.6.0",
-    "eslint": "^4.6.1",
-    "rollup": "^0.48.2",
+    "eslint": "^4.7.2",
+    "rollup": "^0.50.0",
     "rollup-plugin-babel": "^3.0.2",
-    "rollup-plugin-commonjs": "^8.2.0",
+    "rollup-plugin-commonjs": "^8.2.1",
     "rollup-plugin-json": "^2.3.0",
     "rollup-plugin-node-builtins": "^2.1.2",
     "rollup-plugin-node-globals": "^1.1.0",
     "rollup-plugin-node-resolve": "^3.0.0",
-    "rollup-plugin-shebang": "^0.1.4"
+    "rollup-plugin-shebang": "^0.1.4",
+    "source-map-support": "^0.4.18"
   }
 }

@@ -7,7 +7,7 @@ import { version, name, author, mail, homepage } from "../package.json";
 import Egg from "./lib/Egg.js";
 import Netboot from "./lib/Netboot.js";
 import Iso from "./lib/Iso.js";
-const test = require("./lib/test.js");
+import { hatch } from "./lib/hatch.js";
 
 //import shell from "shelljs";
 //import os from "os";
@@ -76,6 +76,10 @@ let n = new Netboot(homeDir, distroName, userfullname, username, password);
 let i = new Iso(homeDir, distroName, userfullname, username, password);
 
 let command = process.argv[2];
+if (command=="hatch"){
+  startHatching();
+}
+
 if (command == "create") {
   if (program.netboot) {
     buildEgg();
@@ -120,9 +124,6 @@ if (command == "create") {
   } else {
     console.log("Usage: eggs purge [netboot|iso]");
   }
-} else if (command == "hatch") {
-  console.log("The penguin start to hatch...");
-  test.start();
 } else {
   console.log(
     "Usage: eggs [show|create|install|purge|start|stop|restart|hatch] options [iso|netboot]"
@@ -187,4 +188,9 @@ function bye() {
     `${name} version ${version} (C) 2017 ${author} <${mail}> site ${homepage}`
   );
   process.exit(0);
+}
+
+async function startHatching() {
+  console.log("The penguin start to hatch...");
+  await hatch();
 }

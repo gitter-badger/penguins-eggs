@@ -1,4 +1,3 @@
 {
-  "presets": ["env"],
-  "plugins": ["transform-runtime", "transform-async-to-generator"]
+  "presets": ["node8"]
 }
