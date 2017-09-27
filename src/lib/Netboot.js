@@ -99,6 +99,7 @@ class Netboot {
 
   pxelinux() {
     utils.exec(`mkdir -p ${this.tftpRoot}/pxelinux.cfg`);
+    let d = new Date();
     let at = pad(d.getUTCFullYear()) + "/" +
               pad(d.getUTCMonth() + 1) + "/" +
               pad(d.getUTCDate()) +
