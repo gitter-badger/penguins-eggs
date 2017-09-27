@@ -1,6 +1,4 @@
-/*
-  Netboot.js V. 0.3.0
-*/
+import { version, name, author, mail, homepage } from "../../package.json";
 
 "use strict";
 //import os from "os";
@@ -115,7 +113,7 @@ PROMPT 0
 KBDMAP it.kbd
 DISPLAY display.txt
 SAY Uso la tastiera e locale per italiano.
-MENU TITLE ${name} ${version} NETBOOT at ${at}
+MENU TITLE NETBOOT ${name} ${version} ${at}
 MENU BACKGROUND eggs.png
 
 LABEL ${this.distroName}

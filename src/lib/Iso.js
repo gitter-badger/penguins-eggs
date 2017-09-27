@@ -109,7 +109,7 @@ class Iso {
 DEFAULT vesamenu.c32
 PROMPT 0
 TIMEOUT 30
-MENU TITLE ${name} ${version} CD/DVD at ${at}
+MENU TITLE CD/DVD ${name} ${version} ${at}
 MENU TABMSG Press TAB key to edit
 MENU BACKGROUND eggs.png
 
