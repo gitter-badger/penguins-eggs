@@ -120,8 +120,8 @@ if (utils.isRoot()) {
   console.log(">>> sudo eggs create --distroname littlebird");
   console.log(">>> sudo eggs hatch");
 }
-//    bye();
-
+bye();
+// END MAIN
 
 
 
