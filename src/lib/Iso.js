@@ -1,12 +1,6 @@
-/*
-  Iso.js V. 0.3.0
-*/
-
 "use strict";
-//import os from "os";
+import { version, name, author, mail, homepage } from "../package.json";
 import fs from "fs";
-//import ip from "ip";
-//import network from "network";
 import utils from "./utils.js";
 
 class Iso {
@@ -109,7 +103,7 @@ DEFAULT vesamenu.c32
 PROMPT 0
 TIMEOUT 30
 
-MENU TITLE Penguins eggs CD/DVD
+MENU TITLE penguins-eggs ${version} CD/DVD generated at ${Date()}
 MENU TABMSG Press TAB key to edit
 MENU BACKGROUND eggs.png
 
