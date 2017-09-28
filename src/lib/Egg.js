@@ -96,9 +96,7 @@ class Egg {
   }
 
   hostname() {
-    let file = `${this.fsDir}/etc/hostname`;
-    let text = this.distroName;
-    utils.bashwrite(file, text);
+    utils.hostname(this.fsDir, distroName);
   }
 
   resolvConf() {

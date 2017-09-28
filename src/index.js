@@ -16,7 +16,6 @@ let username = "artisan";
 let password = "evolution";
 
 if (utils.isRoot()) {
-
   program
     .option("netboot", "define incubator netboot")
     .option("iso", "define incubator iso")
@@ -41,7 +40,7 @@ if (utils.isRoot()) {
 
   program.parse(process.argv);
 
-    if (program.distroname) {
+  if (program.distroname) {
     distroName = program.distroname;
   }
   if (program.userfullname) {
@@ -83,10 +82,8 @@ if (utils.isRoot()) {
   } else if (command == "install") {
     if (program.netboot) {
       n.install();
-    } else if (program.iso) {
-      i.install();
     } else {
-      console.log("Usage: eggs install [netboot|iso]");
+      console.log("Usage: eggs install [netboot]");
     }
   } else if (command == "show") {
     if (program.netboot) {
@@ -104,7 +101,7 @@ if (utils.isRoot()) {
     } else {
       console.log("Usage: eggs purge [netboot|iso]");
     }
-  } else if (command=="hatch") {
+  } else if (command == "hatch") {
     startHatching();
   } else {
     console.log(
@@ -122,8 +119,6 @@ if (utils.isRoot()) {
 }
 bye();
 // END MAIN
-
-
 
 function buildEgg(e) {
   //build egg
