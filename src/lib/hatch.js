@@ -1,7 +1,7 @@
-import utils from "./utils.js";
 import fs from "fs";
 const inquirer = require("inquirer");
 const drivelist = require("drivelist");
+import utils from "./utils.js";
 
 export let hatch = async function() {
   let target = "/TARGET";

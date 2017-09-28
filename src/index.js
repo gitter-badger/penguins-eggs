@@ -2,16 +2,16 @@
 import { install } from "source-map-support";
 install();
 import { version, name, author, mail, homepage } from "../package.json";
+import { hatch } from "./lib/hatch.js";
 import Egg from "./lib/Egg.js";
 import Netboot from "./lib/Netboot.js";
 import Iso from "./lib/Iso.js";
-import { hatch } from "./lib/hatch.js";
 import utils from "./lib/utils.js";
 let program = require("commander").version(version);
 
 const homeDir = "/var/lib/vz/penguins-eggs/";
-let distroName = "littlebird";
-let userfullname = "Artisan";
+let distroName = "eggs";
+let userfullname = "artisan";
 let username = "artisan";
 let password = "evolution";
 
