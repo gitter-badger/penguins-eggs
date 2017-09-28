@@ -1,6 +1,6 @@
 {
   "name": "penguins-eggs",
-  "version": "0.4.96",
+  "version": "0.4.97",
   "author": "Piero Proietti",
   "mail": "piero.proietti@gmail.com",
   "description": "remaster your system and distribuite it by netboot or iso",
@@ -30,14 +30,6 @@
     "build": "rollup -c rollup.config.js",
     "prepublish": "npm run build"
   },
-  "keywords": [
-    "remastering",
-    "pxe-server",
-    "pxe-boot",
-    "iso",
-    "backup",
-    "systemback"
-  ],
   "dependencies": {
     "commander": "^2.11.0",
     "drivelist": "^5.1.8",
