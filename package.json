@@ -10,10 +10,18 @@
     "type": "git",
     "url": "https://github.com/pieroproietti/penguins-eggs"
   },
+  "keywords": [
+    "remastering",
+    "pxe-server",
+    "pxe-boot",
+    "iso",
+    "backup",
+    "systemback"
+  ],
   "bin": {
     "eggs": "./build/index.js"
   },
-  "main": "./build/index.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "babel-node src",

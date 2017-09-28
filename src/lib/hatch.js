@@ -1,100 +1,95 @@
-"use strict";
 import utils from "./utils.js";
 import fs from "fs";
 const inquirer = require("inquirer");
 const drivelist = require("drivelist");
 
-export async function hatch() {
-  let target="/TARGET";
-  let devices={
-      "root" : {
-        "device" : "/dev/pve/root",
-        "fstype" : "ext4",
-        "mountPoint" : "/"
-      },
-      "boot" : {
-        "device" : "/dev/sda1",
-        "fstype" : "vfat",
-        "mountPoint" : "/boot"
-      },
-      "data" : {
-        "device" : "/dev/pve/data",
-        "fstype" : "ext4",
-        "mountPoint" : "/var/lib/vz"
-      },
-      "swap" : {
-        "device" : "/dev/pve/swap",
-        "fstype" : "swap",
-        "mountPoint" : "none"
-      }
-    };
-  //console.log(devices);
+export let hatch = async function() {
+  let target = "/TARGET";
+  let devices = {
+    root: {
+      device: "/dev/pve/root",
+      fstype: "ext4",
+      mountPoint: "/"
+    },
+    boot: {
+      device: "/dev/sda1",
+      fstype: "vfat",
+      mountPoint: "/boot"
+    },
+    data: {
+      device: "/dev/pve/data",
+      fstype: "ext4",
+      mountPoint: "/var/lib/vz"
+    },
+    swap: {
+      device: "/dev/pve/swap",
+      fstype: "swap",
+      mountPoint: "none"
+    }
+  };
+  console.log("hatch...");
 
-
-  let isLive;
-  console.log("isLive");
-  isLive = await getIsLive();
-  console.log(`hatch isLive: ${isLive}`);
-
-  let driveList;
-  driveList = await getDrives();
-  console.log(`hatch driveList: ${driveList}`);
-
-  let varOptions;
-  varOptions = await getOptions(driveList);
-  console.log(`hatch options: ${varOptions}`);
+  let isLive = await getIsLive();
+  await getDrives();
+  let varOptions = await getOptions(driveList);
   let options = JSON.parse(varOptions);
-
-  let isDiskPreoared;
-  isDiskPreoared = await diskPrepare(options.installationDevice);
-  console.log(`hatch isDiskPreoared: ${isDiskPreoared}`);
-
-  let diskSize;
-  diskSize = await getDiskSize(options.installationDevice);
-  console.log(`hatch diskSize: ${diskSize} Byte, equal at ${Math.round(diskSize/1024/1024/1024)} GB`);
-
-  let isPartitionBootPrepared;
-  isPartitionBootPrepared=await diskPreparePartitionBoot(options.installationDevice);
-  console.log(`hatch isPartitionBootPrepared: ${isPartitionBootPrepared}`);
-
-  await diskPreparePartitionLvm(options.installationDevice, Math.floor(diskSize/1024/1024));
+  await diskPrepare(options.installationDevice);
+  let diskSize = await getDiskSize(options.installationDevice);
+  console.log(
+    `hatch diskSize: ${diskSize} Byte, equal at ${Math.round(
+      diskSize / 1024 / 1024 / 1024
+    )} GB`
+  );
+  await diskPreparePartitionBoot(options.installationDevice);
+  await diskPreparePartitionLvm(
+    options.installationDevice,
+    Math.floor(diskSize / 1024 / 1024)
+  );
   await diskPreparePve(options.installationDevice);
   await mkfs(devices);
   await mount(target, devices);
   await rsync(target);
   await fstab(target, devices);
-  //{"username":"artisan","userfullname":"artisan","userpassword":"evolution","rootpassword":"evolution","hostname":"eggs-ve-test","domain":"lan","netInterface":"ens18","netAddressType":"dhcp","installationDevice":"/dev/sda","fsType":"ext4"}
-
-  await hostname(target, options.hostname);
-  await resolvConf(target, options.domain, "192.168.0.1");
-  await interfaces(target, options.netInterfaces,options.netAddressType);
-  await hosts(target, options.hostname, options.domain);
+  await hostname(target, options);
+  await resolvConf(target, options);
+  await interfaces(target, options);
+  await hosts(target, options);
   await mount4chroot(target);
   await mkinitramfs(target);
-  await grubInstall(target, options.installationDevice);
+  await grubInstall(target, options);
+  await purge(target);
   await umount4chroot(target);
   await umount(target, devices);
+};
+
+async function purge(target) {
+  console.log("Removing unecessary live configuration...");
+  await utils.exec(
+    `chroot ${target} apt-get remove --purge squashfs-tools xorriso live-boot syslinux syslinux-common isolinux -y`
+  );
+  await utils.exec(`chroot ${target} apt-get autoremove -y`);
 }
 
-async function grubInstall(target, device){
-  await execute(`chroot ${target} grub-install ${device}`);
+async function grubInstall(target, options) {
+  await execute(`chroot ${target} grub-install ${options.installationDevice}`);
   await execute(`chroot ${target} update-grub`);
 }
 
-
-async function mkinitramfs(target){
-  await execute(`chroot ${target} mkinitramfs -k -o /tmp/initramfs-$(uname -r)`);
+async function mkinitramfs(target) {
+  await execute(
+    `chroot ${target} mkinitramfs -k -o /tmp/initramfs-$(uname -r)`
+  );
   await execute(`cp ${target}/tmp/initramfs-$(uname -r) /TARGET/boot`);
 }
 
-
-async function mount4chroot(target){
+async function mount4chroot(target) {
   await execute(`mount -o bind /proc ${target}/proc`);
   await execute(`mount -o bind /dev ${target}/dev`);
   await execute(`mount -o bind /sys ${target}/sys`);
   await execute(`mount -o bind /run ${target}/run`);
 }
-async function umount4chroot(target){
+
+async function umount4chroot(target) {
   await execute(`umount ${target}/proc`);
   await execute(`sleep 1`);
   await execute(`umount ${target}/dev`);
@@ -105,51 +100,70 @@ async function umount4chroot(target){
   await execute(`sleep 1`);
 }
 
-
-async function   fstab(target, devices) {
-    let file = `${target}/etc/fstab`;
-    let text = `
+async function fstab(target, devices) {
+  let file = `${target}/etc/fstab`;
+  let text = `
 proc /proc proc defaults 0 0
-${devices.root.device} ${devices.root.mountPoint} ${devices.root.fstype} relatime,errors=remount-ro 0 1
-${devices.boot.device} ${devices.boot.mountPoint} ${devices.boot.fstype} relatime 0 0
-${devices.data.device} ${devices.data.mountPoint} ${devices.data.fstype} relatime 0 0
-${devices.swap.device} ${devices.swap.mountPoint} ${devices.swap.fstype} sw 0 0`;
+${devices.root.device} ${devices.root.mountPoint} ${devices.root
+    .fstype} relatime,errors=remount-ro 0 1
+${devices.boot.device} ${devices.boot.mountPoint} ${devices.boot
+    .fstype} relatime 0 0
+${devices.data.device} ${devices.data.mountPoint} ${devices.data
+    .fstype} relatime 0 0
+${devices.swap.device} ${devices.swap.mountPoint} ${devices.swap
+    .fstype} sw 0 0`;
 
   utils.bashwrite(file, text);
 }
 
-async function hostname(target, hostname) {
-    let file = `${target}/etc/hostname`;
-    let text = hostname;
-    utils.bashwrite(file, text);
+async function hostname(target, options) {
+  let file = `${target}/etc/hostname`;
+  let text = options.hostname;
+
+  utils.exec(`rm ${target}/etc/hostname`);
+  fs.writeFileSync(file, text);
 }
 
-async function resolvConf(target, domain, dns) {
+async function resolvConf(target, options) {
+  if (options.netAddressType === "static") {
     let file = `${target}/etc/resolv.conf`;
     let text = `
-search ${domain}
-nameserver ${dns}
+search ${options.domain}
+domain ${options.domain}
+nameserver ${options.netDns}
 nameserver 8.8.8.8
 nameserver 8.8.4.4
 `;
-  utils.bashwrite(file, text);
+    utils.bashwrite(file, text);
+  }
 }
 
-async function interfaces(target, netInterface, addressType) {
+async function interfaces(target, options) {
+  if (options.netAddressType === "static") {
     let file = `${target}/etc/network/interfaces`;
     let text = `
 auto lo
 iface lo inet loopback
-iface ${netInterface} inet ${addressType}
+auto ${options.netInterface}
+iface ${options.netInterface} inet ${options.netAddressType}
+    address: ${options.netAddress}
+    netmask: ${options.netMask}
+    gateway: ${options.netGateway}
 `;
 
-  utils.bashwrite(file, text);
+    fs.writefile(file, text);
+  }
 }
 
-async function  hosts(target, hostname, domain) {
-    let file = `${target}/etc/hosts`;
-    let text = `
-127.0.0.1 localhost.localdomain localhost ${hostname} ${hostname}.${domain}
+async function hosts(target, options) {
+  let file = `${target}/etc/hosts`;
+  let text = `
+127.0.0.1 localhost.localdomain localhost ${options.hostname} ${options.hostname}.${options.domain}`;
+  if (options.netAddressType === "static") {
+    text += `
+${options.netAddress} ${options.hostname} ${options.hostname}.${options.domain} pvelocalhost`;
+  }
+  text += `
 # The following lines are desirable for IPv6 capable hosts
 ::1     ip6-localhost ip6-loopback
 fe00::0 ip6-localnet
@@ -164,19 +178,17 @@ ff02::3 ip6-allhosts
 
 async function getIsLive() {
   let result;
-  console.log("function: getIsLive");
   result = await execute(`./scripts/is_live.sh`);
-  console.log("result: result");
   return result;
 }
 
-async function rsync(target){
-    console.log(`rsync -a / ${target} --exclude-from ./scripts/excludes.list`);
-    await execute(`rsync -a / ${target} --exclude-from ./scripts/excludes.list`);
+async function rsync(target) {
+  console.log(`rsync -a / ${target} --exclude-from ./scripts/excludes.list`);
+  await execute(`rsync -a / ${target} --exclude-from ./scripts/excludes.list`);
 }
 
-async function mkfs(devices){
-  let result=true;
+async function mkfs(devices) {
+  let result = true;
   await execute(`mkfs -t ${devices.root.fstype} ${devices.root.device}`);
   await execute(`mkfs -t ${devices.boot.fstype} ${devices.boot.device}`);
   await execute(`mkfs -t ${devices.data.fstype} ${devices.data.device}`);
@@ -184,17 +196,26 @@ async function mkfs(devices){
   return result;
 }
 
-async function mount(target, devices){
+async function mount(target, devices) {
   await execute(`mkdir ${target}`);
   await execute(`mount ${devices.root.device} ${target}`);
+  await execute(`tune2fs -c 0 -i 0 ${devices.root.device}`);
+  await execute(`rm -rf ${target}/lost+found`);
+
   await execute(`mkdir ${target}/boot`);
   await execute(`mount ${devices.boot.device} ${target}/boot`);
+  await execute(`tune2fs -c 0 -i 0 ${devices.boot.device}`);
+
   await execute(`mkdir -p ${target}/var/lib/vz`);
   await execute(`mount ${devices.data.device} ${target}/var/lib/vz`);
+  await execute(`tune2fs -c 0 -i 0 ${devices.data.device}`);
+  await execute(`rm -rf ${target}/var/lib/vz/lost+found`);
+
   return true;
 }
+async function tune2fs(target, devices) {}
 
-async function umount(target, devices){
+async function umount(target, devices) {
   await execute(`umount ${devices.data.device} ${target}/var/lib/vz`);
   await execute(`umount ${devices.boot.device} ${target}boot`);
   await execute(`umount ${devices.root.device} ${target}`);
@@ -202,17 +223,17 @@ async function umount(target, devices){
   return true;
 }
 
-async function diskPreparePve(device){
+async function diskPreparePve(device) {
   await execute(`./scripts/disk_prepare_pve.sh ${device}`);
   return true;
 }
 
-async function diskPreparePartitionLvm(device,sizeMb){
+async function diskPreparePartitionLvm(device, sizeMb) {
   console.log(`./scripts/disk_prepare_partition_lvm.sh ${device} ${sizeMb}`);
   await execute(`./scripts/disk_prepare_partition_lvm.sh ${device} ${sizeMb}`);
   return true;
 }
-async function diskPreparePartitionBoot(device){
+async function diskPreparePartitionBoot(device) {
   await execute(`./scripts/disk_prepare_partition_boot.sh ${device}`);
   return true;
 }
@@ -223,9 +244,9 @@ async function diskPrepare(device) {
 }
 
 async function getDiskSize(device) {
-  let result="";
+  let result = "";
   result = await execute(`./scripts/disk_get_size.sh ${device}`);
-  result=result.replace("B","").trim();
+  result = result.replace("B", "").trim();
   return result;
 }
 
@@ -284,7 +305,7 @@ async function getOptions(driveList) {
         type: "input",
         name: "hostname",
         message: "hostname: ",
-        default: "eggs-ve-test"
+        default: "penguin"
       },
       {
         type: "input",
@@ -361,11 +382,5 @@ async function getOptions(driveList) {
     });
   });
 }
-
-//disk_prepare;
-//disk_get_size;
-//partition_prepare_boot;
-//partition_prepare_lvm;
-//pve_prepare;
 
 var ifaces = fs.readdirSync("/sys/class/net/");

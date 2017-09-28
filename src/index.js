@@ -64,8 +64,10 @@ if (utils.isRoot()) {
       buildEgg(e);
       buildNetboot(n);
     } else if (program.iso) {
+      i.install();
       buildEgg(e);
       buildIso(i);
+      i.purge();
     } else {
       console.log("usage: eggs create [netboot|iso]");
     }
@@ -96,10 +98,8 @@ if (utils.isRoot()) {
   } else if (command == "purge") {
     if (program.netboot) {
       n.purge();
-    } else if (program.iso) {
-      i.purge();
     } else {
-      console.log("Usage: eggs purge [netboot|iso]");
+      console.log("Usage: eggs purge [netboot]");
     }
   } else if (command == "hatch") {
     startHatching();
@@ -121,7 +121,6 @@ bye();
 // END MAIN
 
 function buildEgg(e) {
-  //build egg
   e.create();
   e.copy();
   e.fstab();
@@ -132,7 +131,6 @@ function buildEgg(e) {
 }
 
 function buildNetboot(n) {
-  // Build the Incubator
   n.create();
   n.vmlinuz();
   n.initramfs();
@@ -178,7 +176,7 @@ function bye() {
   process.exit(0);
 }
 
-async function startHatching() {
+function startHatching() {
   console.log("The penguin start to hatch...");
-  await hatch();
+  hatch();
 }

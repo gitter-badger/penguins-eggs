@@ -8,7 +8,7 @@ import ip from "ip";
 import fs from "fs";
 import os from "os";
 import dns from "dns";
-const path = require('path');
+const path = require("path");
 
 //import network from "network";
 
@@ -120,9 +120,12 @@ utils.prototype.sr = function(file, search, replace) {
   fs.writeFileSync(file, changed);
 };
 
-utils.prototype.isNetworkManager = function(){
-  dpkg --get-selections | grep network-manager
-}
+utils.prototype.hostname = function(target, hostname) {
+  let file = `${target}/etc/hostname`;
+  let text = hostname;
+  fs.writeFileSync(file, text);
+};
+
 /**
  *
  * Funzioni interne: calcolo rete; copiate da ipcalc

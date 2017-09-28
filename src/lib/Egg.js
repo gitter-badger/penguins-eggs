@@ -4,10 +4,7 @@
 
 "use strict";
 
-//import shell from "shelljs";
 import fs from "fs";
-//import os from "os";
-//import dns from "dns";
 import utils from "./utils.js";
 
 class Egg {
@@ -96,7 +93,7 @@ class Egg {
   }
 
   hostname() {
-    utils.hostname(this.fsDir, distroName);
+    utils.hostname(this.fsDir, this.distroName);
   }
 
   resolvConf() {
