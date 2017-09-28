@@ -43,7 +43,7 @@
     "drivelist": "^5.1.8",
     "inquirer": "^3.3.0",
     "ip": "^1.1.5",
-    "network": "^0.3.2",
+    "network": "^0.4.0",
     "shelljs": "^0.7.8"
   },
   "devDependencies": {
