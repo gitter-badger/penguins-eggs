@@ -146,7 +146,8 @@ utils.prototype.date4label = function() {
   }
 
   tz = Math.abs(d.getTimezoneOffset() / 60);
-  ver += " tz: " + sign + pad(tz);
+  ver += sign + pad(tz);
+  return ver;
 };
 
 utils.prototype.date4file = function() {
@@ -170,7 +171,7 @@ utils.prototype.date4file = function() {
 
   tz = Math.abs(d.getTimezoneOffset() / 60);
   ver += sign + pad(tz);
-  return label + ver;
+  return ver;
 };
 
 /**
