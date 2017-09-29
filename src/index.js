@@ -64,10 +64,10 @@ if (utils.isRoot()) {
       buildEgg(e);
       buildNetboot(n);
     } else if (program.iso) {
-      i.install();
+      //i.install();
       buildEgg(e);
       buildIso(i);
-      i.purge();
+      //i.purge();
     } else {
       console.log("usage: eggs create [netboot|iso]");
     }
