@@ -126,6 +126,53 @@ utils.prototype.hostname = function(target, hostname) {
   fs.writeFileSync(file, text);
 };
 
+utils.prototype.date4label = function() {
+  let d = new Date();
+  let tz = "";
+  let ver =
+    pad(d.getFullYear()) +
+    "/" +
+    pad(d.getMonth() + 1) +
+    "/" +
+    pad(d.getDate()) +
+    " " +
+    pad(d.getHours()) +
+    ":" +
+    pad(d.getMinutes());
+
+  let sign = "+";
+  if (d.getTimezoneOffset() < 0) {
+    sign = "-";
+  }
+
+  tz = Math.abs(d.getTimezoneOffset() / 60);
+  ver += " tz: " + sign + pad(tz);
+};
+
+utils.prototype.date4file = function() {
+  let d = new Date();
+  let tz = "";
+  let ver =
+    "_" +
+    pad(d.getFullYear()) +
+    "-" +
+    pad(d.getMonth() + 1) +
+    "-" +
+    pad(d.getDate()) +
+    "_" +
+    pad(d.getHours()) +
+    pad(d.getMinutes());
+
+  let sign = "+";
+  if (d.getTimezoneOffset() < 0) {
+    sign = "-";
+  }
+
+  tz = Math.abs(d.getTimezoneOffset() / 60);
+  ver += sign + pad(tz);
+  return label + ver;
+};
+
 /**
  *
  * Funzioni interne: calcolo rete; copiate da ipcalc
@@ -190,6 +237,13 @@ function getCurrentDirectoryName() {
     cwd = "lib";
   }
   return cwd;
+}
+
+function pad(number) {
+  if (number < 10) {
+    return "0" + number;
+  }
+  return number;
 }
 
 export default new utils();
