@@ -1,5 +1,7 @@
 # penguins-eggs
 
+[![Join the chat at https://gitter.im/penguins-eggs/Lobby](https://badges.gitter.im/penguins-eggs/Lobby.svg)](https://gitter.im/penguins-eggs/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ![penguins-eggs](https://github.com/pieroproietti/penguins-eggs/blob/master/src/assets/penguins-eggs.png?raw=true)
 
 penguins-eggs is a console utility in development, at moment rudimentary (and needing a GUI counterpart) but it work well with Debian 8 Jessie and Debian 9 Stretch, and let You to remaster your system and, for now, give You the possibility to replicate it with remote boot. It is also possible to create iso working as line, but it is no present yet the arises command to install it.
