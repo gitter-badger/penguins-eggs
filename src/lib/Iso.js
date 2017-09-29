@@ -35,11 +35,11 @@ class Iso {
     console.log("==========================================");
     console.log("Incubator iso: create");
     console.log("==========================================");
-    utils.exec(`apt-get update`);
+/*    utils.exec(`apt-get update`);
     utils.exec(
       `apt-get install squashfs-tools xorriso live-boot syslinux syslinux-common isolinux -y`
     );
-
+*/
     if (!fs.existsSync(this.isoDir)) {
       utils.exec(`mkdir -p ${this.isoDir}/live`);
       utils.exec(`mkdir -p ${this.isoDir}/isolinux`);
